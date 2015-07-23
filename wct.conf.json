@@ -1,0 +1,14 @@
+{
+  "suites": ["app/test"],
+  "verbose": true,
+  "persistent": true,
+  "plugins": {
+    "sauce": {
+      "disabled": true,
+      "browsers": [
+        "chrome",
+        "firefox"
+      ]
+    }
+  }
+}
