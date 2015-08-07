@@ -47,21 +47,29 @@
 <body unresolved class="fullbleed layout vertical">
   <span id="browser-sync-binding"></span>
 
-  <template is="dom-bind" id="app">
+    <template is="dom-bind" id="app">
     <paper-drawer-panel id="paperDrawerPanel" force-narrow>
       <!-- Nav Drawer -->
       <paper-header-panel drawer mode="standard">
         <!-- Nav Drawer Toolbar -->
         <paper-toolbar id="drawerToolbar" class="tall">
-          <p>ToDo: Profile Pic</p>
-          <br/>
-          <p>ToDo: User Email</p>
+          <div class="bottom fit">
+            <div class="user-info-container">
+              <div id="tbUserName" class="user-info-username">Placeholder Username</div>
+              <div id="tbUserEmailAddress" class="user-info-emailaddress">Placeholder Email</div>
+            </div>
+          </div>
         </paper-toolbar>
 
         <!-- Nav Drawer Content -->
         <div>
           <paper-menu class="list" attr-for-selected="data-route" selected="{{route}}" on-iron-select="onMenuSelect">
-            <a data-route="home" href="/">
+            <a data-route="login" href="/">
+              <iron-icon icon="polymer"></iron-icon>
+              <span>Login</span>
+            </a>
+
+            <a data-route="home" href="/home">
               <iron-icon icon="home"></iron-icon>
               <span>Home</span>
             </a>
@@ -88,11 +96,21 @@
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
+            <section data-route="login" style="margin-top: -40px">
+              <socobo-login-registration
+                id="elLoginRegistration"
+                on-handle-close-login-registration="closeLoginRegistrationElement"
+                on-handle-successful-login="loginSuccessful"
+                on-handle-failed-login="loginFailed"
+                on-handle-passwords-not-mathing="passwordsMisMatching">
+              </socobo-login-registration>
+            </section>
+
             <section data-route="home">
               <paper-material elevation="1">
-
                 <p class="paper-font-body2">ToDo: Place here your Elements!</p>
-
+                <p>Test:</p>
+                <socobo-element-template></socobo-element-template>
               </paper-material>
             </section>
 
@@ -100,6 +118,11 @@
         </div>
       </paper-header-panel>
     </paper-drawer-panel>
+
+    <paper-toast id="info-toast"
+                 duration="6000"
+                 text="Placeholder">
+    </paper-toast>
 
     <!-- Uncomment next block to enable Service Worker support (1/2) -->
     <!--
@@ -120,8 +143,11 @@
 
   </template>
 
+  <!--firebase-->
+  <script src='https://cdn.firebase.com/js/client/2.2.9/firebase.js'></script>
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
+  <script src="scripts/util.js"></script>
   <!-- endbuild-->
 </body>
 </html>

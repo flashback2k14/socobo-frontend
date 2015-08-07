@@ -1,6 +1,6 @@
 {
   "name": "socobo-frontend",
-  "version": "0.0.1",
+  "version": "0.0.2.5",
   "description": "Socobo Frontend Project",
   "authors": [
     "cs13dr1",
@@ -15,12 +15,15 @@
   },
   "license": "",
   "homepage": "",
+  "ignore": [],
   "dependencies": {
     "iron-elements": "PolymerElements/iron-elements#1.0.0",
     "paper-elements": "PolymerElements/paper-elements#1.0.1",
     "platinum-elements": "PolymerElements/platinum-elements#1.0.1",
     "neon-elements": "PolymerElements/neon-elements#1.0.0",
-    "page": "visionmedia/page.js#~1.6.3"
+    "page": "visionmedia/page.js#~1.6.3",
+    "socobo-element-template": "flashback2k14/socobo-element-template#master",
+    "socobo-login-registration": "flashback2k14/socobo-login-registration#authtest"
   },
   "devDependencies": {
     "web-component-tester": "*",
