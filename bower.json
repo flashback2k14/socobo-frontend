@@ -1,6 +1,6 @@
 {
   "name": "socobo-frontend",
-  "version": "0.0.2.5",
+  "version": "0.0.3.0",
   "description": "Socobo Frontend Project",
   "authors": [
     "cs13dr1",
@@ -23,7 +23,7 @@
     "neon-elements": "PolymerElements/neon-elements#1.0.0",
     "page": "visionmedia/page.js#~1.6.3",
     "socobo-element-template": "flashback2k14/socobo-element-template#master",
-    "socobo-login-registration": "flashback2k14/socobo-login-registration#authtest"
+    "socobo-login-registration": "flashback2k14/socobo-login-registration#master"
   },
   "devDependencies": {
     "web-component-tester": "*",

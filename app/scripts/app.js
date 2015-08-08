@@ -53,13 +53,35 @@
   };
 
   app.loginSuccessful = function(e) {
+    // declare variable
+    var userObj;
+    var userName;
+    var userEmailAddress;
+    // init variable
+    userObj = e.detail.user;
     // get emailaddress from parameter
-    var userEmailAddress = e.detail.user.password.email;
+    if (userObj.hasOwnProperty("password")) {
+      userEmailAddress = userObj.password.email;
+      // get user name from emailaddress
+      userName = Util.getUsernameFromMailAddress(userEmailAddress);
+    } else {
+      /**
+       * ToDo: Get Emailaddress and Username from Social Provider
+       */
+      userName = "";
+      userEmailAddress = "";
+    }
+    // set user info to local storage
+    UserInfo.set("UserObj", userObj);
+    UserInfo.set("Id", userObj.uid);
+    UserInfo.set("ExpireDate", userObj.expires);
+    UserInfo.set("Username", userName);
+    UserInfo.set("EmailAddress", userEmailAddress);
+    // set user info to toolbar menu
+    tbUsername.innerHTML = userName;
+    tbUserEmailAddress.innerHTML = userEmailAddress;
     // go to the home element
     app.route = "home";
-    // set user info to toolbar menu
-    tbUsername.innerHTML = Util.getUsernameFromMailAddress(userEmailAddress);
-    tbUserEmailAddress.innerHTML = userEmailAddress;
     // show toast to inform the user
     infoToast.text = "User " + userEmailAddress + " is logged in!";
     infoToast.toggle();
@@ -76,6 +98,20 @@
     infoToast.text = "Your Passwords does not match! Please retry!";
     infoToast.toggle();
   };
+
+  app.logoutUser = function() {
+    // show toast to inform the user
+    infoToast.text = "Logging out...";
+    infoToast.toggle();
+    // log user out from firebase
+    var rootRef = new Firebase("https://socobo.firebaseio.com/");
+    rootRef.unauth();
+    // set Placedolder to toolbar menu
+    tbUsername.innerHTML = "Placeholder Username";
+    tbUserEmailAddress.innerHTML = "Placeholder Email";
+    // delete all data in local storage
+    UserInfo.deleteAll();
+  };
   /**
    * END: handle custom events for socobo elements here
    */
@@ -87,4 +123,4 @@
   //  document.querySelector("#caching-complete").show();
   //};
 
-})(document);
+}(document));

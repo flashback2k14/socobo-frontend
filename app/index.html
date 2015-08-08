@@ -87,7 +87,7 @@
           <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
           <span class="flex"></span>
           <!-- Toolbar icons -->
-          <paper-icon-button id="btnLogout" icon="eject"></paper-icon-button>
+          <paper-icon-button id="btnLogout" icon="eject" on-click="logoutUser"></paper-icon-button>
           <!-- Application name -->
           <div class="middle">Socobo Frontend</div>
         </paper-toolbar>
@@ -148,6 +148,7 @@
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
   <script src="scripts/util.js"></script>
+  <script src="scripts/userinfo.js"></script>
   <!-- endbuild-->
 </body>
 </html>
