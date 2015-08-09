@@ -11,6 +11,7 @@
   var docReady = false;
   var tbUsername = null;
   var tbUserEmailAddress = null;
+  var imgUserProfilePicture = null;
   var elLoginRegistration = null;
   var infoToast = null;
 
@@ -29,6 +30,7 @@
     docReady = true;
     tbUsername = document.querySelector("#tbUserName");
     tbUserEmailAddress = document.querySelector("#tbUserEmailAddress");
+    imgUserProfilePicture = document.querySelector("#imgUserProfilePicture");
     elLoginRegistration = document.querySelector("#elLoginRegistration");
     infoToast = document.querySelector("#info-toast");
   });
@@ -57,6 +59,7 @@
     var userObj;
     var userName;
     var userEmailAddress;
+    var userProfilePicture
     // init variable
     userObj = e.detail.user;
     // get emailaddress from parameter
@@ -64,22 +67,25 @@
       userEmailAddress = userObj.password.email;
       // get user name from emailaddress
       userName = Util.getUsernameFromMailAddress(userEmailAddress);
+      userProfilePicture = userObj.password.profileImageURL;
     } else {
       /**
-       * ToDo: Get Emailaddress and Username from Social Provider
+       * ToDo: Get Emailaddress, Username, ProfileUrl from Social Provider
        */
       userName = "";
       userEmailAddress = "";
+      userProfilePicture = "";
     }
     // set user info to local storage
-    UserInfo.set("UserObj", userObj);
-    UserInfo.set("Id", userObj.uid);
-    UserInfo.set("ExpireDate", userObj.expires);
-    UserInfo.set("Username", userName);
-    UserInfo.set("EmailAddress", userEmailAddress);
+    UserInfo.set(UserInfo.USEROBJECT, userObj);
+    UserInfo.set(UserInfo.USERID, userObj.uid);
+    UserInfo.set(UserInfo.EXPIREDATE, userObj.expires);
+    UserInfo.set(UserInfo.USERNAME, userName);
+    UserInfo.set(UserInfo.EMAILADDRESS, userEmailAddress);
     // set user info to toolbar menu
     tbUsername.innerHTML = userName;
     tbUserEmailAddress.innerHTML = userEmailAddress;
+    imgUserProfilePicture.src = userProfilePicture;
     // go to the home element
     app.route = "home";
     // show toast to inform the user
@@ -109,6 +115,7 @@
     // set Placedolder to toolbar menu
     tbUsername.innerHTML = "Placeholder Username";
     tbUserEmailAddress.innerHTML = "Placeholder Email";
+    imgUserProfilePicture.src = "../images/touch/icon-128x128.png";
     // delete all data in local storage
     UserInfo.deleteAll();
   };

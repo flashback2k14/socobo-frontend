@@ -1,5 +1,13 @@
 var UserInfo = {
   /**
+   * local storage keys
+   */
+  USEROBJECT: "UserObj",
+  USERID: "Id",
+  EXPIREDATE: "ExpireDate",
+  USERNAME: "Username",
+  EMAILADDRESS: "EmailAddress",
+  /**
    * set user info to local storage
    * @param key
    * @param value
