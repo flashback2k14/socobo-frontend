@@ -21,6 +21,39 @@ var Util = {
    * @return {boolean}
    */
   isUserLoginExpired: function(expireDate) {
-   return expireDate === this._getCurrentTimestamp();
+    if (expireDate === null) return true;
+    else return expireDate === this._getCurrentTimestamp();
+  },
+  /**
+   * helper for saving object in localStorage
+   * @param value
+   * @return {String}
+   */
+  objectToString: function(value) {
+    return JSON.stringify(value);
+  },
+  /**
+   * helper to parse localStorage string to object
+   * @param value
+   * @return {Object}
+   */
+  stringToObject: function(value) {
+    return JSON.parse(value);
+  },
+  /**
+   * get email address from social provider
+   * @param userObj
+   * @return {String}
+   */
+  getEmailAddressFromSocialProvider: function(userObj) {
+    if (userObj.hasOwnProperty("email")) {
+      return userObj.email;
+    } else if (userObj.cachedUserProfile.hasOwnProperty("link")) {
+      return userObj.cachedUserProfile.link;
+    } else if (userObj.cachedUserProfile.hasOwnProperty("email")) {
+      return userObj.cachedUserProfile.email;
+    } else {
+      return "";
+    }
   }
 };

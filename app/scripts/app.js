@@ -33,6 +33,12 @@
     imgUserProfilePicture = document.querySelector("#imgUserProfilePicture");
     elLoginRegistration = document.querySelector("#elLoginRegistration");
     infoToast = document.querySelector("#info-toast");
+    // check if user login is expired
+    if (Util.isUserLoginExpired(UserInfo.get(UserInfo.EXPIREDATE))) {
+      app.route = "login";
+    } else {
+      app.route = "home";
+    }
   });
 
   /**
@@ -59,25 +65,34 @@
     var userObj;
     var userName;
     var userEmailAddress;
-    var userProfilePicture
+    var userProfilePicture;
     // init variable
     userObj = e.detail.user;
-    // get emailaddress from parameter
-    if (userObj.hasOwnProperty("password")) {
-      userEmailAddress = userObj.password.email;
-      // get user name from emailaddress
-      userName = Util.getUsernameFromMailAddress(userEmailAddress);
-      userProfilePicture = userObj.password.profileImageURL;
-    } else {
-      /**
-       * ToDo: Get Emailaddress, Username, ProfileUrl from Social Provider
-       */
-      userName = "";
-      userEmailAddress = "";
-      userProfilePicture = "";
+    // get emailaddress, username, profileUrl
+    switch(userObj.provider) {
+      case "password":
+        userEmailAddress = userObj.password.email;
+        userName = Util.getUsernameFromMailAddress(userEmailAddress);
+        userProfilePicture = userObj.password.profileImageURL;
+        break;
+      case "google":
+        userName = userObj.google.displayName;
+        userEmailAddress = Util.getEmailAddressFromSocialProvider(userObj.google);
+        userProfilePicture = userObj.google.profileImageURL;
+        break;
+      case "twitter":
+        userName = userObj.twitter.displayName;
+        userEmailAddress = Util.getEmailAddressFromSocialProvider(userObj.twitter);
+        userProfilePicture = userObj.twitter.profileImageURL;
+        break;
+      case "facebook":
+        userName = userObj.facebook.displayName;
+        userEmailAddress = Util.getEmailAddressFromSocialProvider(userObj.facebook);
+        userProfilePicture = userObj.facebook.profileImageURL;
+        break;
     }
     // set user info to local storage
-    UserInfo.set(UserInfo.USEROBJECT, userObj);
+    UserInfo.set(UserInfo.USEROBJECT, Util.objectToString(userObj));
     UserInfo.set(UserInfo.USERID, userObj.uid);
     UserInfo.set(UserInfo.EXPIREDATE, userObj.expires);
     UserInfo.set(UserInfo.USERNAME, userName);
@@ -118,6 +133,8 @@
     imgUserProfilePicture.src = "../images/touch/icon-128x128.png";
     // delete all data in local storage
     UserInfo.deleteAll();
+    // go to login element
+    app.route = "login";
   };
   /**
    * END: handle custom events for socobo elements here
