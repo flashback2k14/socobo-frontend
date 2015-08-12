@@ -1,4 +1,4 @@
-# socobo-frontend
+# socobo-project
 
 ## Steps:
 ---------
