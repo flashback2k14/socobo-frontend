@@ -1,1 +1,1 @@
-# socobo-frontend
+# socobo-project

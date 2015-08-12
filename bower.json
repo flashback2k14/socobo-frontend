@@ -1,7 +1,7 @@
 {
-  "name": "socobo-frontend",
-  "version": "0.0.1",
-  "description": "Socobo Frontend Project",
+  "name": "socobo-project",
+  "version": "0.0.2",
+  "description": "Socobo Project",
   "authors": [
     "cs13dr1",
     "flashback2k14",
@@ -11,9 +11,9 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git://github.com/flashback2k14/socobo-frontend"
+    "url": "git://github.com/flashback2k14/socobo-project"
   },
-  "license": "",
+  "license": "http://polymer.github.io/LICENSE.txt",
   "homepage": "",
   "dependencies": {
     "iron-elements": "PolymerElements/iron-elements#1.0.0",

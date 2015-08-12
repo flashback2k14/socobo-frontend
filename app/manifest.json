@@ -1,6 +1,6 @@
 {
-  "name": "Socobo Frontend",
-  "short_name": "Socobo Frontend",
+  "name": "Socobo Project",
+  "short_name": "Socobo Project",
   "icons": [{
         "src": "images/touch/icon-128x128.png",
         "sizes": "128x128",
