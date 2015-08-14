@@ -34,6 +34,10 @@ var UserInfo = {
    * remove all user infos from local storage
    */
   deleteAll: function() {
-    window.localStorage.clear();
+    window.localStorage.removeItem(UserInfo.USEROBJECT);
+    window.localStorage.removeItem(UserInfo.USERID);
+    window.localStorage.removeItem(UserInfo.EXPIREDATE);
+    window.localStorage.removeItem(UserInfo.USERNAME);
+    window.localStorage.removeItem(UserInfo.EMAILADDRESS);
   }
 };

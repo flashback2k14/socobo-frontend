@@ -33,6 +33,8 @@
     imgUserProfilePicture = document.querySelector("#imgUserProfilePicture");
     elLoginRegistration = document.querySelector("#elLoginRegistration");
     infoToast = document.querySelector("#info-toast");
+    // set Base URL to Firebase Database
+    app.firebasebaseurl = "https://socobo.firebaseio.com/";
     // check if user login is expired
     if (Util.isUserLoginExpired(UserInfo.get(UserInfo.EXPIREDATE))) {
       app.route = "login";
@@ -110,7 +112,10 @@
 
   app.loginFailed = function(e) {
     // show toast to inform the user
-    infoToast.text = "Login failed! Please retry! Error: " + e.detail.error.error;
+    var errorObj = e.detail.error;
+    infoToast.text = "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message;
+    infoToast.style.background = "#FF3333";
+    infoToast.style.color = "#EEEEEE";
     infoToast.toggle();
   };
 
