@@ -87,6 +87,52 @@
     margin-left: 48px;
   }
 
+  /*Custom Toolbar Menu*/
+  .user-info-container {
+    margin: 45px 10px 10px 0;
+  }
+
+  .user-info-picture {
+    padding: 5px;
+  }
+  .user-info-username {
+    padding: 5px;
+    font-size: medium;
+  }
+  .user-info-emailaddress{
+    padding: 5px;
+    font-size: xx-small;
+    word-break: break-all;
+  }
+
+  .circular {
+    display: inline-block;
+    min-height: 80px;
+    height: 80px;
+    max-height: 80px;
+    min-width: 80px;
+    width: 80px;
+    max-width: 80px;
+    overflow: hidden;
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
+    border-radius: 50%;
+    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+    -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+    box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+  }
+
+  /*Custom Socobo Elements*/
+  /*Use Custom CSS Mixins*/
+  socobo-login-registration {
+    --socobo-login-registration-bg-image-theme: {
+        top: 67px;
+    };
+    --socobo-login-registration-close-button-theme: {
+        top: 88px;
+    };
+  }
+
   /* Height of the scroll area */
   .content {
     height: 900px;
