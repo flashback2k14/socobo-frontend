@@ -75,6 +75,11 @@
               <span>Home</span>
             </a>
 
+            <a data-route="inventory" href="/inventory">
+              <iron-icon icon="shopping-basket"></iron-icon>
+              <span>Inventar</span>
+            </a>
+
             <!-- ToDo: Menu Entries-->
 
           </paper-menu>
@@ -106,6 +111,9 @@
                 on-handle-failed-login="loginFailed"
                 on-handle-passwords-not-mathing="passwordsMisMatching">
               </socobo-login-registration>
+            </section>
+            <section data-route="inventory" style="margin-top: -40px">
+              <socobo-inventory></socobo-inventory>
             </section>
 
             <section data-route="home">
