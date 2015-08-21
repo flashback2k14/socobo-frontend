@@ -7,6 +7,7 @@ var UserInfo = {
   EXPIREDATE: "ExpireDate",
   USERNAME: "Username",
   EMAILADDRESS: "EmailAddress",
+  PROFILEIMAGE: 'ProfileImage',
   /**
    * set user info to local storage
    * @param key
@@ -39,5 +40,6 @@ var UserInfo = {
     window.localStorage.removeItem(UserInfo.EXPIREDATE);
     window.localStorage.removeItem(UserInfo.USERNAME);
     window.localStorage.removeItem(UserInfo.EMAILADDRESS);
+    window.localStorage.removeItem(UserInfo.PROFILEIMAGE);
   }
 };

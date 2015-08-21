@@ -21,7 +21,7 @@ var Util = {
    * @return {boolean}
    */
   isUserLoginExpired: function(expireDate) {
-	return expireDate === null || this._getCurrentTimestamp() >= expireDate;
+	  return expireDate === null || this._getCurrentTimestamp() >= expireDate;
   },
   /**
    * helper for saving object in localStorage

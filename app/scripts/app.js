@@ -39,6 +39,11 @@
     if (Util.isUserLoginExpired(UserInfo.get(UserInfo.EXPIREDATE))) {
       app.route = "login";
     } else {
+      // set UserInfo to Sidebar after reload
+      tbUsername.innerHTML = UserInfo.get(UserInfo.USERNAME);
+      tbUserEmailAddress.innerHTML = UserInfo.get(UserInfo.EMAILADDRESS);
+      imgUserProfilePicture.src = UserInfo.get(UserInfo.PROFILEIMAGE);
+      // navigate to home
       app.route = "home";
     }
   });
@@ -99,6 +104,7 @@
     UserInfo.set(UserInfo.EXPIREDATE, userObj.expires);
     UserInfo.set(UserInfo.USERNAME, userName);
     UserInfo.set(UserInfo.EMAILADDRESS, userEmailAddress);
+    UserInfo.set(UserInfo.PROFILEIMAGE, userProfilePicture);
     // set user info to toolbar menu
     tbUsername.innerHTML = userName;
     tbUserEmailAddress.innerHTML = userEmailAddress;
@@ -107,6 +113,8 @@
     app.route = "home";
     // show toast to inform the user
     infoToast.text = "User " + userEmailAddress + " is logged in!";
+    infoToast.style.background = '#2EB82E';
+    infoToast.style.color = '#EEEEEE';
     infoToast.toggle();
   };
 
