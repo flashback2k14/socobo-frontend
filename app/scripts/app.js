@@ -63,7 +63,7 @@
   /**
    * BEGIN: handle custom events for socobo elements here
    */
-  app.closeLoginRegistrationElement = function() {
+  app.closeAuthElement = function() {
     app.route = "home";
   };
 
@@ -159,5 +159,4 @@
   //app.displayInstalledToast = function() {
   //  document.querySelector("#caching-complete").show();
   //};
-
 }(document));

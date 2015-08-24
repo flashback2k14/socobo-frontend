@@ -7,7 +7,7 @@ var UserInfo = {
   EXPIREDATE: "ExpireDate",
   USERNAME: "Username",
   EMAILADDRESS: "EmailAddress",
-  PROFILEIMAGE: 'ProfileImage',
+  PROFILEIMAGE: "ProfileImage",
   /**
    * set user info to local storage
    * @param key
