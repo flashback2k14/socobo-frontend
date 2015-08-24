@@ -22,10 +22,17 @@
     "platinum-elements": "PolymerElements/platinum-elements#1.1.1",
     "neon-elements": "PolymerElements/neon-elements#1.0.0",
     "page": "visionmedia/page.js#~1.6.3",
-    "socobo-auth": "flashback2k14/socobo-auth#master"
+    "socobo-auth": "flashback2k14/socobo-auth#master",
+    "socobo-recipe-overview": "https://github.com/hetec/socobo-recipe-overview.git"
   },
   "devDependencies": {
     "web-component-tester": "*",
     "test-fixture": "PolymerElements/test-fixture#^1.0.0"
+  },
+  "resolutions": {
+    "paper-elements": "1.0.2",
+    "iron-elements": "1.0.2",
+    "platinum-elements": "1.1.1",
+    "platinum-sw": "^1.2.0"
   }
 }

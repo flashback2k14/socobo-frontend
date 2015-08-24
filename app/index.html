@@ -75,6 +75,11 @@
               <span>Home</span>
             </a>
 
+            <a data-route="recipes" href="/recipes">
+              <iron-icon icon="book"></iron-icon>
+              <span>Recipes</span>
+            </a>
+
             <!-- ToDo: Menu Entries-->
 
           </paper-menu>
@@ -112,6 +117,10 @@
               <paper-material elevation="1">
                 <p class="paper-font-body2">ToDo: Place here your Elements!</p>
               </paper-material>
+            </section>
+
+            <section data-route="recipes">
+              <socobo-recipe></socobo-recipe>
             </section>
 
           </iron-pages>
