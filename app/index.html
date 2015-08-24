@@ -103,24 +103,24 @@
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
             <section data-route="login" style="margin-top: -40px">
-              <socobo-login-registration
+              <socobo-auth
                 id="elLoginRegistration"
                 firebasebaseurl="[[firebasebaseurl]]"
-                on-handle-close-login-registration="closeLoginRegistrationElement"
+                on-handle-close-auth="closeAuthElement"
                 on-handle-successful-login="loginSuccessful"
                 on-handle-failed-login="loginFailed"
                 on-handle-passwords-not-mathing="passwordsMisMatching">
-              </socobo-login-registration>
+              </socobo-auth>
             </section>
-            <section data-route="inventory" style="margin-top: -40px">
-              <socobo-inventory></socobo-inventory>
-            </section>
-
+            
             <section data-route="home">
               <paper-material elevation="1">
                 <p class="paper-font-body2">ToDo: Place here your Elements!</p>
-                <p>Test:</p>
               </paper-material>
+            </section>
+            
+            <section data-route="inventory" style="margin-top: -40px">
+              <socobo-inventory></socobo-inventory>
             </section>
 
           </iron-pages>

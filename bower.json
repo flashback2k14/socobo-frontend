@@ -1,6 +1,6 @@
 {
   "name": "socobo-project",
-  "version": "0.0.3.3",
+  "version": "0.0.3.4",
   "description": "Socobo Project",
   "authors": [
     "cs13dr1",
@@ -14,16 +14,16 @@
     "url": "git://github.com/flashback2k14/socobo-project"
   },
   "license": "http://polymer.github.io/LICENSE.txt",
-  "homepage": "",
+  "homepage": "https://github.com/flashback2k14/socobo-project",
   "ignore": [],
   "dependencies": {
-    "iron-elements": "PolymerElements/iron-elements#1.0.0",
-    "paper-elements": "PolymerElements/paper-elements#1.0.1",
-    "platinum-elements": "PolymerElements/platinum-elements#1.0.1",
+    "iron-elements": "PolymerElements/iron-elements#1.0.2",
+    "paper-elements": "PolymerElements/paper-elements#1.0.2",
+    "platinum-elements": "PolymerElements/platinum-elements#1.1.1",
     "neon-elements": "PolymerElements/neon-elements#1.0.0",
     "page": "visionmedia/page.js#~1.6.3",
-    "socobo-login-registration": "flashback2k14/socobo-login-registration#master",
-    "socobo-inventory": "lyio/socobo-inventory#master"
+    "socobo-inventory": "lyio/socobo-inventory#master",
+    "socobo-auth": "flashback2k14/socobo-auth#master"
   },
   "devDependencies": {
     "web-component-tester": "*",
