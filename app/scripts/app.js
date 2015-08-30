@@ -19,7 +19,7 @@
    * global eventlistener
    */
   app.addEventListener("dom-change", function() {
-    console.log("Socobo Frontend app is ready to rock!");
+    console.log("Socobo Project app is ready to rock!");
   });
 
   /**
@@ -138,7 +138,7 @@
     infoToast.text = "Logging out...";
     infoToast.toggle();
     // log user out from firebase
-    var rootRef = new Firebase("https://socobo.firebaseio.com/");
+    var rootRef = new Firebase(app.firebasebaseurl);
     rootRef.unauth();
     // set Placedolder to toolbar menu
     tbUsername.innerHTML = "Placeholder Username";
