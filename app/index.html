@@ -126,13 +126,21 @@
 
             <section data-route="recipes">
               <paper-material class="style-pm-recipe" elevation="1">
-                <socobo-recipe></socobo-recipe>
+                <socobo-recipe
+                  base-url="[[firebasebaseurl]]"
+                  user-id="[[userid]]"
+                  expire-date="[[expiredate]]">
+                </socobo-recipe>
               </paper-material>
             </section>
 
             <section data-route="inventory">
               <paper-material class="style-pm-inventory" elevation="1">
-                <socobo-inventory></socobo-inventory>
+                <socobo-inventory
+                  base-url="[[firebasebaseurl]]"
+                  user-id="[[userid]]"
+                  expire-date="[[expiredate]]">
+                </socobo-inventory>
               </paper-material>
             </section>
 

@@ -43,6 +43,9 @@
       tbUsername.innerHTML = UserInfo.get(UserInfo.USERNAME);
       tbUserEmailAddress.innerHTML = UserInfo.get(UserInfo.EMAILADDRESS);
       imgUserProfilePicture.src = UserInfo.get(UserInfo.PROFILEIMAGE);
+      // set UserId and ExpireDate for Subelements
+      app.userid = UserInfo.get(UserInfo.USERID);
+      app.expiredate = UserInfo.get(UserInfo.EXPIREDATE);
       // navigate to home
       app.route = "home";
     }
@@ -109,6 +112,9 @@
     tbUsername.innerHTML = userName;
     tbUserEmailAddress.innerHTML = userEmailAddress;
     imgUserProfilePicture.src = userProfilePicture;
+    // set UserId and ExpireDate for Subelements
+    app.userid = userObj.uid;
+    app.expiredate = userObj.expires;
     // go to the home element
     app.route = "home";
     // show toast to inform the user
@@ -146,6 +152,9 @@
     imgUserProfilePicture.src = "../images/touch/icon-128x128.png";
     // delete all data in local storage
     UserInfo.deleteAll();
+    // reset UserId and ExpireDate for Subelements
+    app.userid = null;
+    app.expiredate = null;
     // go to login element
     app.route = "login";
   };

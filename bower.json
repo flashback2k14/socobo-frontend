@@ -1,6 +1,6 @@
 {
   "name": "socobo-project",
-  "version": "0.0.3.4",
+  "version": "0.0.3.5",
   "description": "Socobo Project",
   "authors": [
     "cs13dr1",
@@ -29,11 +29,5 @@
   "devDependencies": {
     "web-component-tester": "*",
     "test-fixture": "PolymerElements/test-fixture#^1.0.0"
-  },
-  "resolutions": {
-    "paper-elements": "1.0.2",
-    "iron-elements": "1.0.2",
-    "platinum-elements": "1.1.1",
-    "platinum-sw": "^1.2.0"
   }
 }
