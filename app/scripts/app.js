@@ -12,6 +12,7 @@
   var tbUsername = null;
   var tbUserEmailAddress = null;
   var imgUserProfilePicture = null;
+  var menuItemLogin = null;
   var menuItemRecipe = null;
   var menuItemInventory = null;
   var elLoginRegistration = null;
@@ -33,6 +34,7 @@
     tbUsername = document.querySelector("#tbUserName");
     tbUserEmailAddress = document.querySelector("#tbUserEmailAddress");
     imgUserProfilePicture = document.querySelector("#imgUserProfilePicture");
+    menuItemLogin = document.querySelector("#menuItemLogin");
     menuItemRecipe = document.querySelector("#menuItemRecipe");
     menuItemInventory = document.querySelector("#menuItemInventory");
     elLoginRegistration = document.querySelector("#elLoginRegistration");
@@ -171,12 +173,21 @@
    * @private
    */
   function _toggleMenuItems() {
-    if (menuItemRecipe.classList.contains("hide-menu-item") && menuItemInventory.classList.contains("hide-menu-item")) {
+    if (menuItemLogin.classList.contains("show-menu-item")   &&
+        menuItemRecipe.classList.contains("hide-menu-item")  &&
+        menuItemInventory.classList.contains("hide-menu-item"))
+    {
+      menuItemLogin.classList.remove("show-menu-item");
+      menuItemLogin.classList.add("hide-menu-item");
       menuItemRecipe.classList.remove("hide-menu-item");
       menuItemRecipe.classList.add("show-menu-item");
       menuItemInventory.classList.remove("hide-menu-item");
       menuItemInventory.classList.add("show-menu-item");
-    } else {
+    }
+    else
+    {
+      menuItemLogin.classList.remove("hide-menu-item");
+      menuItemLogin.classList.add("show-menu-item");
       menuItemRecipe.classList.remove("show-menu-item");
       menuItemRecipe.classList.add("hide-menu-item");
       menuItemInventory.classList.remove("show-menu-item");
