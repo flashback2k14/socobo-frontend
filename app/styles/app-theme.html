@@ -9,31 +9,53 @@
    */
   /* Application theme */
   :root {
-    --dark-primary-color: #303F9F;
-    --default-primary-color: #3F51B5;
-    --light-primary-color: #C5CAE9;
-    --text-primary-color: #ffffff; /*text/icons*/
-    --accent-color: #FF4081;
-    --primary-background-color: #c5cae9;
-    --primary-text-color: #212121;
-    --secondary-text-color: #727272;
-    --disabled-text-color: #bdbdbd;
-    --divider-color: #B6B6B6;
+    /* App Colors */
+    --dark-primary-color:         #303F9F;
+    --default-primary-color:      #3F51B5;
+    --light-primary-color:        #C5CAE9;
+    --text-primary-color:         #FFFFFF; /*text/icons*/
+    --accent-color:               #FF4081;
+    --primary-background-color:   #C5CAE9;
+    --primary-text-color:         #212121;
+    --secondary-text-color:       #727272;
+    --disabled-text-color:        #BDBDBD;
+    --divider-color:              #B6B6B6;
+    --border-color:               #000000;
 
     /* Components */
     /* paper-drawer-panel */
-    --drawer-menu-color: #ffffff;
-    --drawer-border-color: 1px solid #ccc;;
-    --drawer-toolbar-border-color: 1px solid rgba(0, 0, 0, 0.22);
+    --drawer-menu-color:            var(--text-primary-color);
+    --drawer-border-color:          1px solid var(--disabled-text-color);
+    --drawer-toolbar-border-color:  1px solid var(--border-color);
 
     /* paper-menu */
-    --paper-menu-background-color: #fff;
-    --menu-link-color: #111111;
+    --paper-menu-background-color:  var(--text-primary-color);
+    --menu-link-color:              var(--primary-text-color);
   }
 
   /* General styles */
-  #drawerToolbar {
+  .style-drawer-toolbar {
     margin-top: -20px;
+  }
+  .paper-menu > .iron-selected {
+    color: var(--default-primary-color);
+  }
+  .style-main-toolbar .middle {
+    font-size: 20px;
+    margin-left: 48px;
+  }
+  .style-main-toolbar.has-shadow .middle {
+    font-size: 20px;
+    padding-bottom: 0;
+    margin-left: 48px;
+  }
+
+  /* Height of the scroll area */
+  .content {
+    min-height: 700px;
+    height: 900px;
+    max-height: 90%;
+    overflow: auto;
   }
 
   paper-material {
@@ -41,19 +63,13 @@
     height: 100%;
     padding: 16px 0 16px 0;
     width: calc(98.66% - 16px);
-    margin: 16px auto;
+    margin: 6px auto;
     background: white;
   }
-
   paper-menu iron-icon {
     margin-right: 33px;
     opacity: 0.54;
   }
-
-  .paper-menu > .iron-selected {
-    color: var(--default-primary-color);
-  }
-
   paper-menu a {
     text-decoration: none;
     color: var(--menu-link-color);
@@ -76,22 +92,10 @@
     padding: 0 16px;
   }
 
-  #mainToolbar .middle {
-    font-size: 20px;
-    margin-left: 48px;
-  }
-
-  #mainToolbar.has-shadow .middle {
-    font-size: 20px;
-    padding-bottom: 0;
-    margin-left: 48px;
-  }
-
-  /*Custom Toolbar Menu*/
+  /* Custom Toolbar Menu */
   .user-info-container {
     margin: 45px 10px 10px 0;
   }
-
   .user-info-picture {
     padding: 5px;
   }
@@ -104,7 +108,6 @@
     font-size: xx-small;
     word-break: break-all;
   }
-
   .circular {
     display: inline-block;
     min-height: 80px;
@@ -122,6 +125,20 @@
     box-shadow: 0 0 8px rgba(0, 0, 0, .8);
   }
 
+  /* Custom Socobo Elements Wrapper */
+  .style-pm-recipe {
+    height: 700px;
+    padding: 0;
+    margin: 0;
+  }
+  .style-pm-inventory {
+    height: 700px;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Custom Socobo Elements */
+  /* Use Custom CSS Mixins */
   /*Show / Hide Menu Items*/
   .hide-menu-item {
     display: none;
@@ -137,74 +154,63 @@
   /*Use Custom CSS Mixins*/
   socobo-auth {
     --socobo-auth-bg-image-theme: {
-        top: 67px;
+       top: 67px;
     };
     --socobo-auth-close-button-theme: {
-        top: 88px;
+       top: 88px;
     };
-  }
-
-  /* Height of the scroll area */
-  .content {
-    height: 900px;
+    --socobo-auth-container-theme: {
+       top: 67px;
+    };
+    --socobo-auth-content-theme: {
+       z-index: 1;
+    };
+    --socobo-auth-login-hyperlink-theme: {
+       margin-left: 10px;
+    };
+    --socobo-auth-registration-hyperlink-theme: {
+       margin-left: 10px;
+    };
   }
 
   /* Breakpoints */
+  /* Material Design Adaptive Breakpoints */
   /* Small */
   @media (max-width: 600px) {
-
+    .paper-font-display1 {
+      font-size: 12px;
+    }
+    .bg {
+      background: var(--text-primary-color);
+    }
+    #drawer .paper-toolbar {
+      margin-left: 16px;
+    }
+    #overlay {
+      min-width: 360px;
+    }
     paper-material {
       --menu-container-display: none;
       width: calc(97.33% - 32px);
       padding-left: 16px;
       padding-right: 16px;
     }
-
-    .paper-font-display1 {
-      font-size: 12px;
-    }
-
-    #drawer .paper-toolbar {
-      margin-left: 16px;
-    }
-
-    #overlay {
-      min-width: 360px;
-    }
-
-    .bg {
-      background: white;
-    }
   }
-
   /* Tablet+ */
   @media (min-width: 601px) {
-
+    #drawer.paper-drawer-panel > [drawer] {
+      border-right: 1px solid rgba(0, 0, 0, 0.14);
+    }
     paper-material {
       width: calc(98% - 46px);
       margin-bottom: 32px;
       padding-left: 30px;
       padding-right: 30px;
     }
-
-    #drawer.paper-drawer-panel > [drawer] {
-      border-right: 1px solid rgba(0, 0, 0, 0.14);
-    }
-
     iron-pages {
       padding: 48px 62px;
     }
   }
-
-  /* Material Design Adaptive Breakpoints */
-  /*
-    Below you'll find CSS media queries based on the breakpoint guidance
-    published by the Material Design team. You can choose to use, customise
-    or remove these breakpoints based on your needs.
-
-    http://www.google.com/design/spec/layout/adaptive-ui.html#adaptive-ui-breakpoints
-   */
-
   /* mobile-small */
   @media all and (min-width: 0) and (max-width: 360px) and (orientation: portrait) { }
   /* mobile-large */

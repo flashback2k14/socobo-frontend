@@ -52,7 +52,7 @@
       <!-- Nav Drawer -->
       <paper-header-panel drawer mode="standard">
         <!-- Nav Drawer Toolbar -->
-        <paper-toolbar id="drawerToolbar" class="tall">
+        <paper-toolbar id="drawerToolbar" class="style-drawer-toolbar tall">
           <div class="middle">
             <div class="user-info-container">
               <img id="imgUserProfilePicture" class="user-info-picture circular" src="images/touch/icon-128x128.png" alt="User Profile Picture" />
@@ -94,7 +94,7 @@
       <!-- Main Area -->
       <paper-header-panel main mode="standard">
         <!-- Main Toolbar -->
-        <paper-toolbar id="mainToolbar">
+        <paper-toolbar id="mainToolbar" class="style-main-toolbar">
           <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
           <span class="flex"></span>
           <!-- Toolbar icons -->
@@ -107,7 +107,7 @@
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
-            <section data-route="login" style="margin-top: -40px">
+            <section data-route="login">
               <socobo-auth
                 id="elLoginRegistration"
                 firebasebaseurl="[[firebasebaseurl]]"
@@ -124,12 +124,20 @@
               </paper-material>
             </section>
 
-            <section data-route="inventory" style="margin-top: -40px">
-              <socobo-inventory></socobo-inventory>
+            <section data-route="recipes">
+              <paper-material class="style-pm-recipe" elevation="1">
+                <socobo-recipe
+                  user-login="[[userlogin]]">
+                </socobo-recipe>
+              </paper-material>
             </section>
 
-            <section data-route="recipes">
-              <socobo-recipe></socobo-recipe>
+            <section data-route="inventory">
+              <paper-material class="style-pm-inventory" elevation="1">
+                <socobo-inventory
+                  user-login="[[userlogin]]">
+                </socobo-inventory>
+              </paper-material>
             </section>
 
           </iron-pages>
@@ -166,7 +174,7 @@
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
   <script src="scripts/util.js"></script>
-  <script src="scripts/userinfo.js"></script>
+  <script src="scripts/user-info.js"></script>
   <!-- endbuild-->
 </body>
 </html>

@@ -39,8 +39,10 @@
     menuItemInventory = document.querySelector("#menuItemInventory");
     elLoginRegistration = document.querySelector("#elLoginRegistration");
     infoToast = document.querySelector("#info-toast");
+    // init UserInfo
+    UserInfo.init("https://socobo.firebaseio.com/");
     // set Base URL to Firebase Database
-    app.firebasebaseurl = "https://socobo.firebaseio.com/";
+    app.firebasebaseurl = UserInfo.getBaseUrl();
     // check if user login is expired
     if (Util.isUserLoginExpired(UserInfo.get(UserInfo.EXPIREDATE))) {
       app.route = "login";
@@ -51,6 +53,8 @@
       imgUserProfilePicture.src = UserInfo.get(UserInfo.PROFILEIMAGE);
       // Show Menu Items for Inventory and Recipes
       _toggleMenuItems();
+      // set UserId and ExpireDate for Subelements
+      app.userlogin = UserInfo.getUserLogin();
       // navigate to home
       app.route = "home";
     }
@@ -119,6 +123,8 @@
     imgUserProfilePicture.src = userProfilePicture;
     // Show Menu Items for Inventory and Recipes
     _toggleMenuItems();
+    // set UserId and ExpireDate for Subelements
+    app.userlogin = UserInfo.getUserLogin();
     // go to the home element
     app.route = "home";
     // show toast to inform the user
@@ -148,7 +154,7 @@
     infoToast.text = "Logging out...";
     infoToast.toggle();
     // log user out from firebase
-    var rootRef = new Firebase(app.firebasebaseurl);
+    var rootRef = new Firebase(UserInfo.getBaseUrl());
     rootRef.unauth();
     // set Placedolder to toolbar menu
     tbUsername.innerHTML = "Placeholder Username";
@@ -157,7 +163,9 @@
     // Hide Menu Items for Inventory and Recipes
     _toggleMenuItems();
     // delete all data in local storage
-    UserInfo.deleteAll();
+    UserInfo.deleteAllItems();
+    // reset UserId and ExpireDate for Subelements
+    app.userlogin = null;
     // go to login element
     app.route = "login";
   };
