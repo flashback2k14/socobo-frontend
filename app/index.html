@@ -65,7 +65,7 @@
         <!-- Nav Drawer Content -->
         <div>
           <paper-menu class="list" attr-for-selected="data-route" selected="{{route}}" on-iron-select="onMenuSelect">
-            <a data-route="login" href="/">
+            <a data-route="login" id="menuItemLogin" class="show-menu-item" href="/">
               <iron-icon icon="polymer"></iron-icon>
               <span>Login</span>
             </a>
@@ -75,12 +75,12 @@
               <span>Home</span>
             </a>
 
-            <a data-route="recipes" href="/recipes">
+            <a data-route="recipes" id="menuItemRecipe" class="hide-menu-item"  href="/recipes">
               <iron-icon icon="book"></iron-icon>
               <span>Recipes</span>
             </a>
 
-            <a data-route="inventory" href="/inventory">
+            <a data-route="inventory" id="menuItemInventory" class="hide-menu-item" href="/inventory">
               <iron-icon icon="shopping-basket"></iron-icon>
               <span>Inventar</span>
             </a>
