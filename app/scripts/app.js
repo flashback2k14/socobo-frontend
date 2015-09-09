@@ -12,6 +12,9 @@
   var tbUsername = null;
   var tbUserEmailAddress = null;
   var imgUserProfilePicture = null;
+  var menuItemLogin = null;
+  var menuItemRecipe = null;
+  var menuItemInventory = null;
   var elLoginRegistration = null;
   var infoToast = null;
 
@@ -31,6 +34,9 @@
     tbUsername = document.querySelector("#tbUserName");
     tbUserEmailAddress = document.querySelector("#tbUserEmailAddress");
     imgUserProfilePicture = document.querySelector("#imgUserProfilePicture");
+    menuItemLogin = document.querySelector("#menuItemLogin");
+    menuItemRecipe = document.querySelector("#menuItemRecipe");
+    menuItemInventory = document.querySelector("#menuItemInventory");
     elLoginRegistration = document.querySelector("#elLoginRegistration");
     infoToast = document.querySelector("#info-toast");
     // set Base URL to Firebase Database
@@ -43,6 +49,8 @@
       tbUsername.innerHTML = UserInfo.get(UserInfo.USERNAME);
       tbUserEmailAddress.innerHTML = UserInfo.get(UserInfo.EMAILADDRESS);
       imgUserProfilePicture.src = UserInfo.get(UserInfo.PROFILEIMAGE);
+      // Show Menu Items for Inventory and Recipes
+      _toggleMenuItems();
       // navigate to home
       app.route = "home";
     }
@@ -109,12 +117,14 @@
     tbUsername.innerHTML = userName;
     tbUserEmailAddress.innerHTML = userEmailAddress;
     imgUserProfilePicture.src = userProfilePicture;
+    // Show Menu Items for Inventory and Recipes
+    _toggleMenuItems();
     // go to the home element
     app.route = "home";
     // show toast to inform the user
     infoToast.text = "User " + userEmailAddress + " is logged in!";
-    infoToast.style.background = '#2EB82E';
-    infoToast.style.color = '#EEEEEE';
+    infoToast.style.background = "#2EB82E";
+    infoToast.style.color = "#EEEEEE";
     infoToast.toggle();
   };
 
@@ -144,6 +154,8 @@
     tbUsername.innerHTML = "Placeholder Username";
     tbUserEmailAddress.innerHTML = "Placeholder Email";
     imgUserProfilePicture.src = "../images/touch/icon-128x128.png";
+    // Hide Menu Items for Inventory and Recipes
+    _toggleMenuItems();
     // delete all data in local storage
     UserInfo.deleteAll();
     // go to login element
@@ -152,6 +164,36 @@
   /**
    * END: handle custom events for socobo elements here
    */
+
+  /**
+   * UI Helper functions
+   */
+  /**
+   * function to show or hide the menu items related to the user login state
+   * @private
+   */
+  function _toggleMenuItems() {
+    if (menuItemLogin.classList.contains("show-menu-item")   &&
+        menuItemRecipe.classList.contains("hide-menu-item")  &&
+        menuItemInventory.classList.contains("hide-menu-item"))
+    {
+      menuItemLogin.classList.remove("show-menu-item");
+      menuItemLogin.classList.add("hide-menu-item");
+      menuItemRecipe.classList.remove("hide-menu-item");
+      menuItemRecipe.classList.add("show-menu-item");
+      menuItemInventory.classList.remove("hide-menu-item");
+      menuItemInventory.classList.add("show-menu-item");
+    }
+    else
+    {
+      menuItemLogin.classList.remove("hide-menu-item");
+      menuItemLogin.classList.add("show-menu-item");
+      menuItemRecipe.classList.remove("show-menu-item");
+      menuItemRecipe.classList.add("hide-menu-item");
+      menuItemInventory.classList.remove("show-menu-item");
+      menuItemInventory.classList.add("hide-menu-item");
+    }
+  }
 
   /**
    * show toast after caching is completed
