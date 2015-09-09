@@ -127,9 +127,7 @@
             <section data-route="recipes">
               <paper-material class="style-pm-recipe" elevation="1">
                 <socobo-recipe
-                  base-url="[[firebasebaseurl]]"
-                  user-id="[[userid]]"
-                  expire-date="[[expiredate]]">
+                  user-login="[[userlogin]]">
                 </socobo-recipe>
               </paper-material>
             </section>
@@ -137,9 +135,7 @@
             <section data-route="inventory">
               <paper-material class="style-pm-inventory" elevation="1">
                 <socobo-inventory
-                  base-url="[[firebasebaseurl]]"
-                  user-id="[[userid]]"
-                  expire-date="[[expiredate]]">
+                  user-login="[[userlogin]]">
                 </socobo-inventory>
               </paper-material>
             </section>
@@ -178,7 +174,7 @@
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
   <script src="scripts/util.js"></script>
-  <script src="scripts/userinfo.js"></script>
+  <script src="scripts/user-info.js"></script>
   <!-- endbuild-->
 </body>
 </html>

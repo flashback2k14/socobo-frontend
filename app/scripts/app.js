@@ -33,8 +33,10 @@
     imgUserProfilePicture = document.querySelector("#imgUserProfilePicture");
     elLoginRegistration = document.querySelector("#elLoginRegistration");
     infoToast = document.querySelector("#info-toast");
+    // init UserInfo
+    UserInfo.init("https://socobo.firebaseio.com/");
     // set Base URL to Firebase Database
-    app.firebasebaseurl = "https://socobo.firebaseio.com/";
+    app.firebasebaseurl = UserInfo.getBaseUrl();
     // check if user login is expired
     if (Util.isUserLoginExpired(UserInfo.get(UserInfo.EXPIREDATE))) {
       app.route = "login";
@@ -44,8 +46,7 @@
       tbUserEmailAddress.innerHTML = UserInfo.get(UserInfo.EMAILADDRESS);
       imgUserProfilePicture.src = UserInfo.get(UserInfo.PROFILEIMAGE);
       // set UserId and ExpireDate for Subelements
-      app.userid = UserInfo.get(UserInfo.USERID);
-      app.expiredate = UserInfo.get(UserInfo.EXPIREDATE);
+      app.userlogin = UserInfo.getUserLogin();
       // navigate to home
       app.route = "home";
     }
@@ -113,8 +114,7 @@
     tbUserEmailAddress.innerHTML = userEmailAddress;
     imgUserProfilePicture.src = userProfilePicture;
     // set UserId and ExpireDate for Subelements
-    app.userid = userObj.uid;
-    app.expiredate = userObj.expires;
+    app.userlogin = UserInfo.getUserLogin();
     // go to the home element
     app.route = "home";
     // show toast to inform the user
@@ -144,17 +144,16 @@
     infoToast.text = "Logging out...";
     infoToast.toggle();
     // log user out from firebase
-    var rootRef = new Firebase(app.firebasebaseurl);
+    var rootRef = new Firebase(UserInfo.getBaseUrl());
     rootRef.unauth();
     // set Placedolder to toolbar menu
     tbUsername.innerHTML = "Placeholder Username";
     tbUserEmailAddress.innerHTML = "Placeholder Email";
     imgUserProfilePicture.src = "../images/touch/icon-128x128.png";
     // delete all data in local storage
-    UserInfo.deleteAll();
+    UserInfo.deleteAllItems();
     // reset UserId and ExpireDate for Subelements
-    app.userid = null;
-    app.expiredate = null;
+    app.userlogin = null;
     // go to login element
     app.route = "login";
   };
