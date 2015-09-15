@@ -41,8 +41,8 @@
     infoToast = document.querySelector("#info-toast");
     // init UserInfo
     UserInfo.init("https://socobo.firebaseio.com/");
-    // set Base URL to Firebase Database
-    app.firebasebaseurl = UserInfo.getBaseUrl();
+    // set FirebaseUrl, UserId and ExpireDate for Subelements
+    app.userlogin = UserInfo.getUserLogin();
     // check if user login is expired
     if (Util.isUserLoginExpired(UserInfo.get(UserInfo.EXPIREDATE))) {
       app.route = "login";
@@ -53,8 +53,6 @@
       imgUserProfilePicture.src = UserInfo.get(UserInfo.PROFILEIMAGE);
       // Show Menu Items for Inventory and Recipes
       _toggleMenuItems();
-      // set UserId and ExpireDate for Subelements
-      app.userlogin = UserInfo.getUserLogin();
       // navigate to home
       app.route = "home";
     }
