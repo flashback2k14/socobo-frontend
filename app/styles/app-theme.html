@@ -15,7 +15,7 @@
     --light-primary-color:        #C5CAE9;
     --text-primary-color:         #FFFFFF; /*text/icons*/
     --accent-color:               #FF4081;
-    --primary-background-color:   #C5CAE9;
+    --primary-background-color:   #FFFFFF;
     --primary-text-color:         #212121;
     --secondary-text-color:       #727272;
     --disabled-text-color:        #BDBDBD;
@@ -52,9 +52,8 @@
 
   /* Height of the scroll area */
   .content {
-    min-height: 700px;
-    height: 900px;
-    max-height: 90%;
+    height: 95%;
+    margin-bottom: 20px;
     overflow: auto;
   }
 
@@ -127,18 +126,20 @@
 
   /* Custom Socobo Elements Wrapper */
   .style-pm-recipe {
+    min-height: 500px;
     height: 700px;
+    max-height: 95%;
     padding: 0;
     margin: 0;
   }
   .style-pm-inventory {
+    min-height: 500px;
     height: 700px;
+    max-height: 95%;
     padding: 0;
     margin: 0;
   }
 
-  /* Custom Socobo Elements */
-  /* Use Custom CSS Mixins */
   /*Show / Hide Menu Items*/
   .hide-menu-item {
     display: none;
@@ -164,12 +165,6 @@
     };
     --socobo-auth-content-theme: {
        z-index: 1;
-    };
-    --socobo-auth-login-hyperlink-theme: {
-       margin-left: 10px;
-    };
-    --socobo-auth-registration-hyperlink-theme: {
-       margin-left: 10px;
     };
   }
 
@@ -240,7 +235,13 @@
   /* desktop-medium */
   @media all and (min-width: 841px) and (max-width: 1280px) and (max-aspect-ratio: 4/3) { }
   /* desktop-large */
-  @media all and (min-width: 1281px) and (max-width: 1600px) { }
+  @media all and (min-width: 1281px) and (max-width: 1600px) {
+    .content {
+      height: 95%;
+      margin-bottom: 20px;
+      overflow: auto;
+    }
+  }
   /* desktop-xlarge */
   @media all and (min-width: 1601px) and (max-width: 1920px) { }
 </style>

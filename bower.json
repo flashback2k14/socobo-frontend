@@ -1,6 +1,6 @@
 {
   "name": "socobo-project",
-  "version": "0.0.3.5",
+  "version": "0.0.3.7",
   "description": "Socobo Project",
   "authors": [
     "cs13dr1",
@@ -24,7 +24,7 @@
     "page": "visionmedia/page.js#~1.6.3",
     "socobo-auth": "flashback2k14/socobo-auth#master",
     "socobo-recipe": "hetec/socobo-recipe#master",
-    "socobo-inventory": "lyio/socobo-inventory#master"
+    "socobo-inventory": "lyio/socobo-inventory#^0.1.1"
   },
   "devDependencies": {
     "web-component-tester": "*",
