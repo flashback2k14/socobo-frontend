@@ -126,6 +126,7 @@
             <section data-route="recipes">
               <paper-material class="style-pm-recipe" elevation="1">
                 <socobo-recipe
+                  id="elRecipe"
                   user-login="[[userlogin]]">
                 </socobo-recipe>
               </paper-material>
@@ -134,6 +135,7 @@
             <section data-route="inventory">
               <paper-material class="style-pm-inventory" elevation="1">
                 <socobo-inventory
+                  id="elInventory"
                   user-login="[[userlogin]]">
                 </socobo-inventory>
               </paper-material>
@@ -169,7 +171,7 @@
   </template>
 
   <!--firebase-->
-  <script src='https://cdn.firebase.com/js/client/2.2.9/firebase.js'></script>
+  <script src='https://cdn.firebase.com/js/client/2.3.1/firebase.js'></script>
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
   <script src="scripts/util.js"></script>
