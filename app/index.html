@@ -65,7 +65,7 @@
         <div>
           <paper-menu class="list" attr-for-selected="data-route" selected="{{route}}" on-iron-select="onMenuSelect">
             <a data-route="login" id="menuItemLogin" class="show-menu-item" href="/">
-              <iron-icon icon="polymer"></iron-icon>
+              <iron-icon icon="perm-identity"></iron-icon>
               <span>Login</span>
             </a>
 
@@ -84,8 +84,10 @@
               <span>Inventar</span>
             </a>
 
-            <!-- ToDo: Menu Entries-->
-
+            <a data-route="profile" id="menuItemProfile" class="hide-menu-item" href="/profile">
+              <iron-icon icon="face"></iron-icon>
+              <span>Profile</span>
+            </a>
           </paper-menu>
         </div>
       </paper-header-panel>
@@ -136,6 +138,15 @@
                 <socobo-inventory
                   user-login="[[userlogin]]">
                 </socobo-inventory>
+              </paper-material>
+            </section>
+
+            <section data-route="profile">
+              <paper-material class="style-pm-profile" elevation="1">
+                <socobo-profile
+                  id="elProfile"
+                  user-login="[[userlogin]]">
+                </socobo-profile>
               </paper-material>
             </section>
 

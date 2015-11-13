@@ -25,7 +25,8 @@
     "page": "visionmedia/page.js#1.6.4",
     "socobo-auth": "flashback2k14/socobo-auth#master",
     "socobo-recipe": "hetec/socobo-recipe#master",
-    "socobo-inventory": "lyio/socobo-inventory#^0.1.1"
+    "socobo-inventory": "lyio/socobo-inventory#^0.1.1",
+    "socobo-profile": "flashback2k14/socobo-profile#master"
   },
   "devDependencies": {
     "web-component-tester": "*",

@@ -9,13 +9,19 @@
    * declare variables
    */
   var docReady = false;
+  // Menu Profile Infos
   var tbUsername = null;
   var tbUserEmailAddress = null;
   var imgUserProfilePicture = null;
+  // Menu Items
   var menuItemLogin = null;
   var menuItemRecipe = null;
   var menuItemInventory = null;
+  var menuItemProfile = null;
+  // Socobo Elements
   var elLoginRegistration = null;
+  var elProfile = null;
+  // Other
   var infoToast = null;
 
   /**
@@ -31,16 +37,22 @@
   window.addEventListener("WebComponentsReady", function() {
     // imports are loaded and elements have been registered
     docReady = true;
+    // Menu Profile Infos
     tbUsername = document.querySelector("#tbUserName");
     tbUserEmailAddress = document.querySelector("#tbUserEmailAddress");
     imgUserProfilePicture = document.querySelector("#imgUserProfilePicture");
+    // Menu Items
     menuItemLogin = document.querySelector("#menuItemLogin");
     menuItemRecipe = document.querySelector("#menuItemRecipe");
     menuItemInventory = document.querySelector("#menuItemInventory");
+    menuItemProfile = document.querySelector("#menuItemProfile");
+    // Socobo Elements
     elLoginRegistration = document.querySelector("#elLoginRegistration");
+    elProfile = document.querySelector("#elProfile");
+    // Other
     infoToast = document.querySelector("#info-toast");
     // init UserInfo
-    UserInfo.init("https://socobo.firebaseio.com/");
+    UserInfo.init("https://socobo-dev-project.firebaseio.com/");
     // set FirebaseUrl, UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
     // check if user login is expired
@@ -53,6 +65,8 @@
       imgUserProfilePicture.src = UserInfo.get(UserInfo.PROFILEIMAGE);
       // Show Menu Items for Inventory and Recipes
       _toggleMenuItems();
+      // load Profile
+      elProfile.loadData();
       // navigate to home
       app.route = "home";
     }
@@ -123,6 +137,8 @@
     _toggleMenuItems();
     // set UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
+    // load Profile
+    elProfile.loadData();
     // go to the home element
     app.route = "home";
     // show toast to inform the user
@@ -181,7 +197,8 @@
   function _toggleMenuItems() {
     if (menuItemLogin.classList.contains("show-menu-item")   &&
         menuItemRecipe.classList.contains("hide-menu-item")  &&
-        menuItemInventory.classList.contains("hide-menu-item"))
+        menuItemInventory.classList.contains("hide-menu-item") &&
+        menuItemProfile.classList.contains("hide-menu-item"))
     {
       menuItemLogin.classList.remove("show-menu-item");
       menuItemLogin.classList.add("hide-menu-item");
@@ -189,6 +206,8 @@
       menuItemRecipe.classList.add("show-menu-item");
       menuItemInventory.classList.remove("hide-menu-item");
       menuItemInventory.classList.add("show-menu-item");
+      menuItemProfile.classList.remove("hide-menu-item");
+      menuItemProfile.classList.add("show-menu-item");
     }
     else
     {
@@ -198,6 +217,8 @@
       menuItemRecipe.classList.add("hide-menu-item");
       menuItemInventory.classList.remove("show-menu-item");
       menuItemInventory.classList.add("hide-menu-item");
+      menuItemProfile.classList.remove("show-menu-item");
+      menuItemProfile.classList.add("hide-menu-item");
     }
   }
 
