@@ -52,18 +52,15 @@
 
   /* Height of the scroll area */
   .content {
-    height: 95%;
+    height: 100%;
     margin-bottom: 20px;
     overflow: auto;
   }
 
   paper-material {
-    border-radius: 2px;
     height: 100%;
-    padding: 16px 0 16px 0;
-    width: calc(98.66% - 16px);
-    margin: 6px auto;
     background: white;
+    border-radius: 2px;
   }
   paper-menu iron-icon {
     margin-right: 33px;
@@ -125,26 +122,13 @@
   }
 
   /* Custom Socobo Elements Wrapper */
-  .style-pm-recipe {
-    min-height: 500px;
-    height: 700px;
-    max-height: 95%;
+  .style-pm-margin-padding {
     padding: 0;
     margin: 0;
   }
-  .style-pm-inventory {
-    min-height: 500px;
+  .style-pm-height {
     height: 700px;
-    max-height: 95%;
-    padding: 0;
-    margin: 0;
-  }
-  .style-pm-profile {
-    min-height: 500px;
-    height: 700px;
-    max-height: 95%;
-    padding: 0;
-    margin: 0;
+    overflow: auto;
   }
 
   /*Show / Hide Menu Items*/
@@ -191,23 +175,11 @@
     #overlay {
       min-width: 360px;
     }
-    paper-material {
-      --menu-container-display: none;
-      width: calc(97.33% - 32px);
-      padding-left: 16px;
-      padding-right: 16px;
-    }
   }
   /* Tablet+ */
   @media (min-width: 601px) {
     #drawer.paper-drawer-panel > [drawer] {
       border-right: 1px solid rgba(0, 0, 0, 0.14);
-    }
-    paper-material {
-      width: calc(98% - 46px);
-      margin-bottom: 32px;
-      padding-left: 30px;
-      padding-right: 30px;
     }
     iron-pages {
       padding: 48px 62px;
@@ -243,12 +215,16 @@
   @media all and (min-width: 841px) and (max-width: 1280px) and (max-aspect-ratio: 4/3) { }
   /* desktop-large */
   @media all and (min-width: 1281px) and (max-width: 1600px) {
-    .content {
-      height: 95%;
-      margin-bottom: 20px;
+    .style-pm-height {
+      height: 750px;
       overflow: auto;
     }
   }
   /* desktop-xlarge */
-  @media all and (min-width: 1601px) and (max-width: 1920px) { }
+  @media all and (min-width: 1601px) and (max-width: 1920px) {
+    .style-pm-height {
+      height: 880px;
+      overflow: auto;
+    }
+  }
 </style>
