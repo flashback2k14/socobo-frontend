@@ -3,16 +3,16 @@ var UserInfo = (function() {
    * Baseurl to Firebase DB
    * @private
    */
-  var _baseUrl = undefined;
+  var _baseUrl = "";
   /**
    * local storage keys
    */
-  var USEROBJECT = "UserObj";
-  var USERID = "Id";
-  var EXPIREDATE = "ExpireDate";
-  var USERNAME = "Username";
-  var EMAILADDRESS = "EmailAddress";
-  var PROFILEIMAGE = "ProfileImage";
+  var USEROBJECT = "Socobo.UserObj";
+  var USERID = "Socobo.Id";
+  var EXPIREDATE = "Socobo.ExpireDate";
+  var USERNAME = "Socobo.Username";
+  var EMAILADDRESS = "Socobo.EmailAddress";
+  var PROFILEIMAGE = "Socobo.ProfileImage";
   /**
    * init UserInfo
    * @param baseurl

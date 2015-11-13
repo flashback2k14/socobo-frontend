@@ -16,6 +16,8 @@
   var menuItemRecipe = null;
   var menuItemInventory = null;
   var elLoginRegistration = null;
+  var elInventory = null;
+  var elRecipe = null;
   var infoToast = null;
 
   /**
@@ -38,9 +40,11 @@
     menuItemRecipe = document.querySelector("#menuItemRecipe");
     menuItemInventory = document.querySelector("#menuItemInventory");
     elLoginRegistration = document.querySelector("#elLoginRegistration");
+    elInventory = document.querySelector("#elInventory");
+    elRecipe = document.querySelector("#elRecipe");
     infoToast = document.querySelector("#info-toast");
     // init UserInfo
-    UserInfo.init("https://socobo.firebaseio.com/");
+    UserInfo.init("https://socobo-dev-project.firebaseio.com/");
     // set FirebaseUrl, UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
     // check if user login is expired
@@ -53,6 +57,8 @@
       imgUserProfilePicture.src = UserInfo.get(UserInfo.PROFILEIMAGE);
       // Show Menu Items for Inventory and Recipes
       _toggleMenuItems();
+      // load Recipes
+      elRecipe.loadData();
       // navigate to home
       app.route = "home";
     }
@@ -123,6 +129,8 @@
     _toggleMenuItems();
     // set UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
+    // load Recipes
+    elRecipe.loadData();
     // go to the home element
     app.route = "home";
     // show toast to inform the user
