@@ -35,6 +35,7 @@
   "resolutions": {
     "iron-elements": "1.0.4",
     "paper-elements": "1.0.6",
-    "platinum-elements": "1.2.0"
+    "platinum-elements": "1.2.0",
+    "polymer": "1.2.0"
   }
 }

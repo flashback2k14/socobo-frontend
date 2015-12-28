@@ -182,7 +182,7 @@
     // delete all data in local storage
     UserInfo.deleteAllItems();
     // reset UserId and ExpireDate for Subelements
-    app.userlogin = null;
+    app.userlogin = UserInfo.getUserLogin();
     // go to login element
     app.route = "login";
   };
