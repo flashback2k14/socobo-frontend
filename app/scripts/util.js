@@ -32,37 +32,54 @@ var Util = (function() {
 	  return expireDate === null || _getCurrentTimestamp() >= expireDate;
   }
   /**
-   * util function to extract the user name from the emailaddress
-   * @param email
-   * @returns {String}
+   * toggle single Menu Item
+   * @param mItem
+   * @private
    */
-  function getUsernameFromMailAddress(email) {
-    return email.split("@")[0];
-  }
-  /**
-   * get email address from social provider
-   * @param userObj
-   * @return {String}
-   */
-  function getEmailAddressFromSocialProvider(userObj) {
-    if (userObj.hasOwnProperty("email")) {
-      return userObj.email;
-    } else if (userObj.cachedUserProfile.hasOwnProperty("link")) {
-      return userObj.cachedUserProfile.link;
-    } else if (userObj.cachedUserProfile.hasOwnProperty("email")) {
-      return userObj.cachedUserProfile.email;
+  function _toggleMI(mItem) {
+    if (mItem.classList.contains('show-menu-item')) {
+      mItem.classList.remove('show-menu-item');
+      mItem.classList.add('hide-menu-item');
     } else {
-      return "";
+      mItem.classList.remove('hide-menu-item');
+      mItem.classList.add('show-menu-item');
     }
   }
+  /**
+   * toggle all Menu Items
+   * @param menuItemLogin
+   * @param menuItemRecipe
+   * @param menuItemInventory
+   * @param menuItemProfile
+   */
+  function toggleMenuItems(menuItemLogin, menuItemRecipe, menuItemInventory, menuItemProfile) {
+    _toggleMI(menuItemLogin);
+    _toggleMI(menuItemRecipe);
+    _toggleMI(menuItemInventory);
+    _toggleMI(menuItemProfile);
+  }
+  /**
+   * show info toast
+   * @param toast
+   * @param text
+   * @param bgColor
+   * @param color
+   */
+  function showToast(toast, text, bgColor, color) {
+    toast.text = text;
+    toast.style.background = bgColor;
+    toast.style.color = color;
+    toast.toggle();
+  }
+
   /**
    * make functions public
    */
   return {
-    objectToString                    : objectToString,
-    stringToObject                    : stringToObject,
-    isUserLoginExpired                : isUserLoginExpired,
-    getUsernameFromMailAddress        : getUsernameFromMailAddress,
-    getEmailAddressFromSocialProvider : getEmailAddressFromSocialProvider
+    objectToString      : objectToString,
+    stringToObject      : stringToObject,
+    isUserLoginExpired  : isUserLoginExpired,
+    toggleMenuItems     : toggleMenuItems,
+    showToast           : showToast
   };
 })();

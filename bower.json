@@ -1,6 +1,6 @@
 {
   "name": "socobo-project",
-  "version": "0.0.3.7",
+  "version": "0.0.3.8",
   "description": "Socobo Project",
   "authors": [
     "cs13dr1",
@@ -25,10 +25,17 @@
     "page": "visionmedia/page.js#1.6.4",
     "socobo-auth": "flashback2k14/socobo-auth#master",
     "socobo-recipe": "hetec/socobo-recipe#master",
-    "socobo-inventory": "lyio/socobo-inventory#^0.1.1"
+    "socobo-inventory": "lyio/socobo-inventory#^0.1.1",
+    "socobo-profile": "flashback2k14/socobo-profile#master"
   },
   "devDependencies": {
     "web-component-tester": "*",
     "test-fixture": "PolymerElements/test-fixture#^1.0.0"
+  },
+  "resolutions": {
+    "iron-elements": "1.0.4",
+    "paper-elements": "1.0.6",
+    "platinum-elements": "1.2.0",
+    "polymer": "1.2.0"
   }
 }

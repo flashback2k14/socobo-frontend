@@ -7,19 +7,18 @@
     page("/", function () {
       app.route = "login";
     });
-
     page("/home", function () {
       app.route = "home";
     });
-
     page("/recipes", function () {
       app.route = "recipes";
     });
-
     page("/inventory", function () {
       app.route = "inventory";
     });
-
+    page("/profile", function () {
+      app.route = "profile";
+    });
     // add #! before urls
     page({
       hashbang: true
