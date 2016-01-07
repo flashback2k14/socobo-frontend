@@ -65,7 +65,7 @@
         <div>
           <paper-menu class="list" attr-for-selected="data-route" selected="{{route}}" on-iron-select="onMenuSelect">
             <a data-route="login" id="menuItemLogin" class="show-menu-item" href="/">
-              <iron-icon icon="polymer"></iron-icon>
+              <iron-icon icon="perm-identity"></iron-icon>
               <span>Login</span>
             </a>
 
@@ -84,8 +84,10 @@
               <span>Inventar</span>
             </a>
 
-            <!-- ToDo: Menu Entries-->
-
+            <a data-route="profile" id="menuItemProfile" class="hide-menu-item" href="/profile">
+              <iron-icon icon="face"></iron-icon>
+              <span>Profile</span>
+            </a>
           </paper-menu>
         </div>
       </paper-header-panel>
@@ -108,7 +110,7 @@
 
             <section data-route="login">
               <socobo-auth
-                id="elLoginRegistration"
+                id="elAuth"
                 user-login="[[userlogin]]"
                 on-handle-close-auth="closeAuthElement"
                 on-handle-successful-login="loginSuccessful"
@@ -124,18 +126,34 @@
             </section>
 
             <section data-route="recipes">
-              <paper-material class="style-pm-recipe" elevation="1">
+              <paper-material class="style-pm-margin-padding style-pm-height" elevation="1">
                 <socobo-recipe
+                  id="elRecipe"
                   user-login="[[userlogin]]">
                 </socobo-recipe>
               </paper-material>
             </section>
 
             <section data-route="inventory">
-              <paper-material class="style-pm-inventory" elevation="1">
+              <paper-material class="style-pm-margin-padding style-pm-height" elevation="1">
                 <socobo-inventory
+                  id="elInventory"
                   user-login="[[userlogin]]">
                 </socobo-inventory>
+              </paper-material>
+            </section>
+
+            <section data-route="profile">
+              <paper-material class="style-pm-margin-padding style-pm-height" elevation="1">
+                <socobo-profile
+                  id="elProfile"
+                  user-login="[[userlogin]]"
+                  on-account-deleted="handleAccountDeleted"
+                  on-login-expired="handleLoginExpired"
+                  on-profile-data-changed="handleProfileDataChanged"
+                  on-profile-image-changed="handleProfileImageChanged"
+                  on-profile-info-changed="handleProfileInfoChanged">
+                </socobo-profile>
               </paper-material>
             </section>
 
@@ -169,10 +187,14 @@
   </template>
 
   <!--firebase-->
-  <script src='https://cdn.firebase.com/js/client/2.2.9/firebase.js'></script>
+  <script src='https://cdn.firebase.com/js/client/2.3.2/firebase.js'></script>
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
+  <!-- endbuild-->
+  <!-- build:js scripts/util.js -->
   <script src="scripts/util.js"></script>
+  <!-- endbuild-->
+  <!-- build:js scripts/user-info.js -->
   <script src="scripts/user-info.js"></script>
   <!-- endbuild-->
 </body>
