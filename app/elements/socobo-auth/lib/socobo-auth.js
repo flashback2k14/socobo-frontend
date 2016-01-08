@@ -4,7 +4,7 @@ var SocoboAuth = (function() {
    */
   var instance;
   /**
-   * Singleton functions
+   * Public API
    * @returns {{registerUserAndLogin: registerUserAndLogin, loginWithProvider: loginWithProvider, loginWithEmailaddress: loginWithEmailaddress}}
    */
   function init() {
@@ -15,7 +15,7 @@ var SocoboAuth = (function() {
      * @return {Promise}
      * @private
      */
-    function _createUser(baseURL, userObj) {
+    var _createUser = function(baseURL, userObj) {
       return new Promise(function(resolve, reject) {
         var rootRef = new Firebase(baseURL);
         rootRef.createUser(userObj, function(err, user) {
@@ -23,14 +23,14 @@ var SocoboAuth = (function() {
           if (user) resolve(user);
         });
       });
-    }
+    };
     /**
      * get username from auth data
      * @param authData
      * @return {String}
      * @private
      */
-    function _getUserName(authData) {
+    var _getUserName = function(authData) {
       switch(authData.provider) {
         case 'password':
           return authData.password.email.replace(/@.*/, '');
@@ -41,14 +41,14 @@ var SocoboAuth = (function() {
         case 'facebook':
           return authData.facebook.displayName;
       }
-    }
+    };
     /**
      * get email address from auth data
      * @param userObj
      * @return {String}
      * @private
      */
-    function _getUserEmailAddress(userObj) {
+    var _getUserEmailAddress = function(userObj) {
       switch(userObj.provider) {
         case "password":
           return userObj.password.email;
@@ -61,14 +61,14 @@ var SocoboAuth = (function() {
           if (userObj.facebook.hasOwnProperty("email")) return userObj.facebook.email;
           else return userObj.facebook.cachedUserProfile.email;
       }
-    }
+    };
     /**
      * get profile image from auth data
      * @param userObj
      * @return {String}
      * @private
      */
-    function _getUserProfileImage(userObj) {
+    var _getUserProfileImage = function(userObj) {
       switch(userObj.provider) {
         case "password":
           return userObj.password.profileImageURL;
@@ -79,7 +79,7 @@ var SocoboAuth = (function() {
         case "facebook":
           return userObj.facebook.profileImageURL;
       }
-    }
+    };
     /**
      * register user on firebase and log user in
      * @param baseURL
@@ -88,7 +88,7 @@ var SocoboAuth = (function() {
      * @param isAdmin
      * @return {Promise}
      */
-    function registerUserAndLogin(baseURL ,provider, userObj, isAdmin) {
+    var registerUserAndLogin = function(baseURL ,provider, userObj, isAdmin) {
       if (userObj === null) {
         return loginWithProvider(baseURL ,provider, true, isAdmin);
       } else {
@@ -100,7 +100,7 @@ var SocoboAuth = (function() {
             return err;
           });
       }
-    }
+    };
     /**
      * ToDo: Generate API Keys for
      *  - Facebook
@@ -112,7 +112,7 @@ var SocoboAuth = (function() {
      * @param hasTermsAccepted
      * @return {Promise}
      */
-    function loginWithProvider(baseURL, provider, isRegister, isAdmin, hasTermsAccepted) {
+    var loginWithProvider = function(baseURL, provider, isRegister, isAdmin, hasTermsAccepted) {
       return new Promise(function(resolve, reject) {
         var rootRef = new Firebase(baseURL);
         rootRef.authWithOAuthPopup(provider, function(err, user) {
@@ -136,7 +136,7 @@ var SocoboAuth = (function() {
           }
         }.bind(this));
       });
-    }
+    };
     /**
      * auth user with Email Address
      * @param baseURL
@@ -146,7 +146,7 @@ var SocoboAuth = (function() {
      * @param hasTermsAccepted
      * @return {Promise}
      */
-    function loginWithEmailaddress(baseURL, userObj, isRegister, isAdmin, hasTermsAccepted) {
+    var loginWithEmailaddress = function(baseURL, userObj, isRegister, isAdmin, hasTermsAccepted) {
       return new Promise(function(resolve, reject) {
         var rootRef = new Firebase(baseURL);
         rootRef.authWithPassword(userObj, function onAuth(err, user) {
@@ -170,7 +170,7 @@ var SocoboAuth = (function() {
           }
         }.bind(this));
       });
-    }
+    };
     /**
      * Provide public functions
      */
