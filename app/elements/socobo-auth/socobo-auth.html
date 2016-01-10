@@ -10,7 +10,7 @@ Custom property | Description | Default
 `--socobo-auth-content-theme` | Styling the Area for the Login / Register Element | `{}`
 `--socobo-auth-close-button-theme` | Styling the Close Button | `{}`
 
-@demo demo/index.html
+@demo demo/socobo-auth/demo.html
 -->
 <dom-module id="socobo-auth">
   <template>
@@ -106,11 +106,11 @@ Custom property | Description | Default
     </style>
 
     <div class="container">
-      <paper-fab class="close-button" mini icon="close" on-tap="_closeAuth"></paper-fab>
+      <paper-fab id="btnClose" class="close-button" mini icon="close" on-tap="_closeAuth"></paper-fab>
 
-      <div class="background-image"></div>
+      <div id="bgImage" class="background-image"></div>
 
-      <div class="content">
+      <div id="contentContainer" class="content">
         <paper-material id="pmLogin" class="default-show-login" elevation="5">
           <socobo-auth-login
             id="elLogin"
