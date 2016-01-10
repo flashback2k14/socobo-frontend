@@ -1,0 +1,25 @@
+{
+  "name": "socobo-auth",
+  "version": "0.1.2",
+  "description": "Elements for Authentication for Socobo-Project",
+  "author": [
+    "flashback2k14"
+  ],
+  "keywords": [
+    "web-components",
+    "web-component",
+    "polymer",
+    "socobo",
+    "project",
+    "authentication"
+  ],
+  "main": "index.html",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/flashback2k14/socobo-auth"
+  },
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "http://flashback2k14.github.io/socobo-auth",
+  "ignore": []
+}
