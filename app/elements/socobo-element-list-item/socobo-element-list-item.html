@@ -1,4 +1,14 @@
-<link href="elements.html" rel="import">
+<link rel="import" href="elements.html">
+
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+@demo demo/socobo-element-list-item/demo.html
+-->
+
 <dom-module id="socobo-element-list-item">
   <style>
     :host{
@@ -97,7 +107,7 @@
             node: this.$.wrapper
           }
         }
-      },
+      }
     },
     changeCheckBox : function(){
       if(this.isChecked == true){

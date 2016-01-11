@@ -2,13 +2,13 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>socobo-element-template basic tests</title>
+  <title>socobo-element-list-item basic tests</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <script src="../../../bower_components/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../../bower_components/bower_components/web-component-tester/browser.js"></script>
-  <script src="../../../bower_components/bower_components/test-fixture/test-fixture-mocha.js"></script>
-  <script src="../../../bower_components/bower_components/iron-test-helpers/mock-interactions.js"></script>
+  <script src="../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../../bower_components/iron-test-helpers/mock-interactions.js"></script>
 
   <link rel="import" href="../../elements/socobo-element-list-item/socobo-element-list-item.html">
 </head>
@@ -21,13 +21,13 @@
   </test-fixture>
 
   <script>
-    suite('<socbo-element-list-item>', function() {
+    suite('<socobo-element-list-item>', function() {
       var listItem;
 
       setup(function() {
         listItem = fixture('ListItem');
       });
-      
+
       test('exists', function(done) {
         expect(listItem).to.not.be.eql(undefined);
         done();
