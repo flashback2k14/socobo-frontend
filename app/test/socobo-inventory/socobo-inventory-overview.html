@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>socobo-element-template basic tests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <script src="../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../../elements/socobo-inventory/socobo-inventory-overview.html">
+</head>
+<body>
+
+  <!-- ToDo: -->
+  <test-fixture id="SocoboOverview">
+    <template>
+      <socobo-inventory-overview></socobo-inventory-overview>
+    </template>
+  </test-fixture>
+
+  <script>    
+    suite('<socobo-inventory-overview>', function() {
+      var overview;
+
+      setup(function() {
+        overview = fixture('SocoboOverview');
+        
+      });
+
+      test('has an overview container', function(done) {
+        expect(overview.$.inventoryOverview).to.not.be.eql(undefined);
+        done();
+      });
+
+      test('has a search header', function(done) {
+        expect(overview.$.searchHeader).to.not.be.eql(undefined);
+        done();
+      });
+      
+         test('has a item list', function(done) {
+        expect(overview.$.itemList).to.not.be.eql(undefined);
+        done();
+      });
+
+
+      test('filters items correctly when query matches', function (done) {
+        var item = {desc: "bar", info: "foo"};
+        var filtered = overview._setHidden(item, "foo");
+        expect(filtered).to.be.eql(false)
+        done();
+      });
+
+      test('filters items correctly when query does not match', function (done) {
+        var item = {desc: "foo", info: "foo"};
+        var showItem = overview._setHidden(item, "adjgdf");
+        assert.isTrue(showItem);
+        done();
+      });
+
+      test('no query returns true', function (done) {
+        var item = {desc: "foo", info: "foo"};
+        var filtered = overview._setHidden(item, null);
+        expect(filtered).to.be.eql(false);
+        done();
+      })
+      
+      test('has two items in the list', function(done) {
+        overview.data = [{desc: "foo", info: "foo"}, {desc: "bar", info: "bar"}];
+        flush(function() {
+          assert.equal(overview.$.itemList._instances.length, 2);
+          done();
+        });
+      });
+    });
+    
+    suite('<socobo-overview> item deletion', function() {
+      var overview;
+      
+      setup(function() {
+        overview = fixture('SocoboOverview');
+      });
+      
+      test('deletion event bubbles up', function(done) {
+        overview.addEventListener('delete_request', function(e) {
+          done();
+        })
+        
+        overview.data = [{desc: "foo", info: "foo"}, {desc: "bar", info: "bar"}];
+        flush(function() {
+          var button = overview.querySelector('.delete').querySelector('.paper-icon-button');
+          MockInteractions.tap(button);
+        });
+      })
+    });
+  </script>
+</body>
+</html>

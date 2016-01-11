@@ -1,0 +1,249 @@
+<link rel="import" href="elements.html">
+
+<!--
+The following custom properties and mixins are available for styling:
+Custom property | Description | Default
+----------------|-------------|----------
+`--socobo-inventory-create-create-dialog` | | `{}`
+`--socobo-inventory-create-style-input-container` |  | `{}`
+`--socobo-inventory-create-style-input-color` |  | `{--text-secondary-color}`
+`--socobo-inventory-create-style-input-focus-color` |  | `{--text-secondary-color}`
+`--socobo-inventory-create-style-input-input-color` |  | `{--text-secondary-color}`
+`--socobo-inventory-create-style-input-only-color-color` |  | `{--text-secondary-color}`
+`--socobo-inventory-create-style-input-only-color-focus-color` | | `{--text-secondary-color}`
+`--socobo-inventory-create-style-input-only-color-input-color` | | `{--text-secondary-color}`
+@demo demo/index.html
+-->
+
+<dom-module id="socobo-inventory-create">
+  <template>
+    <style>
+        :host {
+        display: block;
+      }
+      .create-dialog {
+        height: 350px;
+        width: 500px;
+        @apply(--socobo-inventory-create-create-dialog);
+      }
+      .style-paper-dialog-scrollable {
+        margin-top: 0;
+      }
+      .horizontal-layout {
+        @apply(--layout-horizontal);
+        margin-top: 8px;
+      }
+      .vertical-layout {
+        @apply(--layout-vertical);
+      }
+      .width-full {
+        width: 100%;
+      }
+      .width-big {
+        width: 60%;
+      }
+      .width-small {
+        width: 35%;
+        margin-left: 10px;
+      }
+      .style-input {
+        --paper-input-container-input: {
+          width: 440px;
+          @apply(--socobo-inventory-create-style-input-container);
+        };
+        --paper-input-container-color: var(--socobo-inventory-create-style-input-color, --text-secondary-color);
+        --paper-input-container-focus-color: var(--socobo-inventory-create-style-input-focus-color, --text-secondary-color);
+        --paper-input-container-input-color: var(--socobo-inventory-create-style-input-input-color, --text-secondary-color);
+      }
+      .style-input-only-color {
+        --paper-input-container-color: var(--socobo-inventory-create-style-input-only-color-color, --text-secondary-color);
+        --paper-input-container-focus-color: var(--socobo-inventory-create-style-input-only-color-focus-color, --text-secondary-color);
+        --paper-input-container-input-color: var(--socobo-inventory-create-style-input-only-color-input-color, --text-secondary-color);
+      }
+      .style-best-before {
+        padding-top: 25px;
+      }
+      .style-date-picker-row {
+        margin-top: -15px;
+      }
+      .style-dropdown-category {
+        margin-top: 2px;
+      }
+    </style>
+    <div>
+      <paper-dialog 
+        class="create-dialog" 
+        id="dialog"
+        entry-animation="scale-up-animation"
+        exit-animation="fade-out-animation"
+        modal>
+        <h2>Create a new item</h2>
+        <paper-dialog-scrollable class="style-paper-dialog-scrollable">
+          <!-- 1. Row -->
+          <div class="horizontal-layout">
+            <paper-input
+              class="horizontal-layout width-full style-input"
+              value="{{item.name}}"
+              id="itemName"
+              label="Name"
+              maxlength="30"
+              minlength="5"
+              auto-validate
+              required
+              auto-focus
+              $disabled="[[_edit]]"
+              error-message="Please enter a name"
+              ></paper-input>
+          </div>
+            <!-- 2. Row -->
+          <div class="horizontal-layout">
+                <paper-input
+                  pattern="[0-9]+"
+                  class="vertical-layout width-big style-input-only-color"
+                  id="countInput"
+                  value="{{item.count}}"
+                  label="Amount/Number"
+                  error-message="A number is required"
+                  maxlength="5"
+                  minlength="1"
+                  auto-validate
+                  required></paper-input>
+                <paper-dropdown-menu 
+                  label="Measurement" 
+                  class="vertical-layout width-small" 
+                  id="measurementDropdown">
+                  <paper-menu 
+                    id="measurementDropdownMenu"
+                    class="dropdown-content">
+                    <template is="dom-repeat" items="[[measurements]]" as="measurement">
+                      <paper-item>[[measurement]]</paper-item>
+                    </template>
+                  </paper-menu>
+                </paper-dropdown-menu>
+            </div>
+            <div class="horizontal-layout style-best-before">
+              <span>Best before</span>
+            </div>
+            <!-- 4. Row -->
+            <div class="horizontal-layout style-date-picker-row">
+            <paper-input 
+              type="date" 
+              class="vertical-layout width-big" 
+              value="{{item.bestBefore}}" 
+              id="bestBeforeInput"></paper-input>
+            <paper-dropdown-menu
+              class="vertical-layout width-small style-dropdown-category"
+              label="Category" 
+              id="categoryDropdown">
+              <paper-menu 
+                id="categoryDropdownMenu"
+                class="dropdown-content">
+                <template is="dom-repeat" items="[[categories]]" as="category">
+                  <paper-item>[[category]]</paper-item>
+                </template>
+              </paper-menu>
+            </paper-dropdown-menu>
+          </div>
+        </paper-dialog-scrollable>
+        <div class="buttons">
+          <paper-button id="cancelDialogButton" dialog-dismiss>Cancel</paper-button>
+          <paper-button hidden="[[_edit]]" id="createItemButton" on-click="_createItem">Ok</paper-button>
+          <paper-button hidden="[[!_edit]]" id="editItemButton" on-click="_editItem">Save</paper-button>
+        </div>
+      </paper-dialog>
+    </div>
+  </template>
+  <script>
+    (function() {
+      Polymer({
+        is: 'socobo-inventory-create',
+        properties: {
+        },
+
+        ready: function() {
+          this.categories = [
+          "Backen",
+          "Gewürze",
+          "Gemüse",
+          "Obst"],
+
+          this.measurements = ["kg", "g", "Stk", "l"];
+        },
+
+        /*Display the dialog
+        @param {Object} userLogin
+        @param {Object} itemToEdit
+        */
+        show: function(itemToEdit) {
+          this.$.dialog.toggle();
+          
+          this._resetItem(itemToEdit);
+          this._edit = itemToEdit != undefined;
+        },
+        
+        /* Hide the dialog
+        */
+        hide: function() {
+          this.$.dialog.toggle();
+        },
+                
+        _resetItem: function(item) {
+          if (item != undefined) {
+            this.item = item;
+            this.$.bestBeforeInput.value = item.bestBefore
+            this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
+            this.$.measurementDropdownMenu.select(this.measurements.indexOf(item.measurement));
+          } else {
+            // resetting the item
+            this.item = {};
+            this.$.bestBeforeInput.value = "";
+            this.$.categoryDropdownMenu.select(-1);
+            this.$.measurementDropdownMenu.select(-1);
+          }
+        },
+
+        _createItem: function() {
+          this.item.measurement = this.measurements[this.$.measurementDropdownMenu.selected];
+          if (this.$.categoryDropdownMenu.selected != -1) {
+            this.item.category = this.categories[this.$.categoryDropdownMenu.selected];
+          }
+          if (!this._validate(this.item)) {
+            alert("Some information is missing");
+          } else {
+            this.item.info = this.item.count + " " + this.item.measurement;
+            this.item.desc = this.item.name;
+            
+            this.fire('create-item', this.item);
+          }
+        },
+        
+        _editItem: function(e,detail) {
+          var item = this._populateItem(this.item);
+          if(this._validate(item)) {
+            this.fire('edit-item', item);
+          } else {
+            alert('Some information is missing');
+          }
+        },
+        
+        _populateItem: function(item) {
+          item.measurement = this.measurements[this.$.measurementDropdownMenu.selected];
+          item.category = this.categories[this.$.categoryDropdownMenu.selected];
+          
+          item.desc = item.name;
+          item.info = item.count + " " + item.measurement;
+          
+          console.dir(item);
+          return item;
+        },
+        
+        _validate: function(item) {
+          if(!item.name || item.name.length < 5) return false;
+          if(!item.measurement || item.measurement.length === 0) return false;
+          if(!item.count) return false;
+          return true;
+        },
+      });
+    })();
+  </script>
+</dom-module>
