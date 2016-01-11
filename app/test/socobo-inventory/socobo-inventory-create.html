@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>socobo-element-template basic tests</title>
+  <title>socobo inventory create basic tests</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
   <script src="../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
@@ -10,6 +10,7 @@
   <script src="../../../bower_components/test-fixture/test-fixture-mocha.js"></script>
   <script src="../../../bower_components/iron-test-helpers/mock-interactions.js"></script>
 
+  <link rel="import" href="../../../bower_components/test-fixture/test-fixture.html">
   <link rel="import" href="../../elements/socobo-inventory/socobo-inventory-create.html">
 </head>
 <body>
@@ -34,102 +35,102 @@
         expect(dialog.$.createItemButton).to.not.be.eql(undefined);
         done();
       });
-      
+
       test('has a cancel button', function(done) {
         expect(dialog.$.cancelDialogButton).to.not.be.eql(undefined);
         done();
       });
-      
+
       test('has a save button', function(done) {
         expect(dialog.$.editItemButton).to.not.be.eql(undefined);
         done();
       });
-      
+
       test('show sets item data if present', function(done) {
         var item = {desc: 'test item', info: 'test info'};
         dialog.show(item);
         expect(dialog.item.desc).to.be.eql(item.desc);
-        expect(dialog.item.info).to.be.eql(item.info)
+        expect(dialog.item.info).to.be.eql(item.info);
         done();
       });
-      
+
       test('show sets item data to initial values if nothing is passed in', function(done) {
         dialog.show();
         expect(dialog.item.desc).to.be.eql(undefined);
         expect(dialog.item.info).to.be.eql(undefined);
         done();
       });
-      
+
       test('edit button is hidden when not edit mode', function(done) {
         dialog.show();
         expect(dialog.$.editItemButton.hidden).to.be.eql(true);
         done();
       });
-      
+
       test('create button is hidden when in edit mode', function(done) {
         dialog.show({});
         expect(dialog.$.createItemButton.hidden).to.be.eql(true);
         done();
       });
-      
+
       test('clicking save fires an edit event', function(done) {
         dialog.addEventListener('edit-item', function(e) {
-          expect(e.detail).to.not.be.eql(null)
-          expect(e.detail).to.not.be.eql(undefined)
+          expect(e.detail).to.not.be.eql(null);
+          expect(e.detail).to.not.be.eql(undefined);
           done();
         });
-        
+
         dialog.show({name: "Valid name", count: "4", measurement: "pcs"});
         dialog.$.measurementDropdownMenu.select(0);
         var saveButton = dialog.$.editItemButton;
         MockInteractions.tap(saveButton);
       });
-           
+
       test('valid items are validated correctly', function(done) {
-        var validItem = {name: "Valid name", count: "4", measurement: "g"}
+        var validItem = {name: "Valid name", count: "4", measurement: "g"};
         expect(dialog._validate(validItem)).to.be.eql(true);
-        
+
         done();
       })
-      
+
       test('items without measurement are not valid', function(done) {
-        var invalidItem = {name: "Valid name", count: "4"}
+        var invalidItem = {name: "Valid name", count: "4"};
         var anotherInvalidItem = {name: "Valid name", count: "4", measurement: ""};
         expect(dialog._validate(invalidItem)).to.be.eql(false);
         expect(dialog._validate(anotherInvalidItem)).to.be.eql(false);
-        
+
         done();
       });
-      
+
       test('items without name are not valid', function(done) {
-        var invalidItem = {count: "4"}
+        var invalidItem = {count: "4"};
         expect(dialog._validate(invalidItem)).to.be.eql(false);
-        
+
         done();
       });
-      
+
       test('item with too short name are not valid', function(done) {
-        var invalidItem = {name: "name"}
+        var invalidItem = {name: "name"};
         expect(dialog._validate(invalidItem)).to.be.eql(false);
-        
+
         done();
       });
-      
+
       test('items without count are not valid', function(done) {
-        var invalidItem = {name: "Valid name", measurement: "kg"}
+        var invalidItem = {name: "Valid name", measurement: "kg"};
         expect(dialog._validate(invalidItem)).to.be.eql(false);
-        
+
         done();
       });
-      
+
       test('fires create event', function(done) {
         dialog.addEventListener('create-item', function(e) {
           expect(e.detail).to.not.be.eql(undefined);
-          expect(e.detail.name).to.be.eql("Valid name")
-          
+          expect(e.detail.name).to.be.eql("Valid name");
+
           done();
         });
-        
+
         dialog.show();
         dialog.item = {name: "Valid name", count: "4", measurement: "g"};
         dialog.$.measurementDropdownMenu.selected = 1;

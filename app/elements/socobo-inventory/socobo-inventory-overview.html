@@ -1,5 +1,14 @@
 <link rel="import" href="elements.html">
 
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+@demo demo/socobo-inventory/demo.html
+-->
+
 <dom-module id="socobo-inventory-overview">
   <template>
     <style>
@@ -8,8 +17,8 @@
       }
 
       .inventory {
-        margin: 0px;
-        padding: 0px;
+        margin: 0;
+        padding: 0;
         width: 100%;
         height: 100%;
       }
@@ -37,29 +46,28 @@
       }
 
       .overview {
-        padding: 0px;
+        padding: 0;
       }
     </style>
     <div>
       <paper-material vertical layout class="inventory" elevation="1">
-        <socobo-element-search 
-          id="searchHeader" 
+        <socobo-element-search
+          id="searchHeader"
           on-check-all-items="_handleCheckAll"
           on-uncheck-all-items="_handleUncheckAll"
-          on-changed-search-query="_searchQueryChanged"
-          on-clear-search-query="_searchQueryCleared">
+          on-changed-search-query="_searchQueryChanged">
         </socobo-element-search>
 
         <paper-material elevation="1">
           <div id="inventoryOverview" class="overview">
             <template id="itemList" is="dom-repeat" items="{{data}}">
-                <socobo-element-list-item
-                  class="inventory-list-item"
-                  obj="{{item}}"
-                  on-check="_handleCheck"
-                  hidden="{{_setHidden(item, query)}}"
-                  on-uncheck="_handleUncheck">
-                </socobo-element-list-item>
+              <socobo-element-list-item
+                class="inventory-list-item"
+                obj="{{item}}"
+                on-check="_handleCheck"
+                hidden="{{_setHidden(item, query)}}"
+                on-uncheck="_handleUncheck">
+              </socobo-element-list-item>
             </template>
           </div>
         </paper-material>
@@ -77,42 +85,39 @@
             notify: true
           }
         },
-        
+
         ready: function() {
           this.query = null;
         },
-        
+
         _setHidden: function (item, query) {
           return !(query === null || typeof query === 'undefined' || item.desc.indexOf(query) != -1 || item.info.indexOf(query) != -1);
         },
-        
+
         _searchQueryChanged: function(e) {
-          this.query = e.detail.searchQuery;  
-        },
-        
-        _searchQueryCleared: function(e) {
-          this._searchQueryChanged({detail: {searchQuery: null}});
+          this.query = e.detail.searchQuery;
         },
 
         _handleCheckAll: function () {
-            this._checkOrUncheck(true);
+          this._checkOrUncheck(true);
         },
 
         _handleUncheckAll: function () {
-            this._checkOrUncheck(false);
+          this._checkOrUncheck(false);
         },
 
         _handleCheck: function () {
         },
+
         _handleUncheck: function () {
         },
-        
+
         _checkOrUncheck: function(state) {
           var itemList = document.querySelectorAll(".inventory-list-item");
-          for (var element of itemList) {
-              if (!element.hidden) {
-                element.isChecked = state;
-              }  
+          for (var element in itemList) {
+            if (!element.hidden) {
+              element.isChecked = state;
+            }
           }
         }
       });
