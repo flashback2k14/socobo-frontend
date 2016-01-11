@@ -27,7 +27,6 @@
     
     "socobo-recipe": "hetec/socobo-recipe#master",
     "socobo-profile": "flashback2k14/socobo-profile#master",
-    "socobo-element-list-item": "hetec/socobo-element-list-item#master",
     "socobo-element-search": "flashback2k14/socobo-element-search#master"
   },
   "devDependencies": {
