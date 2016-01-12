@@ -1,0 +1,154 @@
+<link rel="import" href="elements.html">
+
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+@demo demo/socobo-inventory/demo.html
+-->
+
+<dom-module id="socobo-inventory">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .button-add {
+        position: absolute;
+        right: 30px;
+        bottom: 30px;
+        --paper-fab-background: var(--accent-color);
+      }
+    </style>
+    <div>
+      <socobo-inventory-create
+        id="inventoryCreateDialog"
+        on-edit-item="_saveItem"
+        on-create-item="_onCreateItem">
+      </socobo-inventory-create>
+
+      <paper-dialog id="confirmationDialog" modal>
+        <h2>Remove item</h2>
+        <span>Are you sure you want to remove this item?</span>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button dialog-confirm on-click="_confirmDelete">Ok</paper-button>
+        </div>
+      </paper-dialog>
+
+      <firebase-collection
+        id="inventoryCollection"
+        order-by-child="created"
+        location="{{location}}"
+        data="{{data}}">
+      </firebase-collection>
+
+      <socobo-inventory-overview
+        on-edit_request="_editItem"
+        on-delete_request="_deleteInventoryItem"
+        data="[[data]]">
+      </socobo-inventory-overview>
+
+      <paper-fab id="inventoryButtonAdd" class="button-add" icon="add" on-click="_createItem"></paper-fab>
+    </div>
+  </template>
+
+  <script>
+    (function () {
+      Polymer({
+        is: 'socobo-inventory',
+
+        properties: {
+
+          /*Object containing the user information. Must have following
+          properties:
+          - userId,
+          - firebaseUrl,
+          - expires
+          */
+          userLogin: {
+            type: Object
+          },
+
+          /*Specifies the location of the Firebase database
+          */
+          location: {
+            computed: "_handleLogin(userLogin)",
+            type: String,
+            value: "https://socobo.firebaseio.com/"
+          }
+        },
+
+        /*Construct firebase url for user's inventory from userLogin object</br>
+        @param {Object} login
+        @method _handleLogin
+        */
+        _handleLogin: function(login) {
+          var url = "";
+          if (login) {
+            url = login.firebaseUrl + "inventory/";
+            url = login.userId ? url + login.userId + "/" : url
+          } else {
+            url = this.location;
+          }
+          return url;
+        },
+
+        /*Display dialog to create new inventory items
+        */
+        _createItem: function () {
+          this.$.inventoryCreateDialog.style.display = "block";
+          this.$.inventoryCreateDialog.show();
+        },
+
+        _onCreateItem: function(e) {
+          var item = e.detail;
+          item.created = Firebase.ServerValue.TIMESTAMP;
+
+          //var ref = new Firebase(this.userLogin.firebaseUrl + "inventory/" + this.userLogin.userId).push();
+          this.$.inventoryCollection.add(item);
+          this.$.inventoryCreateDialog.hide();
+        },
+
+        /*Handles delete events bubbling up from the overview element
+         */
+        _deleteInventoryItem(e) {
+          this.$.confirmationDialog.item = e.detail;
+          this.$.confirmationDialog.toggle();
+        },
+
+        _confirmDelete: function(e) {
+          this.$.inventoryCollection.remove(this.$.confirmationDialog.item);
+        },
+
+        /* Display dialog to edit inventory items
+        */
+        _editItem: function(e) {
+          this.$.inventoryCreateDialog.style.display = "block";
+          this.$.inventoryCreateDialog.show(e.detail);
+        },
+
+        /* Save changes made to inventory items
+        */
+        _saveItem: function(e) {
+          var item = e.detail;
+          var self = this;
+          if (item.__firebaseKey__) {
+            var ref = new Firebase(this._handleLogin(this.userLogin) + "/" + item.__firebaseKey__);
+            ref.update(item, function(error) {
+              if (error) {
+                alert("There was an error updating the item");
+                console.log(error);
+              } else {
+                self.$.inventoryCreateDialog.hide();
+              }
+            });
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>
