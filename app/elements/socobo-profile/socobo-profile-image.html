@@ -1,0 +1,132 @@
+<link rel="import" href="elements.html">
+<!--
+TODO:
+  - Make Element Responsive
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--socobo-profile-image-image-holder-container` | Styling the Container that holds the Image. | `{}`
+`--socobo-profile-image-image-container` | Styling the Container that lies under the holder Container. | `{}`
+`--socobo-profile-image-circular-theme` | Styling the Circular Image theme. | `{}`
+`--socobo-profile-image-circular-hover-theme` | Styling the Circular Image Hover state theme. | `{}`
+
+@demo demo/socobo-profile/demo.html
+-->
+<dom-module id="socobo-profile-image">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .image-holder-container {
+        @apply(--layout-vertical);
+        margin: 40px 20px 0 20px;
+        width: 300px;
+        height: 300px;
+        @apply(--socobo-profile-image-image-holder-container);
+      }
+      .image-holder-container:hover {
+        cursor: pointer;
+      }
+      .image-container {
+        @apply(--socobo-profile-image-image-container);
+      }
+      .circular {
+        display: inline-block;
+        height: 300px;
+        width: 300px;
+        overflow: hidden;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+        -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+        box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+        @apply(--socobo-profile-image-circular-theme);
+      }
+      .circular:hover {
+        -webkit-box-shadow: 0 0 8px rgb(120, 144, 156);
+        -moz-box-shadow: 0 0 8px rgb(120, 144, 156);
+        box-shadow: 0 0 8px rgb(120, 144, 156);
+        @apply(--socobo-profile-image-circular-hover-theme);
+      }
+      .hide-file-chooser {
+        display: none;
+      }
+    </style>
+
+    <div class="image-holder-container">
+      <div class="image-container">
+        <iron-image
+          id="ironImage"
+          class="circular"
+          preload
+          src="{{imageSource}}"
+          sizing="cover"
+          fade
+          placeholder="http://lorempixel.com/600/600"
+          on-tap="_openFileChooser">
+        </iron-image>
+      </div>
+      <input id="fileChooser" type="file" class="hide-file-chooser" on-change="_getImage" />
+    </div>
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'socobo-profile-image',
+        /**
+         * This Event is fired if the profile image is changed. <br/>
+         * @event inner-profile-image-changed
+         */
+
+        /**
+         * Element Properties.
+         */
+        properties: {
+          /**
+           * Image Source from User Object.
+           */
+          imageSource: {
+            type: String,
+            notify: true
+          }
+        },
+        /**
+         * Open File chooser to get a new Profile Image. <br/>
+         * @private <br/>
+         * @method _openFileChooser
+         */
+        _openFileChooser: function() {
+          this.$.fileChooser.click();
+        },
+        /**
+         * Get Image from File chooser and fire custom event. <br/>
+         * @private <br/>
+         * @method _getImage
+         */
+        _getImage: function() {
+          // get selected files
+          var fileSelected = this.$.fileChooser.files;
+          if (fileSelected.length > 0) {
+            // get specific file
+            var fileToLoad = fileSelected[0];
+            // create file reader
+            var fileReader = new FileReader();
+            // create load listener
+            fileReader.onload = function(e) {
+              // data: base64
+              this.imageSource = e.target.result;
+              this.fire("inner-profile-image-changed", {value: "Profile Image changed!"});
+            }.bind(this);
+            // register listener
+            fileReader.readAsDataURL(fileToLoad);
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>

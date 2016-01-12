@@ -1,0 +1,131 @@
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+@demo demo/socobo-element-list-item/demo.html
+-->
+
+<dom-module id="socobo-element-list-item">
+  <style>
+    :host{
+    }
+    .short_info {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      height: 50px;
+      border-bottom: solid 2px #F4F0EC;
+      color: #8A7F80;
+      padding-right: 16px;
+    }
+
+    .short_info:hover{
+      background-color: #F4F0EC;
+    }
+
+    .check {
+      margin-left: 32px;
+    }
+
+    paper-checkbox {
+      --paper-checkbox-unchecked-color: #8A7F80;
+    }
+
+    .desc, .info {
+      font-family: sans-serif;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      height: 100%;
+      line-height: 50px;
+    }
+
+    .desc {
+      @apply(--layout-flex);
+      margin-left: var(--socobo-list-item-desc-margin-left, 32px);
+    }
+
+    .info{
+      @apply(--layout-flex);
+    }
+
+    .desc:hover, .info:hover{
+      cursor: pointer;
+    }
+
+    .edit{
+      margin-right: 16px
+    }
+
+
+    paper-icon-button {
+      text-align: center;
+      padding: 10px;
+    }
+
+    paper-icon-button:hover{
+      color: var(--default-primary-color);
+    }
+  </style>
+
+  <template>
+    <paper-material id="wrapper" class="short_info" elevation="0" >
+      <span class="check"><paper-checkbox checked="{{isChecked}}" on-click="changeCheckBox"></paper-checkbox></span>
+      <span class="desc" on-click="showElement">{{obj.desc}}</span><span class="info" on-click="showElement">{{obj.info}}</span>
+      <span class="edit"><paper-icon-button icon="create" on-click="editElement"></paper-icon-button></span>
+      <span class="delete"><paper-icon-button icon="delete" on-click="deleteElement"></paper-icon-button></span>
+    </paper-material>
+  </template>
+
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+    is: 'socobo-element-list-item',
+    behaviors: [
+      Polymer.NeonAnimationRunnerBehavior
+    ],
+    properties: {
+      obj : {
+        type : Object,
+        value : {
+          desc: "test"
+        }
+      },
+      isChecked : {
+        type : Boolean,
+        value : false
+      },
+      animationConfig : {
+        value : function(){
+          return {
+            name : "fade-in-animation",
+            node: this.$.wrapper
+          }
+        }
+      }
+    },
+    changeCheckBox : function(){
+      if(this.isChecked == true){
+        this.fire("check", this.obj);
+      }else{
+        this.fire("uncheck", this.obj);
+      }
+    },
+    showElement: function () {
+      this.fire("show_request", this.obj);
+    },
+    editElement : function(){
+      this.fire("edit_request", this.obj);
+    },
+    deleteElement : function () {
+      this.fire("delete_request", this.obj);
+    },
+    ready : function(){
+      this.playAnimation();
+    }
+  });
+})();
+</script>

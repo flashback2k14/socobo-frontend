@@ -1,6 +1,6 @@
 {
   "name": "socobo-project",
-  "version": "0.0.3.8",
+  "version": "0.0.3.9.5",
   "description": "Socobo Project",
   "authors": [
     "cs13dr1",
@@ -21,21 +21,15 @@
     "paper-elements": "PolymerElements/paper-elements#^1.0.7",
     "platinum-elements": "PolymerElements/platinum-elements#^1.2.0",
     "neon-elements": "PolymerElements/neon-elements#^1.0.0",
+    "firebase-element": "GoogleWebComponents/firebase-element#^1.0.8",
     "polymer": "Polymer/polymer#^1.2.0",
-    "page": "visionmedia/page.js#^1.6.4",
-    "socobo-auth": "flashback2k14/socobo-auth#master",
-    "socobo-recipe": "hetec/socobo-recipe#master",
-    "socobo-inventory": "lyio/socobo-inventory#master",
-    "socobo-profile": "flashback2k14/socobo-profile#master"
+    "page": "visionmedia/page.js#^1.6.4"
   },
   "devDependencies": {
-    "web-component-tester": "*",
-    "test-fixture": "PolymerElements/test-fixture#^1.0.0"
-  },
-  "resolutions": {
-    "platinum-elements": "^1.2.0",
-    "iron-elements": "^1.0.7",
-    "polymer": "^1.2.0",
-    "paper-elements": "^1.0.7"
+    "iron-component-page": "polymerelements/iron-component-page#^1.0.9",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
+    "iron-test-helpers": "polymerelements/iron-test-helpers#^1.0.0",
+    "test-fixture": "polymerelements/test-fixture#^1.0.0",
+    "web-component-tester": "*"
   }
 }

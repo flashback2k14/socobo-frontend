@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>socobo auth basic tests</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../../elements/elements.html">
+</head>
+<body>
+
+  <test-fixture id="SocoboAuth">
+    <template>
+      <socobo-auth></socobo-auth>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite("<socobo-auth>", function() {
+      var socoboAuth;
+
+      setup(function() {
+        socoboAuth = fixture("SocoboAuth");
+      });
+
+      test("has a close button", function(done) {
+        expect(socoboAuth.$.btnClose).to.not.be.eql(undefined);
+        done();
+      });
+
+      test("has a background image", function(done) {
+        expect(socoboAuth.$.bgImage).to.not.be.eql(undefined);
+        done();
+      });
+
+      test("has a content container", function(done) {
+        expect(socoboAuth.$.contentContainer).to.not.be.eql(undefined);
+        done();
+      });
+
+    });
+  </script>
+</body>
+</html>
