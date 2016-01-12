@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>socobo-element-search Demo</title>
+    <link rel="import" href="elements.html">
+  </head>
+  <body>
+    <template is="dom-bind" id="demo">
+      <p>An example of <code>&lt;socobo-element-search&gt;</code>:</p>
+
+      <paper-material style="margin-top: 24px; margin-left: 50px; width: 80%; height: 600px;">
+        <socobo-element-search
+          on-check-all-items="handleCheckAllItems"
+          on-uncheck-all-items="handleUncheckAllItems"
+          on-changed-search-query="handleChangedSearchQuery">
+        </socobo-element-search>
+
+        <template id="list" is="dom-repeat" items="{{data}}">
+          <template is="dom-if" if="{{_searchForItems(item, searchQuery)}}">
+            <socobo-element-list-item
+              obj="{{item}}"
+              on-check="handleCheck"
+              on-uncheck="handleUncheck">
+            </socobo-element-list-item>
+          </template>
+        </template>
+      </paper-material>
+    </template>
+
+    <script type="text/javascript">
+
+      var demo = document.querySelector("#demo");
+
+      demo.searchQuery = null;
+      demo.data = [
+        {desc: "Mehl", info: "1kg"},
+        {desc: "Butter", info: "250g"},
+        {desc: "Gurke", info: "2 Stk."},
+        {desc: "Puderzucker", info: "2kg"}
+      ];
+
+      /**
+       * Check all items
+       */
+      demo.handleCheckAllItems = function() {
+        var listView = this.$.list;
+        for (var i = 0; i < listView._instances.length; i++) {
+          listView._instances[i]._children[0].nextElementSibling.children[0].children[0].children[0].checked = true;
+        }
+      };
+
+      /**
+       * Uncheck all items
+       */
+      demo.handleUncheckAllItems = function() {
+        var listView = this.$.list;
+        for (var i = 0; i < listView._instances.length; i++) {
+          listView._instances[i]._children[0].nextElementSibling.children[0].children[0].children[0].checked = false;
+        }
+      };
+
+      /**
+       * Get Search Query
+       * @param e
+       */
+      demo.handleChangedSearchQuery = function(e) {
+        this.searchQuery = e.detail.searchQuery;
+      };
+
+      /**
+       * Search in all items
+       * @param item
+       * @param searchQuery
+       */
+      demo._searchForItems = function(item, searchQuery) {
+        if (searchQuery === null ||typeof searchQuery === 'undefined') {
+          return item;
+        } else {
+          return item.desc.toUpperCase().match(searchQuery.toUpperCase()) || item.info.toUpperCase().match(searchQuery.toUpperCase());
+        }
+      };
+
+      /**
+       * Check single Item
+       * @param e
+       */
+      demo.handleCheck = function(e) {
+        var dataObj = e.detail;
+        alert("Item is checked: " + JSON.stringify(dataObj));
+      };
+
+      /**
+       * Uncheck single Item
+       * @param e
+       */
+      demo.handleUncheck = function(e) {
+        var dataObj = e.detail;
+        alert("Item is unchecked: " + JSON.stringify(dataObj));
+      };
+    </script>
+  </body>
+</html>
