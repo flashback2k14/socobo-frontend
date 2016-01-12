@@ -1,7 +1,6 @@
-<link rel="import" href="elements.html">
-
 <!--
 The following custom properties and mixins are available for styling:
+
 Custom property | Description | Default
 ----------------|-------------|----------
 `--socobo-inventory-create-create-dialog` | | `{}`
@@ -12,13 +11,14 @@ Custom property | Description | Default
 `--socobo-inventory-create-style-input-only-color-color` |  | `{--text-secondary-color}`
 `--socobo-inventory-create-style-input-only-color-focus-color` | | `{--text-secondary-color}`
 `--socobo-inventory-create-style-input-only-color-input-color` | | `{--text-secondary-color}`
-@demo demo/index.html
+
+@demo demo/socobo-inventory/demo.html
 -->
 
 <dom-module id="socobo-inventory-create">
   <template>
     <style>
-        :host {
+      :host {
         display: block;
       }
       .create-dialog {
@@ -71,8 +71,8 @@ Custom property | Description | Default
       }
     </style>
     <div>
-      <paper-dialog 
-        class="create-dialog" 
+      <paper-dialog
+        class="create-dialog"
         id="dialog"
         entry-animation="scale-up-animation"
         exit-animation="fade-out-animation"
@@ -92,50 +92,52 @@ Custom property | Description | Default
               required
               auto-focus
               $disabled="[[_edit]]"
-              error-message="Please enter a name"
-              ></paper-input>
+              error-message="Please enter a name">
+            </paper-input>
           </div>
             <!-- 2. Row -->
           <div class="horizontal-layout">
-                <paper-input
-                  pattern="[0-9]+"
-                  class="vertical-layout width-big style-input-only-color"
-                  id="countInput"
-                  value="{{item.count}}"
-                  label="Amount/Number"
-                  error-message="A number is required"
-                  maxlength="5"
-                  minlength="1"
-                  auto-validate
-                  required></paper-input>
-                <paper-dropdown-menu 
-                  label="Measurement" 
-                  class="vertical-layout width-small" 
-                  id="measurementDropdown">
-                  <paper-menu 
-                    id="measurementDropdownMenu"
-                    class="dropdown-content">
-                    <template is="dom-repeat" items="[[measurements]]" as="measurement">
-                      <paper-item>[[measurement]]</paper-item>
-                    </template>
-                  </paper-menu>
-                </paper-dropdown-menu>
+            <paper-input
+              pattern="[0-9]+"
+              class="vertical-layout width-big style-input-only-color"
+              id="countInput"
+              value="{{item.count}}"
+              label="Amount/Number"
+              error-message="A number is required"
+              maxlength="5"
+              minlength="1"
+              auto-validate
+              required>
+            </paper-input>
+              <paper-dropdown-menu
+                label="Measurement"
+                class="vertical-layout width-small"
+                id="measurementDropdown">
+                <paper-menu
+                  id="measurementDropdownMenu"
+                  class="dropdown-content">
+                  <template is="dom-repeat" items="[[measurements]]" as="measurement">
+                    <paper-item>[[measurement]]</paper-item>
+                  </template>
+                </paper-menu>
+              </paper-dropdown-menu>
             </div>
             <div class="horizontal-layout style-best-before">
               <span>Best before</span>
             </div>
             <!-- 4. Row -->
             <div class="horizontal-layout style-date-picker-row">
-            <paper-input 
-              type="date" 
-              class="vertical-layout width-big" 
-              value="{{item.bestBefore}}" 
-              id="bestBeforeInput"></paper-input>
+            <paper-input
+              type="date"
+              class="vertical-layout width-big"
+              value="{{item.bestBefore}}"
+              id="bestBeforeInput">
+            </paper-input>
             <paper-dropdown-menu
               class="vertical-layout width-small style-dropdown-category"
-              label="Category" 
+              label="Category"
               id="categoryDropdown">
-              <paper-menu 
+              <paper-menu
                 id="categoryDropdownMenu"
                 class="dropdown-content">
                 <template is="dom-repeat" items="[[categories]]" as="category">
@@ -162,10 +164,11 @@ Custom property | Description | Default
 
         ready: function() {
           this.categories = [
-          "Backen",
-          "Gewürze",
-          "Gemüse",
-          "Obst"],
+            "Backen",
+            "Gewürze",
+            "Gemüse",
+            "Obst"
+          ];
 
           this.measurements = ["kg", "g", "Stk", "l"];
         },
@@ -176,21 +179,21 @@ Custom property | Description | Default
         */
         show: function(itemToEdit) {
           this.$.dialog.toggle();
-          
+
           this._resetItem(itemToEdit);
           this._edit = itemToEdit != undefined;
         },
-        
+
         /* Hide the dialog
         */
         hide: function() {
           this.$.dialog.toggle();
         },
-                
+
         _resetItem: function(item) {
           if (item != undefined) {
             this.item = item;
-            this.$.bestBeforeInput.value = item.bestBefore
+            this.$.bestBeforeInput.value = item.bestBefore;
             this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
             this.$.measurementDropdownMenu.select(this.measurements.indexOf(item.measurement));
           } else {
@@ -212,11 +215,11 @@ Custom property | Description | Default
           } else {
             this.item.info = this.item.count + " " + this.item.measurement;
             this.item.desc = this.item.name;
-            
+
             this.fire('create-item', this.item);
           }
         },
-        
+
         _editItem: function(e,detail) {
           var item = this._populateItem(this.item);
           if(this._validate(item)) {
@@ -225,24 +228,24 @@ Custom property | Description | Default
             alert('Some information is missing');
           }
         },
-        
+
         _populateItem: function(item) {
           item.measurement = this.measurements[this.$.measurementDropdownMenu.selected];
           item.category = this.categories[this.$.categoryDropdownMenu.selected];
-          
+
           item.desc = item.name;
           item.info = item.count + " " + item.measurement;
-          
+
           console.dir(item);
           return item;
         },
-        
+
         _validate: function(item) {
           if(!item.name || item.name.length < 5) return false;
           if(!item.measurement || item.measurement.length === 0) return false;
           if(!item.count) return false;
           return true;
-        },
+        }
       });
     })();
   </script>

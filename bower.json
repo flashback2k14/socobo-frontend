@@ -35,10 +35,5 @@
     "iron-test-helpers": "polymerelements/iron-test-helpers#^1.0.0",
     "test-fixture": "polymerelements/test-fixture#^1.0.0",
     "web-component-tester": "*"
-  },
-  "resolutions": {
-    "iron-elements": "^1.0.7",
-    "platinum-elements": "^1.2.0",
-    "paper-elements": "^1.0.7"
   }
 }

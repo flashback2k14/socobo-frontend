@@ -2,19 +2,18 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>socobo-element-template basic tests</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>socobo inventory basic tests</title>
 
-  <script src="../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../../bower_components/web-component-tester/browser.js"></script>
-  <script src="../../../bower_components/test-fixture/test-fixture-mocha.js"></script>
-  <script src="../../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
 
-  <link rel="import" href="../../elements/socobo-inventory/socobo-inventory.html">
+  <link rel="import" href="../../elements/elements.html">
 </head>
 <body>
 
-  <!-- ToDo: -->
   <test-fixture id="Inventory">
     <template>
       <socobo-inventory></socobo-inventory>
@@ -22,7 +21,7 @@
   </test-fixture>
 
   <script>
-    /* ToDo: */
+
     suite('<socobo-inventory>', function() {
       var inventory;
 
@@ -34,33 +33,33 @@
         expect(inventory.$.inventoryButtonAdd).to.not.be.eql(undefined);
         done();
       });
-      
+
       test('has creation dialog', function(done) {
         expect(inventory.$.inventoryCreateDialog).to.not.be.eql(undefined);
         done();
       });
-      
+
       test('has a delete confirmation dialog', function(done) {
         expect(inventory.$.confirmationDialog).to.not.be.eql(undefined);
         done();
       });
-      
+
       test('_handleLogin updates location', function(done) {
         var login = {firebaseUrl: "foobar.io/", userId: "234567890"};
         expect(inventory._handleLogin(login)).to.be.eql(login.firebaseUrl + "inventory/" + login.userId + "/");
         done();
       });
-      
+
       test('_handleLogin called with null does not update location', function(done) {
         inventory.location = "test.location.io/";
         expect(inventory._handleLogin(null)).to.be.eql(inventory.location);
         done();
       });
-      
-      
+
+
       test('_handleLogin called with null userId does reset the location', function(done) {
         var location = "test.location.io/";
-        inventory.location = location
+        inventory.location = location;
         expect(inventory._handleLogin({firebaseUrl: location, userId: null})).to.be.eql(location + "inventory/");
         done();
       });
