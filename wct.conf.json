@@ -6,7 +6,8 @@
     "local": {
       "browsers": [
         "chrome",
-        "ie"
+        "ie",
+        "firefox"
       ]
     },
     "sauce": {
