@@ -1,0 +1,48 @@
+<link rel="import" href="elements.html">
+
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+@demo demo/socobo-recipe/demo.html
+-->
+<dom-module id="socobo-recipe">
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+
+  <template>
+    <socobo-recipe-overview
+      id="elRecipeOverview"
+      user-login='[[userLogin]]'>
+    </socobo-recipe-overview>
+  </template>
+
+</dom-module>
+
+<script>
+  (function() {
+    Polymer({
+      is: 'socobo-recipe',
+      properties : {
+        /*Object containing the user information. Must have following
+         properties:
+         - userId,
+         - firebaseUrl,
+         - expires
+         */
+        userLogin : {
+          type : Object,
+          value : {}
+        }
+      },
+      loadData : function(){
+        this.$.elRecipeOverview.getRecipes();
+      }
+    });
+  })();
+</script>
