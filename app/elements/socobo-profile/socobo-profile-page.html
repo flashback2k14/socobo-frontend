@@ -1,0 +1,391 @@
+<link rel="import" href="elements.html">
+<!--
+TODO:
+  - Make Element Responsive
+  - Handle invalid Admin Inputs
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--socobo-profile-page-profile-container` | Styling the Profile Container that holds the Image and the Information. | `{}`
+`--socobo-profile-page-profile-image-container` | Styling the Image Holder Container | `{}`
+`--socobo-profile-page-profile-image-container-bg-color-from` | Styling the Gradient Color for the Background - From | `{#04212A}`
+`--socobo-profile-page-profile-image-container-bg-color-to` | Styling the Gradient Color for the Background - To | `{#062F3C}`
+`--socobo-profile-page-profile-info-container` | Styling the Information Holder Container | `{}`
+
+@demo demo/socobo-profile/demo.html
+-->
+<dom-module id="socobo-profile-page">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .profile-container {
+        @apply(--layout-horizontal);
+        width: 100%;
+        height: 100%;
+        @apply(--socobo-profile-page-profile-container);
+      }
+      .profile-image-container {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+        min-width: 320px;
+        width: 20%;
+        max-width: 20%;
+        margin: 0;
+        background: -webkit-linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, #04212A),var(--socobo-profile-page-profile-image-container-bg-color-to, #062F3C));
+        background: -o-linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, #04212A),var(--socobo-profile-page-profile-image-container-bg-color-to, #062F3C));
+        background: -moz-linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, #04212A),var(--socobo-profile-page-profile-image-container-bg-color-to, #062F3C));
+        background: linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, #04212A),var(--socobo-profile-page-profile-image-container-bg-color-to, #062F3C));
+        @apply(--socobo-profile-page-profile-image-container);
+      }
+      .profile-info-container {
+        @apply(--layout-vertical);
+        width: 80%;
+        margin: 0;
+        @apply(--socobo-profile-page-profile-info-container);
+      }
+    </style>
+
+    <!-- Dialog Element -->
+    <paper-dialog
+      id='confirmRemoveAccountDialog'
+      entry-animation='scale-up-animation'
+      exit-animation='fade-out-animation'
+      modal>
+      <h2>Are you sure to delete your account by socobo project?</h2>
+      <div class='buttons'>
+        <paper-button dialog-dismiss autofocus>Cancel</paper-button>
+        <paper-button on-tap='_deleteAccount'>OK</paper-button>
+      </div>
+    </paper-dialog>
+    <!-- Main Page Element -->
+    <div class="profile-container">
+      <div class="profile-image-container">
+        <socobo-profile-image
+          id="profileImage"
+          image-source="{{profileObject.profileImage}}"
+          on-inner-profile-image-changed="_handleInnerProfileImageChanged">
+        </socobo-profile-image>
+      </div>
+
+      <div class="profile-info-container">
+        <socobo-profile-info
+          id="profileInfo"
+          profile-object="{{profileObject}}"
+          on-save-info-standard="_handleSaveInfoStandard"
+          on-save-info-biography="_handleSaveInfoBiography"
+          on-change-email-address="_handleChangeEmailAddress"
+          on-change-password="_handleChangePassword"
+          on-reset-password="_handleResetPassword"
+          on-delete-account="_handleDeleteAccount"
+          on-passwords-not-matching="_handlePasswordsNotMatching">
+        </socobo-profile-info>
+      </div>
+    </div>
+    <!-- Info Elements-->
+    <paper-toast
+      id="infoToast"
+      duration="4000">
+    </paper-toast>
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'socobo-profile-page',
+        /**
+         * This Event is fired if the user changed the profile image. <br/>
+         * `Detail`: String: "profileImage Data" <br/>
+         * @event profile-user-image-changed
+         */
+        /**
+         * This Event is fired if the user changed the information. <br/>
+         * `Detail`: Object: {name: "name", email: "email"} <br/>
+         * @event profile-user-info-changed
+         */
+        /**
+         * This Event is fired if the user deleted the account. <br/>
+         * @event user-account-deleted
+         */
+        /**
+         * This Event is fired if the user login is expired. <br/>
+         * `Detail`: Object: {value: "The Login is expired!"} <br/>
+         * @event login-expired
+         */
+
+        /**
+         * Element Properties.
+         */
+        properties: {
+          /**
+           * User Login Object
+           */
+          userLogin: {
+            type: Object,
+            value: {},
+            notify: true
+          },
+          /**
+           * User Information Object
+           */
+          profileObject: {
+            type: Object,
+            value: {},
+            notify: true
+          }
+        },
+        /**
+         * Helper Object for holding Delete Account Information for using in the Confirm Dialog.
+         * @type {Object}
+         * @private
+         */
+        _tmpDeleteAccountData: {},
+
+        /**
+         * PROFILE IMAGE
+         */
+        /**
+         * Show Toast if the Profile Image is changed. <br/>
+         * @param {Object} e Message
+         * @private
+         * @method _handleInnerProfileImageChanged
+         */
+        _handleInnerProfileImageChanged: function(e) {
+          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+            this.fire("login-expired", {value: "The Login is expired!"});
+            return;
+          }
+          SocoboProfile
+            .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
+            .updateProfileData({profileImage: this.profileObject.profileImage})
+            .then(function(succ) {
+              ProfileUtil.getInstance(this).showToast(this.$.infoToast, e.detail.value, "#333333", "#EEEEEE");
+              this.fire("profile-user-image-changed", this.profileObject.profileImage);
+            }.bind(this))
+            .catch(function(err) {
+              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
+            }.bind(this));
+        },
+
+        /**
+         * PROFILE INFO
+         */
+        /**
+         * USER INFO
+         */
+        /**
+         * Handle save user information custom event. </br>
+         * @param {Object} e CustomEvent
+         * @private
+         * @method _handleSaveInfoStandard
+         */
+        _handleSaveInfoStandard: function(e) {
+          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+            this.fire("login-expired", {value: "The Login is expired!"});
+            return;
+          }
+          SocoboProfile
+            .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
+            .updateProfileData(e.detail)
+            .then(function(succ) {
+              ProfileUtil.getInstance(this).showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+              this.fire("profile-user-info-changed", e.detail);
+            }.bind(this))
+            .catch(function(err) {
+              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
+            }.bind(this));
+        },
+
+        /**
+         * USER BIOGRAPHY
+         */
+        /**
+         * Handle save biography information custom event. </br>
+         * @param {Object} e CustomEvent
+         * @private
+         * @method _handleSaveInfoBiography
+         */
+        _handleSaveInfoBiography: function(e) {
+          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+            this.fire("login-expired", {value: "The Login is expired!"});
+            return;
+          }
+          SocoboProfile
+            .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
+            .updateProfileData(e.detail)
+            .then(function(succ) {
+              ProfileUtil.getInstance(this).showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+            }.bind(this))
+            .catch(function(err) {
+              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
+            }.bind(this));
+        },
+
+        /**
+         * ADMINISTRATION
+         */
+        /**
+         * Handle change email address custom event. </br>
+         * @param {Object} e CustomEvent
+         * @private
+         * @method _handleChangeEmailAddress
+         */
+        _handleChangeEmailAddress: function(e){
+          // check if user still logged in
+          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+            this.fire("login-expired", {value: "The Login is expired!"});
+            return;
+          }
+          // collect successful messages
+          var successMessage = "";
+          // change user email address
+          SocoboProfile
+            .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
+            .changeUserEmailAddress(e.detail)
+            .then(function(succ) {
+              // add success message from change user email address
+              successMessage += succ.value + "; ";
+              // update profile data
+              SocoboProfile
+                .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
+                .updateProfileData({email: succ.email})
+                .then(function(success) {
+                  // add success message from update profile data
+                  successMessage += success.value;
+                  // show info notification
+                  ProfileUtil.getInstance(this).showToast(this.$.infoToast, successMessage, "#333333", "#EEEEEE");
+                  // fire custom event
+                  this.fire("email-address-updated", {value: succ.email}, {node: this.$.profileInfo});
+                }.bind(this))
+                .catch(function(error) {
+                  ProfileUtil.getInstance(this).showToast(this.$.infoToast, error.value, "#FF3333", "#EEEEEE");
+                }.bind(this));
+            }.bind(this))
+            .catch(function(err) {
+              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
+            }.bind(this));
+        },
+        /**
+         * Handle change password custom event. </br>
+         * @param {Object} e CustomEvent
+         * @private
+         * @method _handleChangePassword
+         */
+        _handleChangePassword: function(e) {
+          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+            this.fire("login-expired", {value: "The Login is expired!"});
+            return;
+          }
+          SocoboProfile
+            .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
+            .changeUserPassword(e.detail)
+            .then(function(succ) {
+              ProfileUtil.getInstance(this).showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+            }.bind(this))
+            .catch(function(err) {
+              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
+            }.bind(this));
+        },
+        /**
+         * Handle reset password custom event. </br>
+         * @param {Object} e CustomEvent
+         * @private
+         * @method _handleResetPassword
+         */
+        _handleResetPassword: function(e) {
+          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+            this.fire("login-expired", {value: "The Login is expired!"});
+            return;
+          }
+          SocoboProfile
+            .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
+            .resetUserPassword(e.detail)
+            .then(function(succ) {
+              ProfileUtil.getInstance(this).showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+            }.bind(this))
+            .catch(function(err) {
+              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
+            }.bind(this));
+        },
+        /**
+         * Handle delete account custom event. </br>
+         * @param {Object} e CustomEvent
+         * @private
+         * @method _handleDeleteAccount
+         */
+        _handleDeleteAccount: function(e) {
+          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+            this.fire("login-expired", {value: "The Login is expired!"});
+            return;
+          }
+          this._tmpDeleteAccountData = e.detail;
+          this.$.confirmRemoveAccountDialog.toggle();
+        },
+        /**
+         * Delete Account if the User press the OK Button from the Confirm Dialog. </br>
+         * @private
+         * @method _deleteAccount
+         */
+        _deleteAccount: function() {
+          // collect successful messages
+          var successMessage = "";
+          // remove all user data
+          SocoboProfile
+            .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
+            .removeAllUserData()
+            .then(function(succ) {
+              // add success message from remove user account
+              successMessage += succ.value + "; ";
+              // remove user account
+              SocoboProfile
+                .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
+                .removeUserAccount(this._tmpDeleteAccountData)
+                .then(function(success){
+                  // add success message from remove all user data
+                  successMessage += success.value;
+                  // show info notification, hide dialog and reset temp delete account data
+                  this._deleteAccountNotificationHelper(successMessage);
+                  // fire custom event
+                  this.fire("user-account-deleted");
+                }.bind(this))
+                .catch(function(error){
+                  // show info notification, hide dialog and reset temp delete account data
+                  this._deleteAccountNotificationHelper(error.value);
+                }.bind(this));
+            }.bind(this))
+            .catch(function(err) {
+              // show info notification, hide dialog and reset temp delete account data
+              this._deleteAccountNotificationHelper(err.value);
+            }.bind(this));
+        },
+        /**
+         * Show Toast if the Passwords not matching. <br/>
+         * @param {Object} e Message
+         * @private
+         * @method _handlePasswordsNotMatching
+         */
+        _handlePasswordsNotMatching: function(e) {
+          ProfileUtil.getInstance(this).showToast(this.$.infoToast, e.detail.value, "#FF3333", "#EEEEEE");
+        },
+
+        /**
+         * Delete Account Notification Helper
+         * @param text Notification Message
+         * @private
+         * @method _deleteAccountNotificationHelper
+         */
+        _deleteAccountNotificationHelper: function(text) {
+          // show info notification
+          ProfileUtil.getInstance(this).showToast(this.$.infoToast, text, "#333333", "#EEEEEE");
+          // hide confirm dialog
+          this.$.confirmRemoveAccountDialog.toggle();
+          // reset temporary account data
+          this._tmpDeleteAccountData = {};
+        }
+      });
+    })();
+  </script>
+</dom-module>
