@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>socobo-element-search basic tests</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../../elements/elements.html">
+</head>
+<body>
+
+  <test-fixture id="SocoboElementSearch">
+    <template>
+      <socobo-element-search></socobo-element-search>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('<socobo-element-search>', function() {
+      var socoboElementSearch;
+
+      setup(function() {
+        socoboElementSearch = fixture('SocoboElementSearch');
+      });
+
+      test("has a checkbox", function(done) {
+        expect(socoboElementSearch.$.chbCheckAllItems).to.not.be.eql(undefined);
+        done();
+      });
+
+      test("has a hidden clear button", function(done) {
+        expect(socoboElementSearch.$.chbCheckAllItems).to.not.be.eql(undefined);
+        done();
+      });
+
+      test("has a search button", function(done) {
+        expect(socoboElementSearch.$.btnSearch).to.not.be.eql(undefined);
+        done();
+      });
+
+    });
+  </script>
+</body>
+</html>

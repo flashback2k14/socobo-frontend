@@ -26,8 +26,7 @@
     "page": "visionmedia/page.js#^1.6.4",
 
     "socobo-recipe": "hetec/socobo-recipe#master",
-    "socobo-profile": "flashback2k14/socobo-profile#master",
-    "socobo-element-search": "flashback2k14/socobo-element-search#master"
+    "socobo-profile": "flashback2k14/socobo-profile#master"
   },
   "devDependencies": {
     "iron-component-page": "polymerelements/iron-component-page#^1.0.9",
