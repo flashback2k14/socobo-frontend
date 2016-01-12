@@ -1,19 +1,13 @@
 {
   "suites": ["app/test"],
   "verbose": true,
-  "persistent": true,
+  "persistent": false,
   "plugins": {
-    "local": {
-      "browsers": [
-        "chrome",
-        "ie"
-      ]
-    },
     "sauce": {
       "disabled": true,
       "browsers": [
         "chrome",
-        "ie"
+        "firefox"
       ]
     }
   }
