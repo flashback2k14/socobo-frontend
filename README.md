@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/flashback2k14/socobo-project.svg)](https://travis-ci.org/flashback2k14/socobo-project)
+
 # socobo-project
 
 ## Steps:
