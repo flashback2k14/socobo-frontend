@@ -2,20 +2,18 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>socobo inventory overview basic tests</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>socobo inventory overview basic tests</title>
 
-  <script src="../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../../bower_components/web-component-tester/browser.js"></script>
-  <script src="../../../bower_components/test-fixture/test-fixture-mocha.js"></script>
-  <script src="../../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
 
-  <link rel="import" href="../../../bower_components/test-fixture/test-fixture.html">
-  <link rel="import" href="../../elements/socobo-inventory/socobo-inventory-overview.html">
+  <link rel="import" href="../../elements/elements.html">
 </head>
 <body>
 
-  <!-- ToDo: -->
   <test-fixture id="SocoboOverview">
     <template>
       <socobo-inventory-overview></socobo-inventory-overview>
@@ -23,12 +21,12 @@
   </test-fixture>
 
   <script>
+
     suite('<socobo-inventory-overview>', function() {
       var overview;
 
       setup(function() {
         overview = fixture('SocoboOverview');
-
       });
 
       test('has an overview container', function(done) {
@@ -66,7 +64,7 @@
         var filtered = overview._setHidden(item, null);
         expect(filtered).to.be.eql(false);
         done();
-      })
+      });
 
       test('has two items in the list', function(done) {
         overview.data = [{desc: "foo", info: "foo"}, {desc: "bar", info: "bar"}];
