@@ -1,0 +1,548 @@
+<link rel="import" href="elements.html">
+<!--
+TODO:
+  - Add all Mixins
+  - Add Description for Mixins!
+  - Make Element Responsive
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--socobo-profile-info-container` |  | `{}`
+`--socobo-profile-info-paper-card-header-bg` |  | `{#062F3C}`
+`--socobo-profile-info-paper-card-header-text-color` |  | `{#FFFFFF}`
+`--socobo-profile-info-style-disabled-inputs-underline-color` |  | `{#FFFFFF}`
+`--socobo-profile-info-style-disabled-inputs-underline-focus-color` |  | `{#FFFFFF}`
+`--socobo-profile-info-style-save-button-bg` |  | `{--paper-green-500}`
+`--socobo-profile-info-style-save-button-color` |  | `{#FFFFFF}`
+`--socobo-profile-info-style-clear-button-bg` |  | `{--paper-pink-500}`
+`--socobo-profile-info-style-clear-button-color` |  | `{#FFFFFF}`
+`--socobo-profile-info-style-fab-edit-info-standard` |  | `{}`
+`--socobo-profile-info-style-fab-edit-info-biography` |  | `{}`
+`--socobo-profile-info-style-admin-buttons-bg` |  | `{--paper-indigo-700}`
+`--socobo-profile-info-style-admin-buttons-color` |  | `{#FFFFFF}`
+
+@demo demo/socobo-profile/demo.html
+-->
+<dom-module id="socobo-profile-info">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .profile-info-container {
+        @apply(--layout-vertical);
+        @apply(--socobo-profile-info-container);
+      }
+      .style-paper-card {
+        --paper-card-header: {
+           background: var(--socobo-profile-info-paper-card-header-bg, #062F3C);
+         };
+        --paper-card-header-text: {
+           margin-left: 20px;
+           font-size: 35px;
+           color: var(--socobo-profile-info-paper-card-header-text-color, #FFFFFF);
+         };
+        --paper-card-content: {
+           font-size: 20px;
+         };
+      }
+      .paper-card-height-normal {
+        height: 230px;
+      }
+      .paper-card-height-large {
+        height: 400px;
+      }
+      /*INPUT STYLING*/
+      .width-for-inputs {
+        width: 80%;
+      }
+      .style-disabled-inputs {
+        --paper-input-container-underline: {
+          background: var(--socobo-profile-info-style-disabled-inputs-underline-color, #FFFFFF);
+        };
+        --paper-input-container-underline-focus: {
+          background: var(--socobo-profile-info-style-disabled-inputs-underline-focus-color, #FFFFFF);
+        };
+      }
+      /*USER INFO*/
+      .profile-info-standard {
+        @apply(--layout-vertical);
+        margin: 0 20px;
+      }
+      .style-fab-edit-info-standard {
+        position: absolute !important;
+        top: 48px;
+        right: 48px;
+        z-index: 1;
+        @apply(--socobo-profile-info-style-fab-edit-info-standard);
+      }
+      .show-info {
+        display: block;
+        margin-top: -15px;
+      }
+      .edit-info {
+        display: none;
+      }
+      .vertical-line {
+        @apply(--layout-vertical);
+        margin: 10px 20px 5px 20px;
+      }
+      .bottom-right-align {
+        position: absolute !important;
+        right: 30px;
+        bottom: 30px;
+      }
+      .style-save-button {
+        --paper-button: {
+         background: var(--socobo-profile-info-style-save-button-bg, --paper-green-500);
+         color: var(--socobo-profile-info-style-save-button-color, #FFFFFF);
+         font-size: medium;
+       };
+      }
+      .style-clear-button {
+        --paper-button: {
+         background: var(--socobo-profile-info-style-clear-button-bg, --paper-pink-500);
+         color: var(--socobo-profile-info-style-clear-button-color, #FFFFFF);
+         font-size: medium;
+       };
+      }
+      /*USER BIOGRAPHY*/
+      .profile-info-biography {
+        @apply(--layout-vertical);
+        margin: 20px 20px;
+      }
+      .style-fab-edit-info-biography {
+        position: absolute !important;
+        top: 48px;
+        right: 48px;
+        z-index: 1;
+        @apply(--socobo-profile-info-style-fab-edit-info-biography);
+      }
+      /*USER ADMINISTRATION*/
+      .profile-info-admin {
+        @apply(--layout-vertical);
+        margin: 0 20px;
+      }
+      .main-admin-container {
+        @apply(--layout-horizontal);
+      }
+      .left-admin-container {
+        @apply(--layout-vertical);
+        width: 25%;
+        margin: 30px 10px 0 15px;
+      }
+      .style-admin-buttons {
+        --paper-button: {
+         background: var(--socobo-profile-info-style-admin-buttons-bg, --paper-indigo-700);
+         color: var(--socobo-profile-info-style-admin-buttons-color, #FFFFFF);
+         font-size: medium;
+         margin-bottom: 15px;
+       };
+      }
+      .right-admin-container {
+        @apply(--layout-vertical);
+        width: 75%;
+        margin: 30px 10px 0 30px;
+      }
+      .show-right-admin-container {
+        display: block;
+      }
+      .hide-right-admin-container {
+        display: none;
+      }
+      .style-admin-inputs {
+        width: 70%;
+        margin-bottom: 15px;
+      }
+      .btn-submit-container {
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+        width: 70%;
+        margin-top: 20px;
+      }
+    </style>
+
+    <div class="profile-info-container">
+      <!-- Information Section -->
+      <div class="profile-info-standard">
+        <paper-card class="style-paper-card paper-card-height-normal" heading="Information" elevation="3">
+          <paper-fab id="fabEditInfoStandard" class="style-fab-edit-info-standard" icon="create" on-tap="_toggleEditInformationSection"></paper-fab>
+          <div class="card-content">
+            <div id="showInfoStandard" class="show-info">
+              <div class="vertical-line">
+                <label for="txtUsernameView"><strong>Username</strong></label>
+                <paper-input id="txtUsernameView" class="width-for-inputs style-disabled-inputs" label="Username" type="text" value="{{profileObject.name}}" no-label-float="true" readonly="true"></paper-input>
+              </div>
+              <div class="vertical-line">
+                <label for="txtEmailAddressView"><strong>Email-Address</strong></label>
+                <paper-input id="txtEmailAddressView" class="width-for-inputs style-disabled-inputs" label="Email-Address" type="email" value="{{profileObject.email}}" no-label-float="true" readonly="true"></paper-input>
+              </div>
+            </div>
+            <div id="editInfoStandard" class="edit-info">
+              <div class="vertical-line">
+                <label for="txtUsername"><strong>Username</strong></label>
+                <paper-input id="txtUsername" class="width-for-inputs" label="Username" type="text" value="{{profileObject.name}}" no-label-float="true"></paper-input>
+              </div>
+              <div class="vertical-line">
+                <label for="txtEmailAddress"><strong>Email-Address</strong></label>
+                <paper-input id="txtEmailAddress" class="width-for-inputs" label="Email-Address" type="email" value="{{profileObject.email}}" no-label-float="true"></paper-input>
+              </div>
+              <div class="bottom-right-align">
+                <paper-button id="btnSaveInfoStandard" class="style-save-button" on-tap="_saveInfoStandard" raised>Save</paper-button>
+              </div>
+            </div>
+          </div>
+        </paper-card>
+      </div>
+      <!-- Biography Section -->
+      <div class="profile-info-biography">
+        <paper-card class="style-paper-card paper-card-height-normal" heading="Biography" elevation="3">
+          <paper-fab id="fabEditInfoBiography" class="style-fab-edit-info-biography" icon="create" on-tap="_toggleEditInformationSection"></paper-fab>
+          <div class="card-content">
+            <div id="showInfoBio" class="show-info">
+              <div class="vertical-line">
+                <paper-textarea
+                  id="txtBiographyView"
+                  class="width-for-inputs style-disabled-inputs"
+                  rows="5"
+                  max-rows="4"
+                  value="{{profileObject.biography}}"
+                  placeholder="Please tell us something about you!"
+                  no-label-float="true"
+                  readonly="true">
+                </paper-textarea>
+              </div>
+            </div>
+            <div id="editInfoBio" class="edit-info">
+              <div class="vertical-line">
+                <paper-textarea
+                  id="txtBiography"
+                  class="width-for-inputs"
+                  rows="5"
+                  max-rows="4"
+                  value="{{profileObject.biography}}"
+                  placeholder="Please tell us something about you!"
+                  no-label-float="true">
+                </paper-textarea>
+              </div>
+              <div class="bottom-right-align">
+                <paper-button id="btnSaveInfoBiography" class="style-save-button" on-tap="_saveInfoBiography" raised>Save</paper-button>
+              </div>
+            </div>
+          </div>
+        </paper-card>
+      </div>
+      <!-- Administration Section -->
+      <div class="profile-info-admin">
+        <paper-card class="style-paper-card paper-card-height-large" heading="Adminstration" elevation="3">
+          <div class="card-content">
+            <div class="main-admin-container">
+              <div class="left-admin-container">
+                <template is="dom-if" if="{{_checkUserLoginProvider(profileObject)}}">
+                  <paper-button id="btnChangeEmailAddress" class="style-admin-buttons" on-tap="_changeEmailAddress">Change Email Address</paper-button>
+                  <paper-button id="btnChangePassword" class="style-admin-buttons" on-tap="_changePassword">Change Password</paper-button>
+                  <paper-button id="btnResetPassword" class="style-admin-buttons" on-tap="_resetPassword">Reset Password</paper-button>
+                </template>
+                <paper-button id="btnDeleteAccount" class="style-admin-buttons" on-tap="_deleteAccount">Delete Account</paper-button>
+              </div>
+              <div class="right-admin-container">
+                <div id="rightAdminContainer" class="hide-right-admin-container">
+                  <paper-input
+                    id="txtOldEmailAddress"
+                    class="style-admin-inputs hide-right-admin-container"
+                    label="Old Email Address"
+                    type="email"
+                    no-label-float="true"
+                    auto-validate
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                    error-message="no valid emailaddress">
+                  </paper-input>
+                  <paper-input
+                    id="txtNewEmailAddress"
+                    class="style-admin-inputs hide-right-admin-container"
+                    label="New Email Address"
+                    type="email"
+                    no-label-float="true"
+                    auto-validate
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                    error-message="no valid emailaddress">
+                  </paper-input>
+                  <paper-input
+                    id="txtOldPassword"
+                    class="style-admin-inputs hide-right-admin-container"
+                    label="Old Password"
+                    type="password"
+                    no-label-float="true"
+                    char-counter auto-validate
+                    pattern=".+"
+                    minlength="8"
+                    maxlength="30"
+                    error-message="min. 8 character">
+                  </paper-input>
+                  <paper-input
+                    id="txtNewPassword"
+                    class="style-admin-inputs hide-right-admin-container"
+                    label="New Password"
+                    type="password"
+                    no-label-float="true"
+                    char-counter auto-validate
+                    pattern=".+"
+                    minlength="8"
+                    maxlength="30"
+                    error-message="min. 8 character">
+                  </paper-input>
+                  <div class="btn-submit-container">
+                    <paper-button id="btnClearAdminChanges" class="style-clear-button" on-tap="_clearAdminChanges" raised>Clear</paper-button>
+                    <paper-button id="btnSubmitAdminChanges" class="style-save-button" on-tap="_submitAdminChanges" raised>Submit</paper-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </paper-card>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'socobo-profile-info',
+        /**
+         * This Event is fired if the save User Infos button is pressed. <br/>
+         * `Detail`: changed User Infos {Object} <br/>
+         * @event save-info-standard
+         */
+        /**
+         * This Event is fired if the save User Biography button is pressed. <br/>
+         * `Detail`: changed User Biography {Object} <br/>
+         * @event save-info-biography
+         */
+        /**
+         * This Event is fired if the Change Email Address button is pressed. <br/>
+         * `Detail`: changed User Administration Infos {Object} <br/>
+         * @event change-email-address
+         */
+        /**
+         * This Event is fired if the Change Password button is pressed. <br/>
+         * `Detail`: changed User Administration Infos {Object} <br/>
+         * @event change-password
+         */
+        /**
+         * This Event is fired if the Passwords not matching. <br/>
+         * @event passwords-not-matching
+         */
+        /**
+         * This Event is fired if the Reset Password button is pressed. <br/>
+         * `Detail`: changed User Administration Infos {Object} <br/>
+         * @event reset-password
+         */
+        /**
+         * This Event is fired if the Delete Account button is pressed. <br/>
+         * `Detail`: changed User Administration Infos {Object} <br/>
+         * @event delete-account
+         */
+
+        /**
+         * Element Properties
+         */
+        properties: {
+          /**
+           * User Information Object
+           */
+          profileObject: {
+            type: Object,
+            value: {},
+            notify: true
+          }
+        },
+
+        /**
+         * Element Listeners
+         */
+        listeners: {
+          "email-address-updated": "_handleEmailAddressUpdated"
+        },
+
+        /**
+         * Helper variable to manage Admin Section State.
+         * @type String
+         * @private
+         */
+        _adminSection: "",
+        /**
+         * Helper Object to hold changed Input Field Values.
+         * @type Object
+         * @private
+         */
+        _changeValues: {},
+
+        /**
+         * Handle changed Email Address from Administration
+         * @param event Event
+         * @param context Event Data
+         * @private
+         * @method _handleEmailAddressUpdated
+         */
+        _handleEmailAddressUpdated: function(event, context) {
+          this.$.txtEmailAddress.value = context.value;
+        },
+
+        /**
+         * Function for Show / Hide Edit Information Section
+         * @param {Object} e FAB
+         * @private
+         * @method _toggleEditInformationSection
+         */
+        _toggleEditInformationSection: function(e) {
+          ProfileUtil
+            .getInstance(this)
+            .toggleInformationArea(this.$.showInfoStandard, this.$.editInfoStandard, this.$.showInfoBio, this.$.editInfoBio, e);
+        },
+
+        /**
+         * Function for Fire Event to Save Information changes.
+         * @private
+         * @method _saveInfoStandard
+         */
+        _saveInfoStandard: function() {
+          var obj = {
+            name: this.$.txtUsername.value,
+            email: this.$.txtEmailAddress.value
+          };
+          this.fire("save-info-standard", obj);
+        },
+        /**
+         * Function for Fire Event to Save Biography changes.
+         * @private
+         * @method _saveInfoBiography
+         */
+        _saveInfoBiography: function() {
+          this.fire("save-info-biography", {biography: this.$.txtBiography.value});
+        },
+
+        /**
+         * Function for show Admin section only if the user is logged in with emailaddress.
+         * @param {Object} obj User Object
+         * @private
+         * @method _checkUserLoginProvider
+         */
+        _checkUserLoginProvider: function(obj) {
+          if (typeof obj !== 'undefined') {
+            return obj.provider === "password";
+          }
+        },
+
+        /**
+         * Toggle Change Email Address Section
+         * @param {Object} e Button
+         * @private
+         * @member _changeEmailAddress
+         */
+        _changeEmailAddress: function(e) {
+          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+        },
+        /**
+         * Toggle Change Password
+         * @param {Object} e Button
+         * @private
+         * @method _changePassword
+         */
+        _changePassword: function(e) {
+          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+        },
+        /**
+         * Toggle Reset Password Section
+         * @param {Object} e Button
+         * @private
+         * @method _resetPassword
+         */
+        _resetPassword: function(e) {
+          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+        },
+        /**
+         * Toggle Delete Account Section
+         * @param {Object} e Button
+         * @private
+         * @method _deleteAccount
+         */
+        _deleteAccount: function(e) {
+          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+        },
+
+        /**
+         * Function to submit changes
+         * @param {Object} e Button
+         * @private
+         * @method _submitAdminChanges
+         */
+        _submitAdminChanges: function(e) {
+          var txtOldEmailAddress = document.querySelector("#txtOldEmailAddress");
+          var txtNewEmailAddress = document.querySelector("#txtNewEmailAddress");
+          var txtOldPassword = document.querySelector("#txtOldPassword");
+          var txtNewPassword = document.querySelector("#txtNewPassword");
+
+          switch (this._adminSection) {
+            case "ChangeEmailAddress":
+              this._changeValues = {
+                type: "ChangeEmailAddress",
+                oldMail: txtOldEmailAddress.value,
+                newMail: txtNewEmailAddress.value,
+                oldPwd: txtOldPassword.value
+              };
+              this.fire("change-email-address", this._changeValues);
+              this._clearAdminChanges();
+              this._changeValues = {};
+              break;
+            case "ChangePassword":
+              this._changeValues = {
+                type: "ChangePassword",
+                oldMail: txtOldEmailAddress.value,
+                oldPwd: txtOldPassword.value,
+                newPwd: txtNewPassword.value
+              };
+              this.fire("change-password", this._changeValues);
+              this._clearAdminChanges();
+              this._changeValues = {};
+              break;
+            case "ResetPassword":
+              this._changeValues = {
+                type: "ResetPassword",
+                oldMail: txtOldEmailAddress.value
+              };
+              this.fire("reset-password", this._changeValues);
+              this._clearAdminChanges();
+              this._changeValues = {};
+              break;
+            case "DeleteAccount":
+              this._changeValues = {
+                type: "DeleteAccount",
+                oldMail: txtOldEmailAddress.value,
+                oldPwd: txtOldPassword.value
+              };
+              this.fire("delete-account", this._changeValues);
+              this._clearAdminChanges();
+              this._changeValues = {};
+              break;
+            default:
+              alert("no valid operation chosen!");
+          }
+          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+        },
+        /**
+         * Clear Input Fields
+         * @private
+         * @method _clearAdminChanges
+         */
+        _clearAdminChanges: function() {
+          document.querySelector("#txtOldEmailAddress").value = "";
+          document.querySelector("#txtNewEmailAddress").value = "";
+          document.querySelector("#txtOldPassword").value = "";
+          document.querySelector("#txtNewPassword").value = "";
+        }
+      });
+    })();
+  </script>
+</dom-module>

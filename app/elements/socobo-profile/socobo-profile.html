@@ -1,0 +1,138 @@
+<link rel="import" href="elements.html">
+<!--
+TODO:
+  - Make Element Responsive
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--socobo-profile-profile-wrapper` | Styling the Main Element Wrapper Container. | `{}`
+
+@demo demo/socobo-profile/demo.html
+-->
+<dom-module id="socobo-profile">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+      .profile-wrapper {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        @apply(--socobo-profile-profile-wrapper);
+      }
+    </style>
+
+    <div class="profile-wrapper">
+      <socobo-profile-page
+        id="profilePage"
+        user-login="{{userLogin}}"
+        profile-object="{{_profileObject}}"
+        on-profile-user-image-changed="_handleProfileUserImageChanged"
+        on-profile-user-info-changed="_handleProfileUserInfoChanged"
+        on-user-account-deleted="_handleUserAccountDeleted">
+      </socobo-profile-page>
+    </div>
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'socobo-profile',
+        /**
+         * This Event is fired if the user changed the profile image. <br/>
+         * `Detail`: Object: {profileImage: "profileImage Data"} <br/>
+         * @event profile-image-changed
+         */
+        /**
+         * This Event is fired if the user changed the information. <br/>
+         * `Detail`: Object: {name: "name", email: "email"} <br/>
+         * @event profile-info-changed
+         */
+        /**
+         * This Event is fired after the profile data is loaded. <br/>
+         * `Detail`: Object: {name: "name", email: "email", profileImage: "profileImage"} <br/>
+         * @event profile-data-changed
+         */
+        /**
+         * This Event is fired if the user deleted the account. <br/>
+         * @event account-deleted
+         */
+
+        /**
+         * Element Properties.
+         */
+        properties: {
+          /**
+           * User Login Object
+           */
+          userLogin: {
+            type: Object,
+            value: {},
+            notify: true
+          }
+        },
+        /**
+         * User Profile Object
+         * @type Object
+         * @private
+         */
+        _profileObject: {},
+        /**
+         * PRIVATE FUNCTIONS
+         */
+        /**
+         * Handle changed user image and fire an event.
+         * @param e CustomEvent
+         * @private
+         * @method _handleProfileDataChanged
+         */
+        _handleProfileUserImageChanged: function(e) {
+          this.fire("profile-image-changed", {profileImage: e.detail});
+        },
+        /**
+         * handle changed user information and fire an event.
+         * @param e CustomEvent
+         * @private
+         * @method _handleProfileUserInfoChanged
+         */
+        _handleProfileUserInfoChanged: function(e) {
+          var userInfo = e.detail;
+          this.fire("profile-info-changed", userInfo);
+        },
+        /**
+         * handle deleted user account and fire an event.
+         * @param e CustomEvent
+         * @private
+         * @method _handleAccountDeleted
+         */
+        _handleUserAccountDeleted: function(e) {
+          this.fire("account-deleted");
+        },
+        /**
+         * PUBLIC FUNCTIONS
+         */
+        /**
+         * Load User Profile Data from Firebase
+         * @method loadProfileData
+         */
+        loadData: function() {
+          SocoboProfile
+            .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
+            .loadProfileData()
+            .then(function(data){
+              this._profileObject = data;
+              this.fire("profile-data-changed", {name: data.name, email: data.email, profileImage: data.profileImage});
+            }.bind(this))
+            .catch(function(err){
+              console.dir(err);
+            });
+        }
+      });
+    })();
+  </script>
+</dom-module>
