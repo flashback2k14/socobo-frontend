@@ -112,7 +112,8 @@ Custom property | Description | Default
 
         _checkOrUncheck: function(state) {
           var itemList = document.querySelectorAll(".inventory-list-item");
-          for (var element in itemList) {
+          for (var i=0; i < itemList.length; i++) {
+            var element = itemList[i];
             if (!element.hidden) {
               element.isChecked = state;
             }
