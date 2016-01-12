@@ -1,0 +1,124 @@
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+@demo demo/socobo-inventory/demo.html
+-->
+
+<dom-module id="socobo-inventory-overview">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .inventory {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .searchBox {
+        display: inline-block;
+        width: 100%;
+        @apply(--layout-horizontal);
+      }
+
+      .checkBoxAll {
+        margin-left: 16px;
+        margin-top: 12px;
+        --paper-checkbox-unchecked-color: var(--text-primary-color);
+        --paper-checkbox-checked-color: var(--accent-color)
+      }
+
+      .search-input {
+        @apply(--layout-flex);
+        margin-left: 32px;
+        margin-bottom: 16px;
+        --paper-input-container-color: var(--text-primary-color);
+        --paper-input-container-focus-color: var(--text-primary-color);
+        --paper-input-container-input-color: var(--text-primary-color)
+      }
+
+      .overview {
+        padding: 0;
+      }
+    </style>
+    <div>
+      <paper-material vertical layout class="inventory" elevation="1">
+        <socobo-element-search
+          id="searchHeader"
+          on-check-all-items="_handleCheckAll"
+          on-uncheck-all-items="_handleUncheckAll"
+          on-changed-search-query="_searchQueryChanged">
+        </socobo-element-search>
+
+        <paper-material elevation="1">
+          <div id="inventoryOverview" class="overview">
+            <template id="itemList" is="dom-repeat" items="{{data}}">
+              <socobo-element-list-item
+                class="inventory-list-item"
+                obj="{{item}}"
+                on-check="_handleCheck"
+                hidden="{{_setHidden(item, query)}}"
+                on-uncheck="_handleUncheck">
+              </socobo-element-list-item>
+            </template>
+          </div>
+        </paper-material>
+      </paper-material>
+    </div>
+  </template>
+  <script>
+    (function () {
+      Polymer({
+        is: 'socobo-inventory-overview',
+
+        properties: {
+          data: {
+            type: Array,
+            notify: true
+          }
+        },
+
+        ready: function() {
+          this.query = null;
+        },
+
+        _setHidden: function (item, query) {
+          return !(query === null || typeof query === 'undefined' || item.desc.indexOf(query) != -1 || item.info.indexOf(query) != -1);
+        },
+
+        _searchQueryChanged: function(e) {
+          this.query = e.detail.searchQuery;
+        },
+
+        _handleCheckAll: function () {
+          this._checkOrUncheck(true);
+        },
+
+        _handleUncheckAll: function () {
+          this._checkOrUncheck(false);
+        },
+
+        _handleCheck: function () {
+        },
+
+        _handleUncheck: function () {
+        },
+
+        _checkOrUncheck: function(state) {
+          var itemList = document.querySelectorAll(".inventory-list-item");
+          for (var element in itemList) {
+            if (!element.hidden) {
+              element.isChecked = state;
+            }
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>
