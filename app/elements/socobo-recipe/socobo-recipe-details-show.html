@@ -1,4 +1,5 @@
 <link rel="import" href="elements.html">
+<link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 
 <!--
 The following custom properties and mixins are available for styling:
@@ -78,13 +79,26 @@ Custom property | Description | Default
     }
 
     /* TITLE */
+    #title_default {
+      color: var(--dark-primary-color);
+      font-family: 'Lobster', cursive;
+    }
+
     .default {
       display: block;
     }
     .subHeadings {
-      background-color: #F4F0EC;
+      color: var(--dark-primary-color);
+      font-size: 18px;
+      font-family: 'Lobster', cursive;
       text-align: center;
     }
+
+    .separator {
+      border: 1px solid var(--dark-primary-color);
+      margin-top: 2px;
+    }
+
 
     /* IMAGES */
     .recipeImg {
@@ -160,6 +174,7 @@ Custom property | Description | Default
           <!-- DETAIL INGREDIENTS -->
           <template is="dom-if" if="{{recipe.ingredients}}">
             <div class="subHeadings">Ingredients</div>
+            <hr class="separator"/>
           </template>
           <div class="ingredients" id="ingr_default" class="default">
             <template is="dom-repeat" items="{{recipe.ingredients}}">
@@ -172,11 +187,13 @@ Custom property | Description | Default
           <!-- DESCRIPTION SECTION -->
           <template is="dom-if" if="{{recipe.text}}">
             <div class="subHeadings">Description</div>
+            <hr class="separator"/>
           </template>
           <div id="text_default" class="default" class="text">{{recipe.text}}</div>
           <!-- DETAIL STEPS -->
           <template is="dom-if" if="{{recipe.steps.length}}">
             <div class="subHeadings">Steps</div>
+            <hr class="separator"/>
           </template>
           <div class="steps" id="steps_default" class="default">
             <template is="dom-repeat" items="{{recipe.steps}}">
