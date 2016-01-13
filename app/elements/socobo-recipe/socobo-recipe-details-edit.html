@@ -44,6 +44,10 @@ Custom property | Description | Default
       padding: 0 30px 30px 30px;
       overflow: hidden;
     }
+    .separator {
+      border: 1px solid var(--dark-primary-color);
+      margin-top: 2px;
+    }
 
     /* EXIT DIALOG */
     .style-exit-button {
@@ -72,7 +76,9 @@ Custom property | Description | Default
       margin-bottom: 20px;
     }
     .subHeadings {
-      background-color: #F4F0EC;
+      color: var(--dark-primary-color);
+      font-size: 18px;
+      font-family: 'Lobster', cursive;
       text-align: center;
     }
 
@@ -134,18 +140,21 @@ Custom property | Description | Default
       line-height: 40px;
       text-align: center;
     }
-    .style-add-step-button {
+
+    /* INGREDIENTS AND STEPS*/
+    .style-add-ingr-button, .style-add-step-button{
+      font-family: 'Lobster', cursive;
       margin: 20px 0 0 0;
-      background-color: #F4F0EC;
+      color: var(--light-primary-color);
+      background-color: var(--dark-primary-color);
       font-size: 10px;
     }
 
-    /* INGREDIENTS */
-    .style-add-ingr-button {
-      margin: 20px 0 0 0;
-      background-color: #F4F0EC;
-      font-size: 10px;
+    .style-add-ingr-button:hover, .style-add-step-button:hover{
+      background-color: var(--accent-color);
+      color: var(--primary-background-color);
     }
+
 
     /* BOTTOM BUTTONS */
     paper-fab {
@@ -221,7 +230,8 @@ Custom property | Description | Default
           </div>
 
           <!-- DETAIL INGREDIENTS HEADLINE -->
-          <div class="subHeadings">Ingredients:</div>
+          <div class="subHeadings">Ingredients</div>
+          <hr class="separator"/>
           <!-- DETAIL INGREDIENTS -->
           <template is="dom-repeat" items="{{ingredient_inputs}}">
             <!-- DETAIL INGREDIENT -->
@@ -247,6 +257,7 @@ Custom property | Description | Default
         <div class="rightColumn">
           <!-- DESCRIPTION SECTION -->
           <div class="subHeadings">Description</div>
+          <hr class="separator"/>
           <paper-textarea
             id="text_input"
             rows="6"
@@ -255,6 +266,7 @@ Custom property | Description | Default
           </paper-textarea>
           <!-- SHOW DETAIL STEPS HEADLINE -->
           <div class="subHeadings">Steps</div>
+          <hr class="separator"/>
           <!-- DETAIL STEPS -->
           <div class="steps" id="steps_input">
             <template is="dom-repeat" items="{{recipe_inputs}}">
