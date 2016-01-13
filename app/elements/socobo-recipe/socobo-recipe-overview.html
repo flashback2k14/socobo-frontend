@@ -122,10 +122,20 @@ Custom property | Description | Default
        * - _checkedBoxes (boolean)
        */
       properties: {
+        /**
+         * A list of the users recipes
+         * */
         recipes: {
           type: Array,
           value: []
         },
+        /**
+        Object containing the user information. Must have following
+         properties:
+         - userId,
+         - firebaseUrl,
+         - expires
+         */
         userLogin: {
           type: Object,
           value: {}
