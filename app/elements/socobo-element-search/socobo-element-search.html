@@ -163,6 +163,15 @@ Custom property | Description | Default
         searchQueryChanged: function() {
           this.fire("changed-search-query", { searchQuery: this.searchStr });
         },
+
+        /**
+         * Method for resetting the search query </br>
+         * @method resetQuery
+         */
+        resetQuery: function() {
+          this.searchStr = "";
+          this.searchQueryChanged();
+        },
         /**
          * Method for clear search query and firing event. </br>
          * @method _clearSearchQuery
@@ -171,9 +180,9 @@ Custom property | Description | Default
           if (this.$.txtSearchQuery.value.length === 0) {
             this._toggleSearchElements();
           } else {
-            this.$.txtSearchQuery.value = "";
-            this.fire("changed-search-query", { searchQuery: null });
+            this.searchStr = "";
           }
+          this.fire("changed-search-query", { searchQuery: this.searchStr });
         },
         /**
          * Method for show / hide search input container. </br>
