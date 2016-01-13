@@ -33,15 +33,15 @@ Custom property | Description | Default
     }
 
     paper-fab {
-      position: absolute;
-      bottom: 40px;
-      right: 40px;
+      position: fixed;
+      top: 36px;
+      right: 80px;
     }
 
     paper-fab#add {
       display: block;
-      --paper-fab-background: var(--default-primary-color);
-      --paper-fab-keyboard-focus-background: var(--default-primary-color);
+      --paper-fab-background: var(--accent-color);
+      --paper-fab-keyboard-focus-background: var(--accent-color);
     }
 
     paper-fab#clear {
@@ -49,6 +49,7 @@ Custom property | Description | Default
       --paper-fab-background: var(--accent-color);
       --paper-fab-keyboard-focus-background: var(--accent-color);
     }
+
 
   </style>
   <template>
