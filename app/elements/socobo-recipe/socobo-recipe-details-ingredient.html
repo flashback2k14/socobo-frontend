@@ -14,10 +14,19 @@ Custom property | Description | Default
       display: block;
     }
 
-    .wrapper {
+    .wrapper_input {
       width: 260px;
       font-family: sans-serif;
-      margin: 0 0 50px 0;
+    }
+
+    .wrapper_output {
+      width: 260px;
+      font-family: sans-serif;
+    }
+
+    .messurement_wrapper{
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
     }
 
     .wrapper paper-icon-button{
@@ -30,14 +39,16 @@ Custom property | Description | Default
 
     .desc {
       @apply(--layout-flex);
+      width: 70%;
       float: left;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .unit, .amount {
+      width: 12%;
       float: right;
-      margin-left: 10px;
+      margin-left: 1%;
     }
 
     .separator {
@@ -50,21 +61,14 @@ Custom property | Description | Default
       width: 100%;
     }
 
-    .amount_input{
-      width: 45%;
-      float: left;
-    }
-
-    .unit_input{
-      width: 25%;
-      float: left;
-      margin-left: 3%;
+    .unit_input, .amount_input{
+      margin-right: 3%;
     }
 
   </style>
   <template>
     <!---->
-    <div class="wrapper" id="ingr_default">
+    <div class="wrapper_output" id="ingr_default">
       <span class="desc">{{ingredient.desc}}</span>
       <span class="unit">{{ingredient.unit}}</span>
       <span class="amount">{{ingredient.amount}}</span>
@@ -72,7 +76,7 @@ Custom property | Description | Default
     </div>
     <!---->
     <paper-material elevation="0"
-                    class="wrapper"
+                    class="wrapper_input"
                     id="ingr_input">
       <!---->
       <paper-input label="New ingredient ..."
@@ -84,22 +88,29 @@ Custom property | Description | Default
                    error-message="Title is required">
       </paper-input>
       <!---->
-      <paper-input label="Measurement"
-                   class="amount_input"
-                   type="number"
-                   value="{{ingredient.amount}}"
-                   pattern="[\d,.]+"
-                   auto-validate
-                   error-message="Invalid characters">
-      </paper-input>
-      <!---->
-      <paper-input label="Unit"
-                   class="unit_input"
-                   value="{{ingredient.unit}}"
-                   pattern="[a-zA-z]{1,5}"
-                   auto-validate
-                   error-message="Invalid characters"></paper-input>
-      <paper-icon-button icon="delete" on-click="removeIngr"></paper-icon-button>
+      <div class="messurement_wrapper">
+        <span>
+          <paper-input label="Amount"
+                       class="amount_input"
+                       type="number"
+                       value="{{ingredient.amount}}"
+                       pattern="[\d,.]+"
+                       auto-validate
+                       error-message="Invalid characters">
+          </paper-input>
+        </span>
+          <!---->
+        <span>
+          <paper-input label="Measurement"
+                       class="unit_input"
+                       value="{{ingredient.unit}}"
+                       pattern="[a-zA-z]{1,5}"
+                       auto-validate
+                       error-message="Invalid characters"></paper-input>
+        </span>
+        <span><paper-icon-button class="delete_icon" icon="delete" on-click="removeIngr"></paper-icon-button></span>
+      </div>
+
     </paper-material>
   </template>
 </dom-module>
