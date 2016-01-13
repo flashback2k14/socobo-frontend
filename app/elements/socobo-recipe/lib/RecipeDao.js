@@ -102,7 +102,7 @@ var RecipeDao = (function(){
      * @returns {Promise}
      */
     var update = function(obj) {
-      //
+      // convert ref path to string
       var reference = obj.ref.toString();
       //
       var newObj = {};
@@ -113,6 +113,8 @@ var RecipeDao = (function(){
           }
         }
       }
+      // set author to recipe object
+      newObj.userId = _id;
       //
       return new Promise(function(resolve, reject) {
         var dataRef = new Firebase(reference);
