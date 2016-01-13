@@ -171,6 +171,8 @@ Custom property | Description | Default
         resetQuery: function() {
           this.searchStr = "";
           this.searchQueryChanged();
+          this.$.chbCheckAllItems.checked = false;
+          this.fire("uncheck-all-items");
         },
         /**
          * Method for clear search query and firing event. </br>
@@ -182,7 +184,7 @@ Custom property | Description | Default
           } else {
             this.searchStr = "";
           }
-          this.fire("changed-search-query", { searchQuery: this.searchStr });
+          this.searchQueryChanged();
         },
         /**
          * Method for show / hide search input container. </br>
