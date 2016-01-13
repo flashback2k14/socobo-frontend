@@ -1,0 +1,64 @@
+<script src="lib/socobo-ranking.js"></script>
+
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+
+@demo demo/socobo-ranking/demo.html
+-->
+
+<dom-module id="socobo-ranking">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+
+      .container {
+
+      }
+
+    </style>
+
+    <div class="container">
+
+
+    </div>
+  </template>
+
+  <script>
+    (function() {
+
+      Polymer({
+        is: 'socobo-ranking',
+        /**
+         * This Event is fired if... <br/>
+         * @event ToDo
+         */
+        /**
+         * Element Properties.
+         */
+        properties: {
+          /**
+           * User Login Object
+           */
+          userLogin: {
+            type: Object,
+            value: {}
+          }
+        },
+        /**
+         * Load Data for Ranking.</br>
+         * @method loadData
+         */
+        loadData: function() {
+
+        }
+      });
+    })();
+  </script>
+</dom-module>
