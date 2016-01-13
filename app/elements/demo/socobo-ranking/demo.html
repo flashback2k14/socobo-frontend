@@ -17,14 +17,16 @@
     <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
     <!-- Demo Data -->
     <script type="text/javascript">
-      var demo = document.querySelector("#demo");
-      demo.userLogin = {
-        "firebaseUrl": "https://socobo-dev-component.firebaseio.com/",
-        "userId": "29cfd62b-6a65-4431-96ad-bdba7bb1473a",
-        "expires": "1605292372"
-      };
-      var elDemoRanking = document.querySelector('#elDemoRanking');
-      elDemoRanking.loadData();
+      window.addEventListener("WebComponentsReady", function() {
+        var demo = document.querySelector("#demo");
+        demo.userLogin = {
+          "firebaseUrl": "https://socobo-dev-component.firebaseio.com/",
+          "userId": "29cfd62b-6a65-4431-96ad-bdba7bb1473a",
+          "expires": 1605292372
+        };
+        var elDemoRanking = document.querySelector('#elDemoRanking');
+        elDemoRanking.loadData();
+      });
     </script>
   </body>
 </html>

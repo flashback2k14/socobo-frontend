@@ -28,6 +28,9 @@ Custom property | Description | Default
 
 
     </div>
+
+    <paper-toast id="infoRanking" duration="2000"></paper-toast>
+
   </template>
 
   <script>
@@ -56,7 +59,24 @@ Custom property | Description | Default
          * @method loadData
          */
         loadData: function() {
+          SocoboRanking.getInstance(this.userLogin)
+            .getData()
+            .then(function(data) {
+              this._notify("Loading Data finished! Calculating started...");
+              this._calcRanking(data);
+            }.bind(this))
+            .catch(function(error) {
+              this._notify(error.message);
+            }.bind(this));
+        },
 
+        _calcRanking: function(data) {
+
+        },
+
+        _notify: function(msg) {
+          this.$.infoRanking.text = msg;
+          this.$.infoRanking.show();
         }
       });
     })();
