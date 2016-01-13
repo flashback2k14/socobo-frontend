@@ -51,7 +51,7 @@ var SocoboRanking = (function() {
           snapshot.forEach(function(item) {
             var invItem = {
               id   : item.key(),
-              name : item.val().info
+              name : item.val().name
             };
             inventoryItems.push(invItem);
           });

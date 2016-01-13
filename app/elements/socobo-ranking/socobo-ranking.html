@@ -9,7 +9,6 @@ Custom property | Description | Default
 
 @demo demo/socobo-ranking/demo.html
 -->
-
 <dom-module id="socobo-ranking">
   <template>
     <style>
@@ -70,10 +69,109 @@ Custom property | Description | Default
             }.bind(this));
         },
 
+        /**
+         * Calculate Ranking
+         * @param data
+         * @private
+         * @method _calcRanking
+         */
         _calcRanking: function(data) {
+          if (data.length === 2) {
+            // data binding array
+            var recipeRanking = [];
+            // temporary array for sorting
+            var tmpRecipeRanking = [];
+            //extract data
+            var inventoryItems = data[0];
+            var recipesItems = data[1];
+            // iterate over recipes
+            recipesItems.forEach(function(recipe) {
+              // init matching items
+              recipe.matchingItems = 0;
+              // iterate over ingredients from recipe
+              recipe.ingredients.forEach(function(ingredient) {
+                // iterate over available inventory items
+                inventoryItems.forEach(function(item) {
+                  // check if inventory items is available for recipe
+                  if (ingredient.desc === item.name) {
+                    // count matching items
+                    recipe.matchingItems++;
+                  }
+                });
+              });
+              // find missing inventory items
+              recipe.missingItems = this._findMissing(recipe.ingredients, inventoryItems);
+              // push recipe into temporary array for sorting
+              tmpRecipeRanking.push(recipe);
+            }.bind(this));
 
+            // sort desc
+            tmpRecipeRanking = tmpRecipeRanking.sort(this._compareRecipeMatchingDesc);
+
+            // push sorted recipe into data binding array
+            this.push("recipeRanking", tmpRecipeRanking);
+
+          } else {
+            this._notify("Error - One needed Item is missing!");
+          }
         },
 
+        /**
+         * Find missing inventory items
+         * @param ingredients
+         * @param items
+         * @returns {Array}
+         * @private
+         * @method _findMissing
+         */
+        _findMissing: function(ingredients, items) {
+          // init variables
+          var missing = [];
+          var itemNames = [];
+          // get names from inventory items
+          items.forEach(function(item) {
+            itemNames.push(item.name);
+          });
+          // check for missing inventory items
+          for (var i = 0; i < ingredients.length; i++) {
+            if (itemNames.indexOf(ingredients[i].desc) === -1) {
+              missing.push(ingredients[i].desc);
+            }
+          }
+          // return missing inventory items
+          return missing;
+        },
+
+        /**
+         * Sorting Recipes (ASC)
+         * @param a
+         * @param b
+         * @private
+         * @return {number}
+         * @method _compareRecipeMatchingAsc
+         */
+        _compareRecipeMatchingAsc: function(a, b) {
+          return a.matchingItems - b.matchingItems;
+        },
+
+        /**
+         * Sorting Recipes (DESC)
+         * @param a
+         * @param b
+         * @private
+         * @return {number}
+         * @method _compareRecipeMatchingDesc
+         */
+        _compareRecipeMatchingDesc: function(a, b) {
+          return b.matchingItems - a.matchingItems;
+        },
+
+        /**
+         * Show Toast with specific message
+         * @param msg
+         * @private
+         * @method _notify
+         */
         _notify: function(msg) {
           this.$.infoRanking.text = msg;
           this.$.infoRanking.show();
