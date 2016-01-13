@@ -78,7 +78,17 @@ Custom property | Description | Default
         color: var(--socobo-recipe-style-icon-focus-color);
       }
 
-    </style>
+      paper-tabs {
+        --paper-tabs-selection-bar-color: var(--accent-color);
+      }
+      paper-tab{
+        color: var(--primary-text-color);
+        font-size: 14px;
+        margin: 0 10px 0 10px;
+
+      }
+
+  </style>
 
     <!---->
     <div class="wrapper_output" id="ingr_default">
@@ -114,12 +124,31 @@ Custom property | Description | Default
         </span>
           <!---->
         <span>
+          <!--
           <paper-input label="Measurement"
                        class="unit_input"
                        value="{{ingredient.unit}}"
                        pattern="[a-zA-z]{1,5}"
                        auto-validate
-                       error-message="Invalid characters"></paper-input>
+                       error-message="Invalid characters">
+          </paper-input>
+          -->
+          <div class="horizontal-section">
+          <paper-dropdown-menu
+            label="Measurement"
+            class="vertical-layout width-small"
+            id="measurementDropdown"
+            horizontal-align="left">
+            <paper-tabs
+              id="measurementDropdownMenu"
+              class="dropdown-content"
+              noink="true">
+              <template is="dom-repeat" items="[[measurements]]" as="measurement">
+                <paper-tab>[[measurement]]</paper-tab>
+              </template>
+            </paper-tabs>
+          </paper-dropdown-menu>
+            </div>
         </span>
         <span><paper-icon-button class="delete_icon" icon="delete" on-click="removeIngr"></paper-icon-button></span>
       </div>
@@ -127,42 +156,46 @@ Custom property | Description | Default
     </paper-material>
   </template>
 
-  <script>
-    (function() {
-      Polymer({
-        is: 'socobo-recipe-details-ingredient',
-        properties: {
-          ingredient: {
-            type: Object,
-            value: {
-            }
-          },
-          state : {
-            type : String,
-            value : "show"
+<script>
+  (function() {
+    Polymer({
+      is: 'socobo-recipe-details-ingredient',
+      properties: {
+        ingredient: {
+          type: Object,
+          value: {
           }
         },
-        chooseState :function(){
-          if(this.state === "add"){
-            this.$.ingr_default.style.display = "none";
-            this.$.sep.style.display = "none";
-            this.$.ingr_input.style.display = "block";
-          }
-          if(this.state === "show"){
-            this.$.ingr_default.style.display = "block";
-            this.$.sep.style.display = "block";
-            this.$.ingr_input.style.display = "none";
-          }
+        measurements : {
+          type : Array,
+          value: ["Kg","l","Stk","Kg","l","Stk","Kg","l","Stk"]
         },
-        removeIngr : function(){
-          this.fire("rem_ingr", this.ingredient);
-        },
-        ready : function () {
-          this.chooseState();
+        state : {
+          type : String,
+          value : "show"
         }
-      });
-    })();
-  </script>
+      },
+      chooseState :function(){
+        if(this.state === "add"){
+          this.$.ingr_default.style.display = "none";
+          this.$.sep.style.display = "none";
+          this.$.ingr_input.style.display = "block";
+        }
+        if(this.state === "show"){
+          this.$.ingr_default.style.display = "block";
+          this.$.sep.style.display = "block";
+          this.$.ingr_input.style.display = "none";
+        }
+      },
+      removeIngr : function(){
+        this.fire("rem_ingr", this.ingredient);
+      },
+      ready : function () {
+        this.chooseState();
+      }
+    });
+  })();
+</script>
 
 </dom-module>
 
