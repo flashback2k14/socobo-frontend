@@ -114,6 +114,7 @@ Custom property | Description | Default
       width: 280px;
       height: 280px;
       margin-bottom: 20px;
+      margin-top: 30px;
     }
     .recipeImg_image {
       position: absolute;
@@ -218,7 +219,7 @@ Custom property | Description | Default
             <template is="dom-if" if="{{!recipe.clone.image}}">
               <iron-image
                 id="edit_placeholder"
-                class="recipeImg"
+                class="recipeImg_image"
                 src="placeholder.png"
                 sizing="cover"
                 preload="true"
@@ -248,7 +249,8 @@ Custom property | Description | Default
             id="addIngr"
             class="style-add-ingr-button"
             icon="add"
-            on-tap="addIngr">add ingredient
+            on-tap="addIngr">
+            New
           </paper-button>
           <!-- END LEFT COLUMN -->
         </div>
@@ -285,7 +287,8 @@ Custom property | Description | Default
             id="addStep"
             class="style-add-step-button"
             icon="add"
-            on-tap="addStep">add step
+            on-tap="addStep">
+            New
           </paper-button>
           <!-- END RIGHT COLUMN -->
         </div>
