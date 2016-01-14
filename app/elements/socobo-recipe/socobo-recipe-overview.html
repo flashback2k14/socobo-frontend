@@ -39,7 +39,7 @@ Custom property | Description | Default
       position: relative;
     }
 
-    .initial-loading-spinner{
+    .loading-spinner{
       position: absolute;
       left: 50%;
       margin-left: -25px;
@@ -47,6 +47,13 @@ Custom property | Description | Default
       height: 50px;
       text-align: center;
       margin-top: 200px;
+      --paper-spinner-layer-1-color: var(--socobo-recipe-style-spinner-color-level1);
+      --paper-spinner-layer-2-color: var(--socobo-recipe-style-spinner-color-level2);
+      --paper-spinner-layer-3-color: var(--socobo-recipe-style-spinner-color-level3);
+      --paper-spinner-layer-4-color: var(--socobo-recipe-style-spinner-color-level4);
+    }
+
+    .loadspinner {
       --paper-spinner-layer-1-color: var(--socobo-recipe-style-spinner-color-level1);
       --paper-spinner-layer-2-color: var(--socobo-recipe-style-spinner-color-level2);
       --paper-spinner-layer-3-color: var(--socobo-recipe-style-spinner-color-level3);
@@ -78,9 +85,18 @@ Custom property | Description | Default
       --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
     }
     .success-note{
-      --paper-toast-background-color: var(--dark-primary-color);
+      --paper-toast-background-color: var(--socobo-recipe-style-success-notification-color);
       --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
     }
+    .load-note{
+      --paper-toast-background-color: var(--socobo-recipe-style-loading-notification-color);
+      --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
 
 
   </style>
@@ -111,7 +127,7 @@ Custom property | Description | Default
       <div class="spinner-wrapper">
         <paper-spinner
           id="initialLoadingSpinner"
-          class="initial-loading-spinner"
+          class="loading-spinner"
           alt="Loading recipes ..."
           active>
         </paper-spinner>
@@ -152,6 +168,14 @@ Custom property | Description | Default
     <!-- Notification -->
     <paper-toast id="errorNotification" class="error-note"></paper-toast>
     <paper-toast id="successNotification" class="success-note"></paper-toast>
+    <paper-toast id="loadNotification" class="load-note" duration="-1">
+      <div>
+        <paper-spinner id="loadspinner" class="loadspinner" active></paper-spinner>
+      </div>
+      <div>
+        <paper-item id="loadtext"></paper-item>
+      </div>
+    </paper-toast>
   </template>
 </dom-module>
 <script>
@@ -307,6 +331,7 @@ Custom property | Description | Default
        * @param e
        */
       _addNewRecipe: function (e) {
+        this._notifyOnLoading("Adding recipe   ")
         RecipeDao.getInstance(this.userLogin)
           .add(e.detail)
           .then(function (success) {
@@ -431,6 +456,15 @@ Custom property | Description | Default
       _notifyOnSuccess: function (msg) {
         this.$.successNotification.text = msg;
         this.$.successNotification.show();
+      },
+      /**
+       * Shows a given loading message as paper-toast element
+       * @param msg
+       * @private
+       */
+      _notifyOnLoading: function (msg) {
+        this.$.loadtext.innerHTML = msg;
+        this.$.loadNotification.opened = true;
       },
       /**
        * Enables all checkboxes on checking the main checkbox of the search bar
