@@ -171,6 +171,11 @@ Custom property | Description | Default
     .style-abort-fab {
       --paper-fab-background: var(--default-primary-color);
     }
+    /* NOTIFICATION */
+    .error-note{
+      --paper-toast-background-color: var(--accent-color);
+      --paper-toast-color: white;
+    }
 
   </style>
   <template>
@@ -290,6 +295,8 @@ Custom property | Description | Default
         </paper-fab>
       </div>
     </paper-dialog>
+    <!-- Notification -->
+    <paper-toast id="errorNotification" class="error-note"></paper-toast>
   </template>
 </dom-module>
 
@@ -453,10 +460,18 @@ Custom property | Description | Default
           this.clearInputFields();
           this.$.dialog.close();
         }else{
-          alert(v);
+          this._notify(v);
         }
       },
-
+      /**
+       * Shows a given message as paper-toast element
+       * @param msg
+       * @private
+       */
+      _notify: function (msg) {
+        this.$.errorNotification.text = msg;
+        this.$.errorNotification.show();
+      },
       /**
        * VALIDATE
        */
@@ -471,12 +486,12 @@ Custom property | Description | Default
         var textExists = check(this, "text");
         var stepsExist = this.recipe.steps.length > 0;
         var ingredientsExist = this.recipe.ingredients.length > 0;
-        var message = "";
+        var message = [];
         if (!titleExists) {
-          message += "Title\n";
+          message.push("Title");
         }
         if (!stepsExist && !textExists) {
-          message += "Description or Steps\n";
+          message.push("at least a description or some steps");
         }
         var stepsComplete = true;
         if (stepsExist) {
@@ -486,12 +501,12 @@ Custom property | Description | Default
             }
           }
           if(!stepsComplete){
-            message += "Steps need a description\n";
+            message.push("descriptions for the steps");
           }
         }
         var ingredientsComplete = true;
         if (!ingredientsExist) {
-          message += "Ingredients\n"
+          message.push("ingredients")
         } else {
           for(var ingr in this.recipe.ingredients){
             if(this.recipe.ingredients[ingr].desc == ""){
@@ -499,13 +514,18 @@ Custom property | Description | Default
             }
           }
           if(!ingredientsComplete){
-            message += "Ingredients need a description\n";
+            message.push("descriptions for the ingredients");
           }
         }
-        if (message !== "") {
-          message = "Missing:\n" + message;
+        var msg = "";
+        if (message.length > 0) {
+          msg = "Please add the missing information: ";
+          message.forEach(function(element){
+            msg += element + ", ";
+          })
+          msg = msg.slice(0, msg.length - 2);
         }
-        return message;
+        return msg;
       }
 
     });
