@@ -174,6 +174,17 @@ Custom property | Description | Default
           this.$.chbCheckAllItems.checked = false;
           this.fire("uncheck-all-items");
         },
+
+        /**
+         * Method to reset cjeckbox
+         * @method resetCheckbox
+         */
+        resetCheckbox: function() {
+          if (this.$.chbCheckAllItems.checked) {
+            this.$.chbCheckAllItems.checked = false;
+          }
+        },
+
         /**
          * Method for clear search query and firing event. </br>
          * @method _clearSearchQuery

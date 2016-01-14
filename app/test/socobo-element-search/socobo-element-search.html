@@ -43,7 +43,7 @@
         done();
       });
 
-      test("has a reset method", function(done) {
+      test("has a reset query method", function(done) {
         expect(socoboElementSearch.resetQuery).to.not.be.eql(undefined);
         done();
       });
@@ -85,6 +85,18 @@
 
         expect(socoboElementSearch.$.searchInputContainer.classList.contains("style-search-input-container"))
           .to.be.eql(true, "style-search-input-container");
+        done();
+      });
+
+      test("has a reset checkbox method", function(done) {
+        expect(socoboElementSearch.resetCheckbox).to.not.be.eql(undefined);
+        done();
+      });
+
+      test("calling reset checkbox method to uncheck checkbox", function(done) {
+        socoboElementSearch.$.chbCheckAllItems.checked = true;
+        socoboElementSearch.resetCheckbox();
+        expect(socoboElementSearch.$.chbCheckAllItems.checked).to.be.eql(false);
         done();
       });
 
