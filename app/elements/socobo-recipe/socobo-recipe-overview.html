@@ -25,12 +25,12 @@ Custom property | Description | Default
       display: block;
     }
 
-    #recipe_list {
+    .recipe_list {
       z-index: 19;
       margin-top: 20px;
     }
 
-    #recipe_list:first-child {
+    .recipe_list:first-child {
       border-top: 2px solid var(--socobo-recipe-style-border-color);
     }
 
@@ -134,7 +134,7 @@ Custom property | Description | Default
       on-changed-search-query="_searchQueryChanged">
     </socobo-element-search>
     <!-- List -->
-    <div id="recipe_list">
+    <div id="recipe_list" class="recipe_list">
       <div class="spinner-wrapper">
         <paper-spinner
           id="initialLoadingSpinner"
