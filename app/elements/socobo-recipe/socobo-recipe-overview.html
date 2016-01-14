@@ -296,7 +296,6 @@ Custom property | Description | Default
        * automatically.
        */
       getRecipes: function () {
-
         RecipeDao.getInstance(this.userLogin)
           .getAll()
           .then(function (recipes) {
@@ -314,6 +313,7 @@ Custom property | Description | Default
        * @param e
        */
       _removeRecipe: function (e) {
+        this._notifyOnLoading("Deleting recipe")
         RecipeDao.getInstance(this.userLogin)
           .remove(e.detail)
           .then(function (success) {
@@ -331,7 +331,7 @@ Custom property | Description | Default
        * @param e
        */
       _addNewRecipe: function (e) {
-        this._notifyOnLoading("Adding recipe   ")
+        this._notifyOnLoading("Adding recipe")
         RecipeDao.getInstance(this.userLogin)
           .add(e.detail)
           .then(function (success) {
@@ -360,6 +360,7 @@ Custom property | Description | Default
        * @param e
        */
       _editRecipe: function (e) {
+        this._notifyOnLoading("Updating recipe")
         RecipeDao.getInstance(this.userLogin)
           .update(e.detail)
           .then(function (success) {
