@@ -301,6 +301,15 @@ Custom property | Description | Default
          * @private
          */
         _addRecipe: function () {
+          //get measurements and add these to the add dialog
+          RecipeDao.getInstance(this.userLogin)
+            .measurements()
+            .then(function(data){
+              this.$.addDialog.measurements = data;
+            }.bind(this)).
+          catch(function(error){
+            this._notify(error);
+          }.bind(this));
           this.$.addDialog.state = "add";
           this.$.addDialog.toggleDialog();
           this.$.addDialog.clearInputFields();
