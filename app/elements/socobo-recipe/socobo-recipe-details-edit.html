@@ -90,6 +90,8 @@ Custom property | Description | Default
       opacity: 0.0;
       position: absolute;
       z-index: 6;
+      border-radius: 10px;
+
     }
     .overlay:hover {
       opacity: 0.4;
@@ -115,12 +117,15 @@ Custom property | Description | Default
       height: 280px;
       margin-bottom: 20px;
       margin-top: 30px;
+      border-radius: 10px;
     }
     .recipeImg_image {
       position: absolute;
       width: 280px;
       height: 280px;
       z-index: 4;
+      border-radius: 10px;
+
     }
     .style-file-chooser {
       display: none;
@@ -149,7 +154,6 @@ Custom property | Description | Default
       color: var(--light-primary-color);
       background-color: var(--dark-primary-color);
       font-size: 10px;
-      border-radius: 5px;
     }
 
     .style-add-ingr-button:hover, .style-add-step-button:hover{
@@ -246,12 +250,13 @@ Custom property | Description | Default
             </socobo-recipe-details-ingredient>
           </template>
           <!-- ADD DETAIL INGREDIENT-->
-          <paper-icon-button
+          <paper-fab
             id="addIngr"
+            mini="true"
             class="style-add-ingr-button"
             icon="add"
             on-tap="addIngr">
-          </paper-icon-button>
+          </paper-fab>
           <!-- END LEFT COLUMN -->
         </div>
 
@@ -283,15 +288,15 @@ Custom property | Description | Default
             </template>
           </div>
           <!-- ADD DETAIL STEP -->
-          <paper-icon-button
+          <paper-fab
             id="addStep"
+            mini="true"
             class="style-add-step-button"
             icon="add"
             on-tap="addStep">
-          </paper-icon-button>
+          </paper-fab>
           <!-- END RIGHT COLUMN -->
         </div>
-
         <!-- END CONTENT -->
       </div>
 
