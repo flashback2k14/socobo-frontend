@@ -50,6 +50,16 @@ Custom property | Description | Default
       --paper-fab-keyboard-focus-background: var(--accent-color);
     }
 
+    /* NOTIFICATION */
+    .error-note{
+      --paper-toast-background-color: var(--accent-color);
+      --paper-toast-color: white;
+    }
+    .success-note{
+      --paper-toast-background-color: var(--dark-primary-color);
+      --paper-toast-color: white;
+    }
+
 
   </style>
   <template>
@@ -106,7 +116,8 @@ Custom property | Description | Default
       on-tap="_removeAllChecked">
     </paper-fab>
     <!-- Notification -->
-    <paper-toast id="errorNotification"></paper-toast>
+    <paper-toast id="errorNotification" class="error-note"></paper-toast>
+    <paper-toast id="successNotification" class="success-note"></paper-toast>
   </template>
 </dom-module>
 <script>
@@ -233,7 +244,7 @@ Custom property | Description | Default
             this.set("recipes", recipes.value);
           }.bind(this))
           .catch(function (error) {
-            this._notify(error.value);
+            this._notifyOnError(error.value);
           }.bind(this));
       },
       /**
@@ -246,11 +257,11 @@ Custom property | Description | Default
         RecipeDao.getInstance(this.userLogin)
           .remove(e.detail)
           .then(function (success) {
-            this._notify(success.value);
+            this._notifyOnSuccess(success.value);
             this._updateAfterDeletion(e.detail, this.recipes, 'recipes');
           }.bind(this))
           .catch(function (error) {
-            this._notify(error.value);
+            this._notifyOnError(error.value);
           }.bind(this));
       },
       /**
@@ -263,7 +274,7 @@ Custom property | Description | Default
         RecipeDao.getInstance(this.userLogin)
           .add(e.detail)
           .then(function (success) {
-            this._notify(success.value);
+            this._notifyOnSuccess(success.value);
 
             RecipeDao.getInstance(this.userLogin)
               .getAll()
@@ -272,12 +283,12 @@ Custom property | Description | Default
                 this.set("recipes", recipes.value);
               }.bind(this))
               .catch(function (error) {
-                this._notify(error.value);
+                this._notifyOnError(error.value);
               }.bind(this));
 
           }.bind(this))
           .catch(function (error) {
-            this._notify(error.value);
+            this._notifyOnError(error.value);
           }.bind(this));
       },
       /**
@@ -291,7 +302,7 @@ Custom property | Description | Default
         RecipeDao.getInstance(this.userLogin)
           .update(e.detail)
           .then(function (success) {
-            this._notify(success.value);
+            this._notifyOnSuccess(success.value);
 
             RecipeDao.getInstance(this.userLogin)
               .getAll()
@@ -300,12 +311,12 @@ Custom property | Description | Default
                 this.set("recipes", recipes.value);
               }.bind(this))
               .catch(function (error) {
-                this._notify(error.value);
+                this._notifyOnError(error.value);
               }.bind(this));
 
           }.bind(this))
           .catch(function (error) {
-            this._notify(error.value);
+            this._notifyOnError(error.value);
           }.bind(this));
       },
       /**
@@ -351,10 +362,10 @@ Custom property | Description | Default
             }.bind(this));
             this._resetSearchElementCheckbox();
             // notify user
-            this._notify("Elements successfully removed!");
+            this._notifyOnSuccess("Elements successfully removed!");
           }.bind(this))
           .catch(function (error) {
-            this._notify(error.message);
+            this._notifyOnError(error.message);
           }.bind(this));
       },
       /**
@@ -368,13 +379,22 @@ Custom property | Description | Default
         enableButton.style.display = "block";
       },
       /**
-       * Shows a given message as paper-toast element
+       * Shows a given error message as paper-toast element
        * @param msg
        * @private
        */
-      _notify: function (msg) {
+      _notifyOnError: function (msg) {
         this.$.errorNotification.text = msg;
         this.$.errorNotification.show();
+      },
+      /**
+       * Shows a given success message as paper-toast element
+       * @param msg
+       * @private
+       */
+      _notifyOnSuccess: function (msg) {
+        this.$.successNotification.text = msg;
+        this.$.successNotification.show();
       },
       /**
        * Enables all checkboxes on checking the main checkbox of the search bar
@@ -457,7 +477,7 @@ Custom property | Description | Default
           checkInfo = !((item.info).toLowerCase().indexOf(lowerCaseQuery) != -1);
         }
         return checkDesc || checkInfo;
-      },
+      }
     });
   })();
 </script>
