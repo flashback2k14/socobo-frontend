@@ -18,23 +18,109 @@ Custom property | Description | Default
       }
 
       .container {
+        @apply(--layout-horizontal);
+        width: 100%;
+        height: 100%;
+      }
 
+      .style-main-card {
+        @apply(--layout-vertical);
+        @apply(--laout-start-justified);
+        width: 50%;
+        height: 700px;
+      }
+      .style-main-toolbar {
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+      }
+      .style-title {
+        margin-left: 10px;
+        font-size: x-large;
+      }
+
+      .style-detail-dialog {
+        --paper-dialog: {
+          width: 30%;
+          height: 300px;
+        };
+      }
+
+      .style-paper-item {
+        margin: 6px 0 0 0;
+        --paper-item: {
+          padding: 5px;
+          border-radius: 2px;
+        };
+      }
+      .style-paper-item:nth-child(2n+2) {
+        --paper-item: {
+          padding: 5px;
+          background: #EEEEEE;
+          border-radius: 2px;
+        };
+      }
+      .style-paper-item:hover {
+        cursor: pointer;
+        border: solid 1px lightgray;
+        border-radius: 2px;
+      }
+
+      .stlye-item-name {
+        font-size: x-large;
+        padding: 3px;
+      }
+      .style-item-matching {
+        font-size: small;
+        padding: 3px;
       }
 
     </style>
 
     <div class="container">
 
+      <!-- Detail Dialog -->
+      <paper-dialog
+        id="detailDialog"
+        class="style-detail-dialog"
+        entry-animation="scale-up-animation"
+        exit-animation="fade-out-animation"
+        modal>
+        <h2>Details - <span>[[recipe.name]]</span></h2>
+        <div>
+          <h1>Test</h1>
+        </div>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+        </div>
+      </paper-dialog>
+
+      <!-- Ranking -->
+      <paper-card id="mainCard" class="style-main-card">
+        <paper-toolbar class="style-main-toolbar">
+          <div class="middle style-title">Ranking</div>
+          <paper-icon-button id="btnAsc" icon="arrow-upward" on-tap="_sortAsc"></paper-icon-button>
+          <paper-icon-button id="btnDesc" icon="arrow-downward" on-tap="_sortDesc"></paper-icon-button>
+        </paper-toolbar>
+
+        <div class="card-content">
+          <template is="dom-repeat" items="{{recipeRanking}}" as="recipe">
+            <paper-item class="style-paper-item" on-tap="_openRankingItem">
+              <paper-item-body two-line>
+                <div class="stlye-item-name">[[recipe.name]]</div>
+                <div class="style-item-matching">Matching Ingredients: [[recipe.matchingItems]] / [[recipe.ingredients.length]]</div>
+              </paper-item-body>
+            </paper-item>
+          </template>
+        </div>
+      </paper-card>
 
     </div>
-
+    <!-- Notification-->
     <paper-toast id="infoRanking" duration="2000"></paper-toast>
-
   </template>
 
   <script>
     (function() {
-
       Polymer({
         is: 'socobo-ranking',
         /**
@@ -51,6 +137,14 @@ Custom property | Description | Default
           userLogin: {
             type: Object,
             value: {}
+          },
+          /**
+           * data binding array
+           */
+          recipeRanking: {
+            type: Array,
+            value: [],
+            notify: true
           }
         },
         /**
@@ -76,44 +170,44 @@ Custom property | Description | Default
          * @method _calcRanking
          */
         _calcRanking: function(data) {
-          if (data.length === 2) {
-            // data binding array
-            var recipeRanking = [];
-            // temporary array for sorting
-            var tmpRecipeRanking = [];
-            //extract data
-            var inventoryItems = data[0];
-            var recipesItems = data[1];
-            // iterate over recipes
-            recipesItems.forEach(function(recipe) {
-              // init matching items
-              recipe.matchingItems = 0;
-              // iterate over ingredients from recipe
-              recipe.ingredients.forEach(function(ingredient) {
-                // iterate over available inventory items
-                inventoryItems.forEach(function(item) {
-                  // check if inventory items is available for recipe
-                  if (ingredient.desc === item.name) {
-                    // count matching items
-                    recipe.matchingItems++;
-                  }
-                });
-              });
-              // find missing inventory items
-              recipe.missingItems = this._findMissing(recipe.ingredients, inventoryItems);
-              // push recipe into temporary array for sorting
-              tmpRecipeRanking.push(recipe);
-            }.bind(this));
-
-            // sort desc
-            tmpRecipeRanking = tmpRecipeRanking.sort(this._compareRecipeMatchingDesc);
-
-            // push sorted recipe into data binding array
-            this.push("recipeRanking", tmpRecipeRanking);
-
-          } else {
-            this._notify("Error - One needed Item is missing!");
+          // check Data
+          if (data === null || typeof(data) === "undefined") {
+            this._notify("No Data for Ranking available!");
+            return false;
           }
+          // check Data length
+          if (data.length !== 2) {
+            this._notify("Error - One needed Item is missing!");
+            return false;
+          }
+
+          //extract data
+          var inventoryItems = data[0];
+          var recipesItems = data[1];
+          // iterate over recipes
+          recipesItems.forEach(function(recipe) {
+            // init matching items
+            recipe.matchingItems = 0;
+            // iterate over ingredients from recipe
+            recipe.ingredients.forEach(function(ingredient) {
+              // iterate over available inventory items
+              inventoryItems.forEach(function(item) {
+                // check if inventory items is available for recipe
+                if (ingredient.desc === item.name) {
+                  // count matching items
+                  recipe.matchingItems++;
+                }
+              });
+            });
+            // find missing inventory items
+            recipe.missingItems = this._findMissing(recipe.ingredients, inventoryItems);
+            // push recipe into data binding array
+            this.push("recipeRanking", recipe);
+          }.bind(this));
+          // sort desc
+          this._sortList(true);
+          // notify user
+          this._notify("Calculating finished!");
         },
 
         /**
@@ -143,6 +237,43 @@ Custom property | Description | Default
         },
 
         /**
+         * Sort List
+         * @param useDesc
+         * @private
+         * @method _sortList
+         */
+        _sortList: function(useDesc) {
+          // getting recipes
+          var recipes = this.get("recipeRanking");
+          // reset recipes
+          this.set("recipeRanking", []);
+          // sorting and set
+          if (useDesc) {
+            this.set("recipeRanking", recipes.sort(this._compareRecipeMatchingDesc));
+          } else {
+            this.set("recipeRanking", recipes.sort(this._compareRecipeMatchingAsc));
+          }
+        },
+
+        /**
+         * Sort List ASC
+         * @private
+         * @method _sortAsc
+         */
+        _sortAsc: function() {
+          this._sortList(false);
+        },
+
+        /**
+         * Sort List DESC
+         * @private
+         * @method _sortDesc
+         */
+        _sortDesc: function() {
+          this._sortList(true);
+        },
+
+        /**
          * Sorting Recipes (ASC)
          * @param a
          * @param b
@@ -166,6 +297,19 @@ Custom property | Description | Default
           return b.matchingItems - a.matchingItems;
         },
 
+
+        _openRankingItem: function(e) {
+          var clickedItem = e.model.recipe;
+          var str = "";
+
+          clickedItem.ingredients.forEach(function(item) {
+
+          });
+
+          this.$.detailDialog.toggle();
+          this.$.detailDialog.recipe = clickedItem;
+        },
+
         /**
          * Show Toast with specific message
          * @param msg
@@ -174,7 +318,9 @@ Custom property | Description | Default
          */
         _notify: function(msg) {
           this.$.infoRanking.text = msg;
-          this.$.infoRanking.show();
+          if (!this.$.infoRanking.opened) {
+            this.$.infoRanking.show();
+          }
         }
       });
     })();

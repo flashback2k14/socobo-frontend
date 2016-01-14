@@ -4,39 +4,39 @@ var Util = (function() {
    * @param value
    * @return {String}
    */
-  function objectToString(value) {
+  var objectToString = function(value) {
     return JSON.stringify(value);
-  }
+  };
   /**
    * helper to parse localStorage string to object
    * @param value
    * @return {Object}
    */
-  function stringToObject(value) {
+  var stringToObject = function(value) {
     return JSON.parse(value);
-  }
+  };
   /**
    * get current timestamp
    * @return {number}
    * @private
    */
-  function _getCurrentTimestamp() {
+  var _getCurrentTimestamp = function() {
     return Math.round(new Date().getTime() / 1000.0);
-  }
+  };
   /**
    * check if user login is expired
    * @param expireDate
    * @return {boolean}
    */
-  function isUserLoginExpired(expireDate) {
+  var isUserLoginExpired = function(expireDate) {
 	  return expireDate === null || _getCurrentTimestamp() >= expireDate;
-  }
+  };
   /**
    * toggle single Menu Item
    * @param mItem
    * @private
    */
-  function _toggleMI(mItem) {
+  var _toggleMI = function(mItem) {
     if (mItem.classList.contains('show-menu-item')) {
       mItem.classList.remove('show-menu-item');
       mItem.classList.add('hide-menu-item');
@@ -44,20 +44,16 @@ var Util = (function() {
       mItem.classList.remove('hide-menu-item');
       mItem.classList.add('show-menu-item');
     }
-  }
+  };
   /**
    * toggle all Menu Items
-   * @param menuItemLogin
-   * @param menuItemRecipe
-   * @param menuItemInventory
-   * @param menuItemProfile
+   * @param menuItems
    */
-  function toggleMenuItems(menuItemLogin, menuItemRecipe, menuItemInventory, menuItemProfile) {
-    _toggleMI(menuItemLogin);
-    _toggleMI(menuItemRecipe);
-    _toggleMI(menuItemInventory);
-    _toggleMI(menuItemProfile);
-  }
+  var toggleMenuItems = function(menuItems) {
+    menuItems.forEach(function(menuItem) {
+      _toggleMI(menuItem);
+    });
+  };
   /**
    * show info toast
    * @param toast
@@ -65,12 +61,12 @@ var Util = (function() {
    * @param bgColor
    * @param color
    */
-  function showToast(toast, text, bgColor, color) {
+  var showToast = function(toast, text, bgColor, color) {
     toast.text = text;
     toast.style.background = bgColor;
     toast.style.color = color;
-    toast.toggle();
-  }
+    toast.show();
+  };
 
   /**
    * make functions public

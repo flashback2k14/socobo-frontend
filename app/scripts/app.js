@@ -15,11 +15,13 @@
   var imgUserProfilePicture = null;
   // Menu Items
   var menuItemLogin = null;
+  var menuItemHome = null;
   var menuItemRecipe = null;
   var menuItemInventory = null;
   var menuItemProfile = null;
   // Socobo Elements
   var elAuth = null;
+  var elRanking = null;
   var elInventory = null;
   var elRecipe = null;
   var elProfile = null;
@@ -45,11 +47,13 @@
     imgUserProfilePicture = document.querySelector("#imgUserProfilePicture");
     // Menu Items
     menuItemLogin = document.querySelector("#menuItemLogin");
+    menuItemHome = document.querySelector("#menuItemHome");
     menuItemRecipe = document.querySelector("#menuItemRecipe");
     menuItemInventory = document.querySelector("#menuItemInventory");
     menuItemProfile = document.querySelector("#menuItemProfile");
     // Socobo Elements
     elAuth = document.querySelector("#elAuth");
+    elRanking = document.querySelector("#elRanking");
     elInventory = document.querySelector("#elInventory");
     elRecipe = document.querySelector("#elRecipe");
     elProfile = document.querySelector("#elProfile");
@@ -63,9 +67,10 @@
     if (Util.isUserLoginExpired(UserInfo.get(UserInfo.EXPIREDATE))) {
       app.route = "login";
     } else {
-      // Show Menu Items for Inventory and Recipes
-      Util.toggleMenuItems(menuItemLogin, menuItemRecipe, menuItemInventory, menuItemProfile);
-      // load Recipes and Profile
+      // Show Menu Items for Home, Inventory and Recipes
+      Util.toggleMenuItems([menuItemLogin, menuItemHome, menuItemRecipe, menuItemInventory, menuItemProfile]);
+      // load Ranking, Recipes and Profile
+      elRanking.loadData();
       elRecipe.loadData();
       elProfile.loadData();
       // navigate to home
@@ -103,11 +108,12 @@
     UserInfo.set(UserInfo.USEROBJECT, Util.objectToString(userObj));
     UserInfo.set(UserInfo.USERID, userObj.uid);
     UserInfo.set(UserInfo.EXPIREDATE, userObj.expires);
-    // Show Menu Items for Inventory and Recipes
-    Util.toggleMenuItems(menuItemLogin, menuItemRecipe, menuItemInventory, menuItemProfile);
+    // Show Menu Items for Home, Inventory and Recipes
+    Util.toggleMenuItems([menuItemLogin, menuItemHome, menuItemRecipe, menuItemInventory, menuItemProfile]);
     // set UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
-    // load Recipes and Profile
+    // load Ranking, Recipes and Profile
+    elRanking.loadData();
     elRecipe.loadData();
     elProfile.loadData();
     // go to the home element
@@ -177,8 +183,8 @@
     tbUsername.innerHTML = "Placeholder Username";
     tbUserEmailAddress.innerHTML = "Placeholder Email";
     imgUserProfilePicture.src = "../images/touch/icon-128x128.png";
-    // Hide Menu Items for Inventory and Recipes
-    Util.toggleMenuItems(menuItemLogin, menuItemRecipe, menuItemInventory, menuItemProfile);
+    // Hide Menu Items for Home, Inventory and Recipes
+    Util.toggleMenuItems([menuItemLogin, menuItemHome, menuItemRecipe, menuItemInventory, menuItemProfile]);
     // delete all data in local storage
     UserInfo.deleteAllItems();
     // reset UserId and ExpireDate for Subelements

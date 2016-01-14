@@ -68,7 +68,7 @@
               <span>Login</span>
             </a>
 
-            <a data-route="home" href="/home">
+            <a data-route="home" id="menuItemHome" class="hide-menu-item" href="/home">
               <iron-icon icon="home"></iron-icon>
               <span>Home</span>
             </a>
@@ -119,8 +119,11 @@
             </section>
 
             <section data-route="home">
-              <paper-material elevation="1">
-                <p class="paper-font-body2">ToDo: Place here your Elements!</p>
+              <paper-material class="style-pm-margin-padding style-pm-height" elevation="1">
+                <socobo-ranking
+                  id="elRanking"
+                  user-login="[[userlogin]]">
+                </socobo-ranking>
               </paper-material>
             </section>
 
