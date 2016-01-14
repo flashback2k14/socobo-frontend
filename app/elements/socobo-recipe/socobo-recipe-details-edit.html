@@ -23,7 +23,7 @@ Custom property | Description | Default
       padding: 0;
       overflow: auto;
       background-color: white;
-      color: #8A7F80;
+      color: var(--socobo-recipe-style-text-color);
       font-family: sans-serif;
       border-radius: 5px;
       line-height: 2;
@@ -45,7 +45,7 @@ Custom property | Description | Default
       overflow: hidden;
     }
     .separator {
-      border: 1px solid var(--dark-primary-color);
+      border: 1px solid var(--socobo-recipe-style-border-color);
       margin-top: 2px;
     }
 
@@ -57,11 +57,11 @@ Custom property | Description | Default
       margin: 0;
       top: 0;
       right: 20px;
-      color: #8A7F80;
+      color: var(--socobo-recipe-style-text-color);
       font-weight: 100;
     }
     .style-exit-button:hover {
-      color: var(--accent-color);
+      color: var(--socobo-recipe-style-icon-focus-color);
       cursor: pointer;
     }
     .style-exit-button iron-icon {
@@ -76,7 +76,7 @@ Custom property | Description | Default
       margin-bottom: 20px;
     }
     .subHeadings {
-      color: var(--dark-primary-color);
+      color: var(--socobo-recipe-style-sub-heading-color);
       font-size: 18px;
       font-family: 'Lobster', cursive;
       text-align: center;
@@ -86,7 +86,7 @@ Custom property | Description | Default
     .overlay {
       width: 280px;
       height: 280px;
-      background-color: var(--default-primary-color);
+      background-color: var(--socobo-recipe-style-image-overlay-color);
       opacity: 0.0;
       position: absolute;
       z-index: 6;
@@ -151,14 +151,14 @@ Custom property | Description | Default
     .style-add-ingr-button, .style-add-step-button{
       font-family: 'Lobster', cursive;
       margin: 20px 0 0 0;
-      color: var(--light-primary-color);
-      background-color: var(--dark-primary-color);
+      color: var(--socobo-recipe-style-action-btn-text-color);
+      background-color: var(--socobo-recipe-style-secundary-action-btn-color);
       font-size: 10px;
     }
 
     .style-add-ingr-button:hover, .style-add-step-button:hover{
-      background-color: var(--accent-color);
-      color: var(--primary-background-color);
+      background-color: var(--socobo-recipe-style-action-btn-color);
+      color: var(--socobo-recipe-style-icon-text-color);
     }
 
 
@@ -167,7 +167,7 @@ Custom property | Description | Default
       margin: 10px;
     }
     .style-abort-fab {
-      --paper-fab-background: var(--default-primary-color);
+      --paper-fab-background: var(--socobo-recipe-style-secundary-action-btn-color);
     }
 
   </style>

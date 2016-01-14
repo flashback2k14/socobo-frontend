@@ -15,6 +15,7 @@ Custom property | Description | Default
     }
 
     .wrapper {
+      color: var(--socobo-recipe-style-text-color)
       font-family: sans-serif;
       @apply(--layout-horizontal);
       @apply(--layout-top);
@@ -26,12 +27,12 @@ Custom property | Description | Default
     }
 
     .wrapper:hover {
-      background-color: whitesmoke;
+      background-color: var(--socobo-recipe-style-step-content-focus-color);
     }
 
     .wrapper:hover .stepNumber {
-      background-color: var(--default-primary-color);
-      color: var(--light-primary-color)
+      background-color: var(--socobo-recipe-style-step-number-focus-color);
+      color: var(--socobo-recipe-style-step-number-text-focus-color)
     }
 
     .stepNumber {
@@ -39,9 +40,9 @@ Custom property | Description | Default
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      background-color: #F4F0EC;
+      background-color: var(--socobo-recipe-style-step-number-color);
       text-align: center;
-      color: #8A7F80;
+      color: var(--socobo-recipe-style-step-number-text-color);
       font-size: 25px;
       line-height: 50px;
       float: left;
@@ -54,13 +55,13 @@ Custom property | Description | Default
       padding: 10px 10px 10px 30px;
       overflow: hidden;
       text-overflow: ellipsis;
-      color: var(--primary-text-color);
+      color: var(--socobo-recipe-style-text-color);
       text-align: justify;
     }
 
     .separator {
       width: 30%;
-      border: 1px solid #F4F0EC;
+      border: 1px solid var(--socobo-recipe-style-border-color);
     }
 
     .steps_input {
@@ -83,7 +84,7 @@ Custom property | Description | Default
     }
 
     .steps_input paper-icon-button:hover {
-      color: var(--accent-color);
+      color: var(--socobo-recipe-style-icon-focus-color);
     }
 
     .clearer {

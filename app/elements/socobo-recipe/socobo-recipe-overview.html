@@ -20,7 +20,7 @@ Custom property | Description | Default
     }
 
     #recipe_list:first-child {
-      border-top: 2px solid #F4F0EC;
+      border-top: 2px solid var(--socobo-recipe-overview-style-border-color);
     }
 
     #no_recipes {
@@ -28,7 +28,7 @@ Custom property | Description | Default
       text-align: center;
       font-family: sans-serif;
       font-weight: 100;
-      color: #F4F0EC;
+      color: var(--socobo-recipe-overview-style-icon-text-color);
       line-height: 80px;
     }
 
@@ -38,26 +38,27 @@ Custom property | Description | Default
       right: 80px;
     }
 
-    paper-fab#add {
-      display: block;
-      --paper-fab-background: var(--accent-color);
-      --paper-fab-keyboard-focus-background: var(--accent-color);
+    .action_btn{
+      --paper-fab-background: var(--socobo-recipe-overview-style-action-btn-color);
+      --paper-fab-keyboard-focus-background: var(--socobo-recipe-overview-style-action-btn-color);
     }
 
-    paper-fab#clear {
+    paper-fab.add {
+      display: block;
+    }
+
+    paper-fab.clear {
       display: none;
-      --paper-fab-background: var(--accent-color);
-      --paper-fab-keyboard-focus-background: var(--accent-color);
     }
 
     /* NOTIFICATION */
     .error-note{
-      --paper-toast-background-color: var(--accent-color);
-      --paper-toast-color: white;
+      --paper-toast-background-color: var(--socobo-recipe-overview-style-error-notification-color);
+      --paper-toast-color: var(--socobo-recipe-overview-style-notification-text-color);
     }
     .success-note{
       --paper-toast-background-color: var(--dark-primary-color);
-      --paper-toast-color: white;
+      --paper-toast-color: var(--socobo-recipe-overview-style-notification-text-color);
     }
 
 
@@ -106,12 +107,14 @@ Custom property | Description | Default
     <!-- Add -->
     <paper-fab
       id="add"
+      class="action_btn add"
       icon="add"
       on-tap="_addRecipe">
     </paper-fab>
     <!-- Clear -->
     <paper-fab
       id="clear"
+      class="action_btn clear"
       icon="delete"
       on-tap="_removeAllChecked">
     </paper-fab>
