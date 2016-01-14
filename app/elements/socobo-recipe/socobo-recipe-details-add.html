@@ -249,6 +249,7 @@ Custom property | Description | Default
             <socobo-recipe-details-ingredient
               state="add"
               ingredient="{{item}}"
+              measurements="[[measurements]]"
               id="{{item}}"
               on-rem_ingr="removeIngr">
             </socobo-recipe-details-ingredient>
@@ -329,30 +330,38 @@ Custom property | Description | Default
           'fileChooser.change': 'encode'
         },
 
-        /**
-         * PROPERTIES
-         */
-        properties: {
-          recipe : {
-            type : Object,
-            value : {}
-          },
-          image : {
-            type : Object
-          },
-          recipe_inputs : {
-            type : Array,
-            value : []
-          },
-          ingredient_inputs : {
-            type : Array,
-            value : []
-          },
-          state : {
-            type: String,
-            value: "show"
-          }
+      /**
+       * PROPERTIES
+       */
+      properties: {
+        recipe : {
+          type : Object,
+          value : {}
         },
+        image : {
+          type : Object
+        },
+        recipe_inputs : {
+          type : Array,
+          value : []
+        },
+        ingredient_inputs : {
+          type : Array,
+          value : []
+        },
+        state : {
+          type: String,
+          value: "show"
+        },
+        /**
+         * Measurements from the database
+         * which are usable for the ingredients
+         */
+        measurements: {
+          type : Array,
+          value : []
+        }
+      },
 
         /**
          * SHOW / HIDE

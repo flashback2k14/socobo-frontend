@@ -144,7 +144,7 @@ Custom property | Description | Default
               class="dropdown-content"
               noink="true">
               <template is="dom-repeat" items="[[measurements]]" as="measurement">
-                <paper-tab>[[measurement]]</paper-tab>
+                <paper-tab on-click="select">[[measurement]]</paper-tab>
               </template>
             </paper-tabs>
           </paper-dropdown-menu>
@@ -166,9 +166,13 @@ Custom property | Description | Default
           value: {
           }
         },
+        /**
+         * Measurements from the database
+         * which are usable for the ingredients
+         */
         measurements : {
           type : Array,
-          value: ["Kg","l","Stk","Kg","l","Stk","Kg","l","Stk"]
+          value: []
         },
         state : {
           type : String,
@@ -189,6 +193,10 @@ Custom property | Description | Default
       },
       removeIngr : function(){
         this.fire("rem_ingr", this.ingredient);
+      },
+      select : function(e){
+        this.ingredient.unit = this.measurements[this.$.measurementDropdownMenu.selected];
+        alert(this.ingredient.unit);
       },
       ready : function () {
         this.chooseState();
