@@ -20,16 +20,37 @@ Custom property | Description | Default
     }
 
     #recipe_list:first-child {
-      border-top: 2px solid var(--socobo-recipe-overview-style-border-color);
+      border-top: 2px solid var(--socobo-recipe-style-border-color);
     }
 
-    #no_recipes {
+    .no_recipes {
+      display: block;
       font-size: 40px;
       text-align: center;
       font-family: sans-serif;
       font-weight: 100;
-      color: var(--socobo-recipe-overview-style-icon-text-color);
+      color: var(--socobo-recipe-style-icon-text-color);
       line-height: 80px;
+      font-family: 'Lobster', cursive;
+    }
+
+    .spinner-wrapper{
+      width: 100%;
+      position: relative;
+    }
+
+    .initial-loading-spinner{
+      position: absolute;
+      left: 50%;
+      margin-left: -25px;
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      margin-top: 200px;
+      --paper-spinner-layer-1-color: var(--socobo-recipe-style-spinner-color-level1);
+      --paper-spinner-layer-2-color: var(--socobo-recipe-style-spinner-color-level2);
+      --paper-spinner-layer-3-color: var(--socobo-recipe-style-spinner-color-level3);
+      --paper-spinner-layer-4-color: var(--socobo-recipe-style-spinner-color-level4);
     }
 
     paper-fab {
@@ -39,8 +60,8 @@ Custom property | Description | Default
     }
 
     .action_btn{
-      --paper-fab-background: var(--socobo-recipe-overview-style-action-btn-color);
-      --paper-fab-keyboard-focus-background: var(--socobo-recipe-overview-style-action-btn-color);
+      --paper-fab-background: var(--socobo-recipe-style-action-btn-color);
+      --paper-fab-keyboard-focus-background: var(--socobo-recipe-style-action-btn-color);
     }
 
     paper-fab.add {
@@ -53,12 +74,12 @@ Custom property | Description | Default
 
     /* NOTIFICATION */
     .error-note{
-      --paper-toast-background-color: var(--socobo-recipe-overview-style-error-notification-color);
-      --paper-toast-color: var(--socobo-recipe-overview-style-notification-text-color);
+      --paper-toast-background-color: var(--socobo-recipe-style-error-notification-color);
+      --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
     }
     .success-note{
       --paper-toast-background-color: var(--dark-primary-color);
-      --paper-toast-color: var(--socobo-recipe-overview-style-notification-text-color);
+      --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
     }
 
 
@@ -87,8 +108,18 @@ Custom property | Description | Default
     </socobo-element-search>
     <!-- List -->
     <div id="recipe_list">
+      <div class="spinner-wrapper">
+        <paper-spinner
+          id="initialLoadingSpinner"
+          class="initial-loading-spinner"
+          alt="Loading recipes ..."
+          active>
+        </paper-spinner>
+      </div>
       <template is="dom-if" if="{{!recipes.length}}">
-        <p id="no_recipes">no recipes<br>available</p>
+        <p id="no_recipes" class="no_recipes">
+          no recipes<br>available
+        </p>
       </template>
       <template id="listItems" is="dom-repeat" items="{{recipes}}">
         <socobo-element-list-item
@@ -241,10 +272,12 @@ Custom property | Description | Default
        * automatically.
        */
       getRecipes: function () {
+
         RecipeDao.getInstance(this.userLogin)
           .getAll()
           .then(function (recipes) {
             this.set("recipes", recipes.value);
+            this.$.initialLoadingSpinner.active = false;
           }.bind(this))
           .catch(function (error) {
             this._notifyOnError(error.value);
