@@ -258,6 +258,7 @@ Custom property | Description | Default
               class="inputs"
               ingredient="{{item}}"
               id="{{item}}"
+              measurements="{{measurements}}"
               on-rem_ingr="removeIngr">
             </socobo-recipe-details-ingredient>
           </template>
@@ -366,6 +367,41 @@ Custom property | Description | Default
             value: "show"
           }
         },
+      /**
+       * PROPERTIES
+       */
+      properties: {
+        recipe : {
+          type : Object,
+          value : {}
+        },
+        image : {
+          type : Object
+        },
+        recipe_inputs : {
+          type : Array,
+          value : []
+        },
+        ingredient_inputs : {
+          type : Array,
+          value : []
+        },
+        /**
+         * Used to switch between input fields and text
+         */
+        state : {
+          type: String,
+          value: "show"
+        },
+        /**
+         * Measurements from the database
+         * which are usable for the ingredients
+         */
+        measurements: {
+          type : Array,
+          value: []
+        }
+      },
 
         /**
          * SHOW / HIDE

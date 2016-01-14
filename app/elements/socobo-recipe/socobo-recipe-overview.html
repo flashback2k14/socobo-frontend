@@ -288,6 +288,15 @@ Custom property | Description | Default
           //Create clone of the e.detail object
           var eClone = CloneModule.clone(e.detail);
           //Alternative: var eClone = (JSON.parse(JSON.stringify(e.detail)));
+          //get measurements and add these to the add dialog
+          RecipeDao.getInstance(this.userLogin)
+            .measurements()
+            .then(function(data){
+              this.$.editDialog.measurements = data;
+            }.bind(this)).
+          catch(function(error){
+            this._notify(error);
+          }.bind(this));
           this.$.editDialog.toggleDialog();
           //Pass clone object and original object to the recipe dialog
           this.$.editDialog.recipe = {original: e.detail, clone: eClone};
