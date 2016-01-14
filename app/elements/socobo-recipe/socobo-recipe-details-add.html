@@ -157,6 +157,7 @@ Custom property | Description | Default
       color: var(--light-primary-color);
       background-color: var(--dark-primary-color);
       font-size: 10px;
+      border-radius: 5px;
     }
 
     .style-add-ingr-button:hover, .style-add-step-button:hover{
@@ -234,13 +235,12 @@ Custom property | Description | Default
               on-rem_ingr="removeIngr">
             </socobo-recipe-details-ingredient>
           </template>
-          <paper-button
+          <paper-icon-button
             icon="add"
             id="addIngr"
             class="style-add-ingr-button"
             on-tap="addIngr">
-            New
-          </paper-button>
+          </paper-icon-button>
         </div>
 
         <!-- RIGHT COLUMN -->
@@ -269,13 +269,12 @@ Custom property | Description | Default
               </socobo-recipe-details-step>
             </template>
           </div>
-          <paper-button
+          <paper-icon-button
             icon="add"
             id="addStep"
             class="style-add-step-button"
             on-tap="addStep">
-            New
-          </paper-button>
+          </paper-icon-button>
         </div>
       </div>
 
