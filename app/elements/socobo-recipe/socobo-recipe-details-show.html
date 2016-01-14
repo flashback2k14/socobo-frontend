@@ -32,7 +32,7 @@ Custom property | Description | Default
         overflow: scroll;
         background-color: white;
         color: var(--socobo-recipe-style-text-color);
-        font-family: sans-serif;
+        @apply(--socobo-recipe-style-default-font);
         border-radius: 5px;
         line-height: 2;
       }
@@ -87,7 +87,7 @@ Custom property | Description | Default
       .default-title-style.default {
         color: var(--socobo-recipe-style-heading-color);
         border-bottom: 2px solid var(--socobo-recipe-style-border-color);
-        font-family: 'Lobster', cursive;
+        @apply(--socobo-recipe-style-heading-font);
         margin-bottom: 10px;
       }
 
@@ -98,7 +98,7 @@ Custom property | Description | Default
       .subHeadings {
         color: var(--socobo-recipe-style-sub-heading-color);
         font-size: 18px;
-        font-family: 'Lobster', cursive;
+        @apply(--socobo-recipe-style-heading-font);
         text-align: center;
       }
 

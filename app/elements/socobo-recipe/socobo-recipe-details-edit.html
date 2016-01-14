@@ -35,7 +35,7 @@ Custom property | Description | Default
         overflow: auto;
         background-color: white;
         color: var(--socobo-recipe-style-text-color);
-        font-family: sans-serif;
+        @apply(--socobo-recipe-style-default-font);
         border-radius: 5px;
         line-height: 2;
       }
@@ -89,7 +89,7 @@ Custom property | Description | Default
       .subHeadings {
         color: var(--socobo-recipe-style-sub-heading-color);
         font-size: 18px;
-        font-family: 'Lobster', cursive;
+        @apply(--socobo-recipe-style-heading-font);
         text-align: center;
       }
 
@@ -160,7 +160,7 @@ Custom property | Description | Default
 
       /* INGREDIENTS AND STEPS*/
       .style-add-ingr-button, .style-add-step-button{
-        font-family: 'Lobster', cursive;
+        @apply(--socobo-recipe-style-heading-font);
         margin: 20px 0 0 0;
         color: var(--socobo-recipe-style-action-btn-text-color);
         background-color: var(--socobo-recipe-style-secundary-action-btn-color);
