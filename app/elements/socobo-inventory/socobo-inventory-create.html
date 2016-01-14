@@ -77,7 +77,8 @@ Custom property | Description | Default
         entry-animation="scale-up-animation"
         exit-animation="fade-out-animation"
         modal>
-        <h2>Create a new item</h2>
+        <h2 hidden="[[_edit]]">Create a new item</h2>
+        <h2 hidden="[[!_edit]]">Change the item</h2>
         <paper-dialog-scrollable class="style-paper-dialog-scrollable">
           <!-- 1. Row -->
           <div class="horizontal-layout">
