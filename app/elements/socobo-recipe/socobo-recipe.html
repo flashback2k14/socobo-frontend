@@ -9,40 +9,44 @@ Custom property | Description | Default
 @demo demo/socobo-recipe/demo.html
 -->
 <dom-module id="socobo-recipe">
-  <style>
-    :host {
-      display: block;
-    }
-  </style>
 
   <template>
+
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
     <socobo-recipe-overview
       id="elRecipeOverview"
       user-login='[[userLogin]]'>
     </socobo-recipe-overview>
   </template>
 
+  <script>
+    (function() {
+      Polymer({
+        is: 'socobo-recipe',
+        properties : {
+          /*Object containing the user information. Must have following
+           properties:
+           - userId,
+           - firebaseUrl,
+           - expires
+           */
+          userLogin : {
+            type : Object,
+            value : {}
+          }
+        },
+        loadData : function(){
+          this.$.elRecipeOverview.getRecipes();
+        }
+      });
+    })();
+  </script>
+
 </dom-module>
 
-<script>
-  (function() {
-    Polymer({
-      is: 'socobo-recipe',
-      properties : {
-        /*Object containing the user information. Must have following
-         properties:
-         - userId,
-         - firebaseUrl,
-         - expires
-         */
-        userLogin : {
-          type : Object,
-          value : {}
-        }
-      },
-      loadData : function(){
-        this.$.elRecipeOverview.getRecipes();
-      }
-    });
-  })();
-</script>
+
