@@ -212,10 +212,24 @@ Custom property | Description | Default
         this.ingredient.unit = this.measurements[this.$.measurementDropdownMenu.selected];
       },
       /**
+       * Transforms the current unit of the ingredient to
+       * the index in the measurements array
+       * @private
+       */
+      _selectExistingValue : function(){
+        var searchedValue = this.ingredient.unit;
+        for(var measurement in this.measurements){
+          if(searchedValue === this.measurements[measurement]){
+            return measurement;
+          }
+        }
+      },
+      /**
        * Called if the component is ready
        */
       ready : function () {
         this._chooseState();
+        this.$.measurementDropdownMenu.selected = this._selectExistingValue();
       }
     });
   })();
