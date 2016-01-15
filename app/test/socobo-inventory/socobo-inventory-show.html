@@ -32,6 +32,13 @@
         expect(document.querySelector('#showInventoryDialog')).to.not.be.eql(undefined);
         done();
       });
+
+      test("has an input field for name that is readonly", function(done) {
+        expect(document.querySelector("paper-input")).to.not.be.eql(undefined);
+        expect(document.querySelector("paper-input").readonly,  "is not readonly").to.be.eql(true);
+        expect(document.querySelector("paper-input").label).to.be.eql("Name");
+        done();
+      });
     });
   </script>
 </body>
