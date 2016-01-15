@@ -90,7 +90,7 @@ Custom property | Description | Default
         on-add-to-grocery-list="_handleAddToGroceryList">
       </socobo-ranking-dialog>
       <!-- Ranking -->
-      <div class="style-ranking">
+      <div id="rankingWrapper" class="style-ranking">
         <!-- Toolbar -->
         <paper-toolbar class="style-main-toolbar">
           <div class="middle style-title">Ranking</div>
@@ -120,8 +120,9 @@ Custom property | Description | Default
       Polymer({
         is: 'socobo-ranking',
         /**
-         * This Event is fired if... <br/>
-         * @event ToDo
+         * This Event is fired if the user click the "add-to-grocery-list" button on the ranking dialog. <br/>
+         * `Detail`: Object: {Missing Inventory Items} <br/>
+         * @event add-missing-items-to-grocery-list
          */
         /**
          * Element Properties.
@@ -272,7 +273,9 @@ Custom property | Description | Default
         },
 
         /**
-         *
+         * Reload List
+         * @private
+         * @method _reload
          */
         _reload: function() {
           this._notify("Reloading...");
@@ -316,14 +319,26 @@ Custom property | Description | Default
           this.$.rankingDialog.recipe = clickedItem;
         },
 
+        /**
+         * Handle Event - go to Recipe - open Recipe dialog
+         * @param e
+         * @private
+         * @method _handleGoToRecipe
+         */
         _handleGoToRecipe: function(e) {
           this.$.recipeShow.state = "show";
           this.$.recipeShow.toggleDialog();
           this.$.recipeShow.recipe = e.detail.item;
         },
 
-        _handleAddToGroceryList: function() {
-          alert("Todo");
+        /**
+         * Handle Event - add to grocery list - fire Event
+         * @param e
+         * @private
+         * @method _handleAddToGroceryList
+         */
+        _handleAddToGroceryList: function(e) {
+          this.fire("add-missing-items-to-grocery-list", e.detail.items);
         },
 
         /**

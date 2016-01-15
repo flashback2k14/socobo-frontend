@@ -67,7 +67,7 @@
     if (Util.isUserLoginExpired(UserInfo.get(UserInfo.EXPIREDATE))) {
       app.route = "login";
     } else {
-      // Show Menu Items for Home, Inventory and Recipes
+      // Show Menu Items
       Util.toggleMenuItems([menuItemLogin, menuItemHome, menuItemRecipe, menuItemInventory, menuItemProfile]);
       // load Ranking, Recipes and Profile
       elRanking.loadData();
@@ -108,7 +108,7 @@
     UserInfo.set(UserInfo.USEROBJECT, Util.objectToString(userObj));
     UserInfo.set(UserInfo.USERID, userObj.uid);
     UserInfo.set(UserInfo.EXPIREDATE, userObj.expires);
-    // Show Menu Items for Home, Inventory and Recipes
+    // Show Menu Items
     Util.toggleMenuItems([menuItemLogin, menuItemHome, menuItemRecipe, menuItemInventory, menuItemProfile]);
     // set UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
@@ -131,6 +131,13 @@
     // show toast to inform the user
     infoToast.text = "Your Passwords does not match! Please retry!";
     infoToast.toggle();
+  };
+  /**
+   * RANKING
+   */
+  app.handleAddMissingItemsToGroceryList = function(e) {
+    var missingItems = e.detail;
+    console.log("Missing Items for Grocery List:", missingItems);
   };
   /**
    * PROFILE
@@ -183,7 +190,7 @@
     tbUsername.innerHTML = "Placeholder Username";
     tbUserEmailAddress.innerHTML = "Placeholder Email";
     imgUserProfilePicture.src = "../images/touch/icon-128x128.png";
-    // Hide Menu Items for Home, Inventory and Recipes
+    // Hide Menu Items
     Util.toggleMenuItems([menuItemLogin, menuItemHome, menuItemRecipe, menuItemInventory, menuItemProfile]);
     // delete all data in local storage
     UserInfo.deleteAllItems();

@@ -28,6 +28,11 @@
         socoboRankingDialog = fixture("SocoboRankingDialog");
       });
 
+      test("has a dialog element", function(done) {
+        expect(socoboRankingDialog.$.detailDialog).to.not.be.eql(undefined);
+        done();
+      });
+
     });
   </script>
 </body>
