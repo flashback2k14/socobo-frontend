@@ -259,7 +259,7 @@ Custom property | Description | Default
               ingredient="{{item}}"
               id="{{item}}"
               measurements="{{measurements}}"
-              on-rem_ingr="removeIngr">
+              on-rem_ingr="_removeIngr">
             </socobo-recipe-details-ingredient>
           </template>
           <!-- ADD DETAIL INGREDIENT-->
@@ -478,7 +478,7 @@ Custom property | Description | Default
         /**
          * REMOVE
          */
-        removeIngr : function(e) {
+        _removeIngr : function(e) {
           var model = e.model;
           var itemIndex = model.get('index');
           this.cutElementOffArray(itemIndex, 'ingredient_inputs');

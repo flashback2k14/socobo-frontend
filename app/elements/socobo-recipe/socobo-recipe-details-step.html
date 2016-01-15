@@ -146,7 +146,7 @@ Custom property | Description | Default
             value : "show"
           }
         },
-        chooseState :function(){
+        _chooseState :function(){
           if(this.state === "add"){
             this.$.steps_default.style.display = "none";
             this.$.sep.style.display = "none";
@@ -162,7 +162,7 @@ Custom property | Description | Default
           this.fire("rem_step", this.step)
         },
         ready : function (){
-          this.chooseState();
+          this._chooseState();
         }
       });
     })();

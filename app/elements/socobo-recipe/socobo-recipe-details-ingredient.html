@@ -124,15 +124,6 @@ Custom property | Description | Default
         </span>
           <!---->
         <span>
-          <!--
-          <paper-input label="Measurement"
-                       class="unit_input"
-                       value="{{ingredient.unit}}"
-                       pattern="[a-zA-z]{1,5}"
-                       auto-validate
-                       error-message="Invalid characters">
-          </paper-input>
-          -->
           <div class="horizontal-section">
           <paper-dropdown-menu
             label="Measurement"
@@ -144,13 +135,13 @@ Custom property | Description | Default
               class="dropdown-content"
               noink="true">
               <template is="dom-repeat" items="[[measurements]]" as="measurement">
-                <paper-item on-click="select">[[measurement]]</paper-item>
+                <paper-item on-click="_select">[[measurement]]</paper-item>
               </template>
             </paper-menu>
           </paper-dropdown-menu>
             </div>
         </span>
-        <span><paper-icon-button class="delete_icon" icon="delete" on-click="removeIngr"></paper-icon-button></span>
+        <span><paper-icon-button class="delete_icon" icon="delete" on-click="_removeIngr"></paper-icon-button></span>
       </div>
 
     </paper-material>
@@ -174,12 +165,20 @@ Custom property | Description | Default
           type : Array,
           value: []
         },
+        /**
+         * State to determine if the ingredients are only shown or
+         * if input fields are provided to change the values
+         */
         state : {
           type : String,
           value : "show"
         }
       },
-      chooseState :function(){
+      /**
+       * Determines the state
+       * @private
+       */
+      _chooseState :function(){
         if(this.state === "add"){
           this.$.ingr_default.style.display = "none";
           this.$.sep.style.display = "none";
@@ -191,14 +190,26 @@ Custom property | Description | Default
           this.$.ingr_input.style.display = "none";
         }
       },
-      removeIngr : function(){
+      /**
+       * Fire event to remove the ingredient
+       * @private
+       */
+      _removeIngr : function(){
         this.fire("rem_ingr", this.ingredient);
       },
-      select : function(e){
+      /**
+       * Sets the measurement attribute of the ingredients object
+       * @param e
+       * @private
+         */
+      _select : function(e){
         this.ingredient.unit = this.measurements[this.$.measurementDropdownMenu.selected];
       },
+      /**
+       * Called if the component is ready
+       */
       ready : function () {
-        this.chooseState();
+        this._chooseState();
       }
     });
   })();
