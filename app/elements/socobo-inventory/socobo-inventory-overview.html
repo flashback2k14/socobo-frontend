@@ -56,6 +56,8 @@ Custom property | Description | Default
           on-changed-search-query="_searchQueryChanged">
         </socobo-element-search>
 
+        <socobo-inventory-show id="showDialog"></socobo-inventory-show>
+
         <paper-material elevation="1">
           <div id="inventoryOverview" class="overview">
             <template id="itemList" is="dom-repeat" items="{{data}}">
@@ -64,7 +66,8 @@ Custom property | Description | Default
                 obj="{{item}}"
                 on-check="_handleCheck"
                 hidden="{{_setHidden(item, query)}}"
-                on-uncheck="_handleUncheck">
+                on-uncheck="_handleUncheck"
+                on-show_request="_showItem">
               </socobo-element-list-item>
             </template>
           </div>
@@ -118,6 +121,10 @@ Custom property | Description | Default
               element.isChecked = state;
             }
           }
+        },
+
+        _showItem: function (e) {
+          this.$.showDialog.show(e.detail);
         }
       });
     })();

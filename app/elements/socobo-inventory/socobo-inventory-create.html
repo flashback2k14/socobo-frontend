@@ -22,7 +22,6 @@ Custom property | Description | Default
         display: block;
       }
       .create-dialog {
-        height: 350px;
         width: 500px;
         @apply(--socobo-inventory-create-create-dialog);
       }
@@ -77,7 +76,12 @@ Custom property | Description | Default
         entry-animation="scale-up-animation"
         exit-animation="fade-out-animation"
         modal>
-        <h2>Create a new item</h2>
+        <template is="dom-if" if="{{_edit}}">
+          <h2>Change the item</h2>
+        </template>
+        <template is="dom-if" if="{{!_edit}}">
+          <h2>Create a new item</h2>
+        </template>
         <paper-dialog-scrollable class="style-paper-dialog-scrollable">
           <!-- 1. Row -->
           <div class="horizontal-layout">
