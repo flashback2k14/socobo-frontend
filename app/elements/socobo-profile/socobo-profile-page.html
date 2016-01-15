@@ -25,7 +25,6 @@ Custom property | Description | Default
       .profile-container {
         @apply(--layout-horizontal);
         width: 100%;
-        height: 100%;
         @apply(--socobo-profile-page-profile-container);
       }
       .profile-image-container {
@@ -34,17 +33,21 @@ Custom property | Description | Default
         min-width: 320px;
         width: 20%;
         max-width: 20%;
-        margin: 0;
-        background: -webkit-linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, #04212A),var(--socobo-profile-page-profile-image-container-bg-color-to, #062F3C));
+        margin: 0 0 10px 0;
+        /*background: -webkit-linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, #04212A),var(--socobo-profile-page-profile-image-container-bg-color-to, #062F3C));
         background: -o-linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, #04212A),var(--socobo-profile-page-profile-image-container-bg-color-to, #062F3C));
         background: -moz-linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, #04212A),var(--socobo-profile-page-profile-image-container-bg-color-to, #062F3C));
-        background: linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, #04212A),var(--socobo-profile-page-profile-image-container-bg-color-to, #062F3C));
+        background: linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, #04212A),var(--socobo-profile-page-profile-image-container-bg-color-to, #062F3C));*/
+        background: -webkit-linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, --dark-primary-color),var(--socobo-profile-page-profile-image-container-bg-color-to, --default-primary-color));
+        background: -o-linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, --dark-primary-color),var(--socobo-profile-page-profile-image-container-bg-color-to, --default-primary-color));
+        background: -moz-linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, --dark-primary-color),var(--socobo-profile-page-profile-image-container-bg-color-to, --default-primary-color));
+        background: linear-gradient(var(--socobo-profile-page-profile-image-container-bg-color-from, --dark-primary-color),var(--socobo-profile-page-profile-image-container-bg-color-to, --default-primary-color));
         @apply(--socobo-profile-page-profile-image-container);
       }
       .profile-info-container {
         @apply(--layout-vertical);
         width: 80%;
-        margin: 0;
+        margin: 0 0 10px 0;
         @apply(--socobo-profile-page-profile-info-container);
       }
     </style>

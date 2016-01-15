@@ -28,12 +28,10 @@ Custom property | Description | Default
         @apply(--layout-center);
         @apply(--layout-center-justified);
       }
-
-      .style-main-card {
+      .style-ranking {
         @apply(--layout-vertical);
         @apply(--laout-start-justified);
         width: 50%;
-        height: 700px;
       }
       .style-main-toolbar {
         @apply(--layout-horizontal);
@@ -44,8 +42,12 @@ Custom property | Description | Default
         font-size: x-large;
       }
 
+      .style-list {
+        margin-top: 20px;
+      }
+
       .style-paper-item {
-        margin: 6px 0 0 0;
+        margin: 0 12px 12px 12px;
         --paper-item: {
           padding: 5px;
           border-radius: 2px;
@@ -88,14 +90,16 @@ Custom property | Description | Default
         on-add-to-grocery-list="_handleAddToGroceryList">
       </socobo-ranking-dialog>
       <!-- Ranking -->
-      <paper-card id="mainCard" class="style-main-card">
+      <div class="style-ranking">
+        <!-- Toolbar -->
         <paper-toolbar class="style-main-toolbar">
           <div class="middle style-title">Ranking</div>
+          <paper-icon-button id="btnReload" icon="refresh" on-tap="_reload"></paper-icon-button>
           <paper-icon-button id="btnAsc" icon="arrow-upward" on-tap="_sortAsc"></paper-icon-button>
           <paper-icon-button id="btnDesc" icon="arrow-downward" on-tap="_sortDesc"></paper-icon-button>
         </paper-toolbar>
-
-        <div class="card-content">
+        <!-- List View -->
+        <div class="style-list">
           <template is="dom-repeat" items="{{recipeRanking}}" as="recipe">
             <paper-item class="style-paper-item" on-tap="_openRankingItem">
               <paper-item-body two-line>
@@ -105,7 +109,7 @@ Custom property | Description | Default
             </paper-item>
           </template>
         </div>
-      </paper-card>
+      </div>
     </div>
     <!-- Notification-->
     <paper-toast id="infoRanking" duration="2000"></paper-toast>
@@ -265,6 +269,15 @@ Custom property | Description | Default
          */
         _sortDesc: function() {
           this._sortList(true);
+        },
+
+        /**
+         *
+         */
+        _reload: function() {
+          this._notify("Reloading...");
+          this.set("recipeRanking", []);
+          this.loadData();
         },
 
         /**

@@ -146,7 +146,8 @@
             </section>
 
             <section data-route="profile">
-              <paper-material class="style-pm-margin-padding style-pm-height" elevation="1">
+              <!--<paper-material class="style-pm-margin-padding style-pm-height" elevation="1">-->
+              <div class="style-pm-margin-padding style-pm-height">
                 <socobo-profile
                   id="elProfile"
                   user-login="[[userlogin]]"
@@ -156,7 +157,8 @@
                   on-profile-image-changed="handleProfileImageChanged"
                   on-profile-info-changed="handleProfileInfoChanged">
                 </socobo-profile>
-              </paper-material>
+              </div>
+              <!--</paper-material>-->
             </section>
 
           </iron-pages>
