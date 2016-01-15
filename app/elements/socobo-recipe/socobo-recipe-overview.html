@@ -450,11 +450,8 @@ Custom property | Description | Default
                 // cut recipe from bounded arrays
                 this._updateAfterDeletion(recipe.item, this.recipes, 'recipes');
                 this._updateAfterDeletion(recipe.item, this._checkedBoxes.refs, "_checkedBoxes.refs");
-                this._checkedBoxes.number--;
-                // check to change FAB
-                this._trackCheckedBoxes();
               }.bind(this));
-              this._resetSearchElementCheckbox();
+              this.$.searchbar.resetQuery();
               // notify user
               this._notifyOnSuccess("Elements successfully removed!");
             }.bind(this))
