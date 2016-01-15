@@ -44,6 +44,13 @@
         done();
       });
 
+      test('_handleMeasurement updates location properly', function(done) {
+        var login = {firebaseUrl: "foobar.io/", userId: "234567890"};
+        expect(inventory._handleMeasurement(login)).to.contain(login.firebaseUrl);
+        expect(inventory._handleMeasurement(login)).to.contain("measurements");
+        done();
+      });
+
       test('_handleLogin updates location', function(done) {
         var login = {firebaseUrl: "foobar.io/", userId: "234567890"};
         expect(inventory._handleLogin(login)).to.be.eql(login.firebaseUrl + "inventory/" + login.userId + "/");

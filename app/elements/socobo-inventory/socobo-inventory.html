@@ -85,19 +85,27 @@ Custom property | Description | Default
             type: String,
             value: "https://socobo.firebaseio.com/"
           },
+
+          measurementLocation: {
+            computed: "_handleMeasurement(userLogin)",
+            type: String,
+            value: "https://socobo.firebaseio.com/"
+          }
+        },
+
+        _handleMeasurement: function(login){
+          return login ? login.firebaseUrl + "measurements/" : this.measurementLocation;
         },
 
         /*Construct firebase url for user's inventory from userLogin object</br>
-        @param {Object} login
-        @method _handleLogin
-        */
+         @param {Object} login
+         @method _handleLogin
+         */
         _handleLogin: function(login) {
           var url = "";
           if (login) {
             url = login.firebaseUrl + "inventory/";
             url = login.userId ? url + login.userId + "/" : url
-            this.measurementLocation = login.firebaseUrl + "measurements/"
-            console.log(this.measurementLocation)
           } else {
             url = this.location;
           }
