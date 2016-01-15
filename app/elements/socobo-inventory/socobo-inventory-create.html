@@ -121,7 +121,7 @@ Custom property | Description | Default
                   id="measurementDropdownMenu"
                   class="dropdown-content">
                   <template is="dom-repeat" items="[[measurements]]" as="measurement">
-                    <paper-item>[[measurement]]</paper-item>
+                    <paper-item>[[measurement.value]]</paper-item>
                   </template>
                 </paper-menu>
               </paper-dropdown-menu>
@@ -164,6 +164,12 @@ Custom property | Description | Default
       Polymer({
         is: 'socobo-inventory-create',
         properties: {
+          /* Array of measurement objects. {value: value}.
+          */
+          measurements: {
+            type: Array,
+            value: ["Values"]
+          }
         },
 
         ready: function() {
@@ -173,8 +179,6 @@ Custom property | Description | Default
             "Gemüse",
             "Obst"
           ];
-
-          this.measurements = ["kg", "g", "Stk", "l"];
         },
 
         /*Display the dialog
