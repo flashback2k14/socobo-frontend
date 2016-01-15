@@ -76,13 +76,17 @@ Custom property | Description | Default
     </style>
 
     <div class="container">
-
+      <!-- Recipe Show Dialog -->
+      <socobo-recipe-details-show
+        id="recipeShow">
+      </socobo-recipe-details-show>
       <!-- Detail Dialog -->
       <socobo-ranking-dialog
         id="rankingDialog"
-        class="style-ranking-dialog">
+        class="style-ranking-dialog"
+        on-go-to-recipe="_handleGoToRecipe"
+        on-add-to-grocery-list="_handleAddToGroceryList">
       </socobo-ranking-dialog>
-
       <!-- Ranking -->
       <paper-card id="mainCard" class="style-main-card">
         <paper-toolbar class="style-main-toolbar">
@@ -102,7 +106,6 @@ Custom property | Description | Default
           </template>
         </div>
       </paper-card>
-
     </div>
     <!-- Notification-->
     <paper-toast id="infoRanking" duration="2000"></paper-toast>
@@ -298,6 +301,16 @@ Custom property | Description | Default
           var clickedItem = e.model.recipe;
           this.$.rankingDialog.toggleDialog();
           this.$.rankingDialog.recipe = clickedItem;
+        },
+
+        _handleGoToRecipe: function(e) {
+          this.$.recipeShow.state = "show";
+          this.$.recipeShow.toggleDialog();
+          this.$.recipeShow.recipe = e.detail.item;
+        },
+
+        _handleAddToGroceryList: function() {
+          alert("Todo");
         },
 
         /**
