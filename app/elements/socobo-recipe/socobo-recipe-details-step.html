@@ -4,89 +4,106 @@
 The following custom properties and mixins are available for styling:
 
 Custom property | Description | Default
-----------------|-------------|----------
-
+`--socobo-recipe-style-border-color`  | | `{--light-primary-color}`
+`--socobo-recipe-style-text-color`  | | `{--secondary-text-color}`
+`--socobo-recipe-style-icon-focus-color`  | |  `{--accent-color}`
+`--socobo-recipe-style-step-number-color`  | |   `{--light-primary-color}`
+`--socobo-recipe-style-step-number-text-color`  | |   `{--dark-primary-color}`
+`--socobo-recipe-style-step-number-focus-color`  | |   `{--default-primary-color}`
+`--socobo-recipe-style-step-number-text-focus-color`  | |   `{--light-primary-color}`
+`--socobo-recipe-style-step-content-focus-color`  | |   `{--light-primary-color}`
+`--socobo-recipe-style-heading-font`  | | `{Lobster cursive}`
+`--socobo-recipe-style-default-font`  | | `{sans serif}`
 @demo demo/socobo-recipe/demo.html
 -->
 <dom-module id="socobo-recipe-details-step">
-  <style>
-    :host {
-      display: block;
-    }
 
-    .wrapper {
-      font-family: sans-serif;
-      @apply(--layout-horizontal);
-      @apply(--layout-top);
-      width: 100%;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      border-bottom-left-radius:25px;
-      border-top-left-radius: 25px;
-    }
-
-    .wrapper:hover {
-      background-color: whitesmoke;
-    }
-
-    .wrapper:hover .stepNumber {
-      background-color: var(--default-primary-color);
-      color: var(--light-primary-color)
-    }
-
-    .stepNumber {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background-color: #F4F0EC;
-      text-align: center;
-      color: #8A7F80;
-      font-size: 25px;
-      line-height: 50px;
-      float: left;
-    }
-
-    .stepDesc {
-      @apply(--layout-flex);
-      min-height: 30px;
-      margin: 0 0 0 20px;
-      padding: 10px 10px 10px 30px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: var(--primary-text-color);
-      text-align: justify;
-    }
-
-    .separator {
-      width: 30%;
-      border: 1px solid #F4F0EC;
-    }
-
-    .steps_input {
-      width: 100%;
-      @apply(--layout-horizontal);
-    }
-
-    .steps_input paper-textarea {
-      float: left;
-      width: 80%;
-    }
-
-    .steps_input paper-icon-button {
-      float: right;
-      margin-top: 13px;
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-      text-align: center;
-    }
-
-    .clearer {
-      clear: both;
-    }
-
-  </style>
   <template>
+
+    <style>
+      :host {
+        display: block;
+      }
+
+      .wrapper {
+        color: var(--socobo-recipe-style-text-color);
+        @apply(--socobo-recipe-style-default-font);
+        @apply(--layout-horizontal);
+        @apply(--layout-top);
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-bottom-left-radius:25px;
+        border-top-left-radius: 25px;
+      }
+
+      .wrapper:hover {
+        background-color: var(--socobo-recipe-style-step-content-focus-color);
+      }
+
+      .wrapper:hover .stepNumber {
+        background-color: var(--socobo-recipe-style-step-number-focus-color);
+        color: var(--socobo-recipe-style-step-number-text-focus-color)
+      }
+
+      .stepNumber {
+        @apply(--socobo-recipe-style-heading-font);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--socobo-recipe-style-step-number-color);
+        text-align: center;
+        color: var(--socobo-recipe-style-step-number-text-color);
+        font-size: 25px;
+        line-height: 50px;
+        float: left;
+      }
+
+      .stepDesc {
+        @apply(--layout-flex);
+        min-height: 30px;
+        margin: 0 0 0 20px;
+        padding: 10px 10px 10px 30px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--socobo-recipe-style-text-color);
+        text-align: justify;
+      }
+
+      .separator {
+        width: 30%;
+        border: 1px solid var(--socobo-recipe-style-border-color);
+      }
+
+      .steps_input {
+        width: 100%;
+        @apply(--layout-horizontal);
+      }
+
+      .steps_input paper-textarea {
+        float: left;
+        width: 80%;
+      }
+
+      .steps_input paper-icon-button {
+        float: right;
+        margin-top: 13px;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+      }
+
+      .steps_input paper-icon-button:hover {
+        color: var(--socobo-recipe-style-icon-focus-color);
+      }
+
+      .clearer {
+        clear: both;
+      }
+
+    </style>
+
     <!---->
     <div class="wrapper" id="steps_default">
       <paper-material elevation="1"
@@ -114,40 +131,43 @@ Custom property | Description | Default
     <!---->
     <hr class="separator" id="sep">
   </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'socobo-recipe-details-step',
+        properties : {
+          step : {
+            type : Object,
+            value : {}
+          },
+          state : {
+            type : String,
+            value : "show"
+          }
+        },
+        chooseState :function(){
+          if(this.state === "add"){
+            this.$.steps_default.style.display = "none";
+            this.$.sep.style.display = "none";
+            this.$.steps_input.style.display = "block";
+          }
+          if(this.state === "show"){
+            this.$.steps_default.style.display = "block";
+            this.$.sep.style.display = "block";
+            this.$.steps_input.style.display = "none";
+          }
+        },
+        removeStep : function (){
+          this.fire("rem_step", this.step)
+        },
+        ready : function (){
+          this.chooseState();
+        }
+      });
+    })();
+  </script>
+
 </dom-module>
 
-<script>
-  (function() {
-    Polymer({
-      is: 'socobo-recipe-details-step',
-      properties : {
-        step : {
-          type : Object,
-          value : {}
-        },
-        state : {
-          type : String,
-          value : "show"
-        }
-      },
-      chooseState :function(){
-        if(this.state === "add"){
-          this.$.steps_default.style.display = "none";
-          this.$.sep.style.display = "none";
-          this.$.steps_input.style.display = "block";
-        }
-        if(this.state === "show"){
-          this.$.steps_default.style.display = "block";
-          this.$.sep.style.display = "block";
-          this.$.steps_input.style.display = "none";
-        }
-      },
-      removeStep : function (){
-        this.fire("rem_step", this.step)
-      },
-      ready : function (){
-        this.chooseState();
-      }
-    });
-  })();
-</script>
+

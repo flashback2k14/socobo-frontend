@@ -2,69 +2,86 @@
 
 <!--
 The following custom properties and mixins are available for styling:
-
+`--socobo-recipe-style-border-color`  | | `{--light-primary-color}`
+`--socobo-recipe-style-text-color`  | | `{--secondary-text-color}`
+`--socobo-recipe-style-icon-focus-color`  | |  `{--accent-color}`
+`--socobo-recipe-style-heading-font`  | | `{Lobster cursive}`
+`--socobo-recipe-style-default-font`  | | `{sans serif}`
 Custom property | Description | Default
 ----------------|-------------|----------
 
 @demo demo/socobo-recipe/demo.html
 -->
 <dom-module id="socobo-recipe-details-ingredient">
-  <style>
-    :host {
-      display: block;
-    }
 
-    .wrapper {
-      width: 260px;
-      font-family: sans-serif;
-      margin: 0 0 50px 0;
-    }
-
-    .wrapper paper-icon-button{
-      float: right;
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-      text-align: center;
-    }
-
-    .desc {
-      @apply(--layout-flex);
-      float: left;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .unit, .amount {
-      float: right;
-      margin-left: 10px;
-    }
-
-    .separator {
-      clear: both;
-      margin-top:40px;
-      border: solid 1px #F4F0EC;
-      width: 30%;
-    }
-    .desc_input{
-      width: 100%;
-    }
-
-    .amount_input{
-      width: 45%;
-      float: left;
-    }
-
-    .unit_input{
-      width: 25%;
-      float: left;
-      margin-left: 3%;
-    }
-
-  </style>
   <template>
+
+    <style>
+      :host {
+        display: block;
+      }
+
+      .wrapper_input {
+        color: var(--socobo-recipe-style-text-color);
+        width: 260px;
+        @apply(--socobo-recipe-style-default-font);
+      }
+
+      .wrapper_output {
+        color: var(--socobo-recipe-style-text-color);
+        width: 260px;
+        @apply(--socobo-recipe-style-default-font);
+      }
+
+      .messurement_wrapper{
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+
+      .wrapper paper-icon-button{
+        float: right;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+      }
+
+      .desc {
+        @apply(--layout-flex);
+        width: 70%;
+        float: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .unit, .amount {
+        width: 12%;
+        float: right;
+        margin-left: 1%;
+      }
+
+      .separator {
+        clear: both;
+        margin-top:40px;
+        border: solid 1px var(--socobo-recipe-style-border-color);
+        width: 30%;
+      }
+      .desc_input{
+        width: 100%;
+      }
+
+      .unit_input, .amount_input{
+        margin-right: 3%;
+      }
+
+      .delete_icon:hover{
+        color: var(--socobo-recipe-style-icon-focus-color);
+      }
+
+    </style>
+
     <!---->
-    <div class="wrapper" id="ingr_default">
+    <div class="wrapper_output" id="ingr_default">
       <span class="desc">{{ingredient.desc}}</span>
       <span class="unit">{{ingredient.unit}}</span>
       <span class="amount">{{ingredient.amount}}</span>
@@ -72,7 +89,7 @@ Custom property | Description | Default
     </div>
     <!---->
     <paper-material elevation="0"
-                    class="wrapper"
+                    class="wrapper_input"
                     id="ingr_input">
       <!---->
       <paper-input label="New ingredient ..."
@@ -84,59 +101,69 @@ Custom property | Description | Default
                    error-message="Title is required">
       </paper-input>
       <!---->
-      <paper-input label="Measurement"
-                   class="amount_input"
-                   type="number"
-                   value="{{ingredient.amount}}"
-                   pattern="[\d,.]+"
-                   auto-validate
-                   error-message="Invalid characters">
-      </paper-input>
-      <!---->
-      <paper-input label="Unit"
-                   class="unit_input"
-                   value="{{ingredient.unit}}"
-                   pattern="[a-zA-z]{1,5}"
-                   auto-validate
-                   error-message="Invalid characters"></paper-input>
-      <paper-icon-button icon="delete" on-click="removeIngr"></paper-icon-button>
+      <div class="messurement_wrapper">
+        <span>
+          <paper-input label="Amount"
+                       class="amount_input"
+                       type="number"
+                       value="{{ingredient.amount}}"
+                       pattern="[\d,.]+"
+                       auto-validate
+                       error-message="Invalid characters">
+          </paper-input>
+        </span>
+          <!---->
+        <span>
+          <paper-input label="Measurement"
+                       class="unit_input"
+                       value="{{ingredient.unit}}"
+                       pattern="[a-zA-z]{1,5}"
+                       auto-validate
+                       error-message="Invalid characters"></paper-input>
+        </span>
+        <span><paper-icon-button class="delete_icon" icon="delete" on-click="removeIngr"></paper-icon-button></span>
+      </div>
+
     </paper-material>
   </template>
-</dom-module>
 
-<script>
-  (function() {
-    Polymer({
-      is: 'socobo-recipe-details-ingredient',
-      properties: {
-        ingredient: {
-          type: Object,
-          value: {
+  <script>
+    (function() {
+      Polymer({
+        is: 'socobo-recipe-details-ingredient',
+        properties: {
+          ingredient: {
+            type: Object,
+            value: {
+            }
+          },
+          state : {
+            type : String,
+            value : "show"
           }
         },
-        state : {
-          type : String,
-          value : "show"
+        chooseState :function(){
+          if(this.state === "add"){
+            this.$.ingr_default.style.display = "none";
+            this.$.sep.style.display = "none";
+            this.$.ingr_input.style.display = "block";
+          }
+          if(this.state === "show"){
+            this.$.ingr_default.style.display = "block";
+            this.$.sep.style.display = "block";
+            this.$.ingr_input.style.display = "none";
+          }
+        },
+        removeIngr : function(){
+          this.fire("rem_ingr", this.ingredient);
+        },
+        ready : function () {
+          this.chooseState();
         }
-      },
-      chooseState :function(){
-        if(this.state === "add"){
-          this.$.ingr_default.style.display = "none";
-          this.$.sep.style.display = "none";
-          this.$.ingr_input.style.display = "block";
-        }
-        if(this.state === "show"){
-          this.$.ingr_default.style.display = "block";
-          this.$.sep.style.display = "block";
-          this.$.ingr_input.style.display = "none";
-        }
-      },
-      removeIngr : function(){
-        this.fire("rem_ingr", this.ingredient);
-      },
-      ready : function () {
-        this.chooseState();
-      }
-    });
-  })();
-</script>
+      });
+    })();
+  </script>
+
+</dom-module>
+
+
