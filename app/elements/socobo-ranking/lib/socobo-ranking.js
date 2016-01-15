@@ -72,11 +72,8 @@ var SocoboRanking = (function() {
         var ref = new Firebase(_recipeRoute);
         ref.orderByChild("userId").startAt(_userId).on("value", function(snapshot) {
           snapshot.forEach(function(item) {
-            var recItem = {
-              id          : item.key(),
-              name        : item.val().text,
-              ingredients : item.val().ingredients
-            };
+            var recItem = item.val();
+            recItem.id = item.key();
             recipeItems.push(recItem);
           });
           resolve(recipeItems);

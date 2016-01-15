@@ -5,7 +5,7 @@ The following custom properties and mixins are available for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
-
+`--socobo-profile-profile-wrapper` | Styling the Main Element Wrapper Container. | `{}`
 
 @demo demo/socobo-ranking/demo.html
 -->
@@ -23,6 +23,12 @@ Custom property | Description | Default
         height: 100%;
       }
 
+      .style-ranking-dialog {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-center-justified);
+      }
+
       .style-main-card {
         @apply(--layout-vertical);
         @apply(--laout-start-justified);
@@ -36,13 +42,6 @@ Custom property | Description | Default
       .style-title {
         margin-left: 10px;
         font-size: x-large;
-      }
-
-      .style-detail-dialog {
-        --paper-dialog: {
-          width: 30%;
-          height: 300px;
-        };
       }
 
       .style-paper-item {
@@ -79,20 +78,10 @@ Custom property | Description | Default
     <div class="container">
 
       <!-- Detail Dialog -->
-      <paper-dialog
-        id="detailDialog"
-        class="style-detail-dialog"
-        entry-animation="scale-up-animation"
-        exit-animation="fade-out-animation"
-        modal>
-        <h2>Details - <span>[[recipe.name]]</span></h2>
-        <div>
-          <h1>Test</h1>
-        </div>
-        <div class="buttons">
-          <paper-button dialog-dismiss>Cancel</paper-button>
-        </div>
-      </paper-dialog>
+      <socobo-ranking-dialog
+        id="rankingDialog"
+        class="style-ranking-dialog">
+      </socobo-ranking-dialog>
 
       <!-- Ranking -->
       <paper-card id="mainCard" class="style-main-card">
@@ -106,8 +95,8 @@ Custom property | Description | Default
           <template is="dom-repeat" items="{{recipeRanking}}" as="recipe">
             <paper-item class="style-paper-item" on-tap="_openRankingItem">
               <paper-item-body two-line>
-                <div class="stlye-item-name">[[recipe.name]]</div>
-                <div class="style-item-matching">Matching Ingredients: [[recipe.matchingItems]] / [[recipe.ingredients.length]]</div>
+                <div class="stlye-item-name">[[recipe.desc]]</div>
+                <div class="style-item-matching">Matching Ingredients: [[recipe.matchingItemCount]] / [[recipe.ingredients.length]]</div>
               </paper-item-body>
             </paper-item>
           </template>
@@ -180,14 +169,14 @@ Custom property | Description | Default
             this._notify("Error - One needed Item is missing!");
             return false;
           }
-
           //extract data
           var inventoryItems = data[0];
           var recipesItems = data[1];
           // iterate over recipes
           recipesItems.forEach(function(recipe) {
             // init matching items
-            recipe.matchingItems = 0;
+            recipe.matchingItemCount = 0;
+            recipe.matchingItems = [];
             // iterate over ingredients from recipe
             recipe.ingredients.forEach(function(ingredient) {
               // iterate over available inventory items
@@ -195,7 +184,9 @@ Custom property | Description | Default
                 // check if inventory items is available for recipe
                 if (ingredient.desc === item.name) {
                   // count matching items
-                  recipe.matchingItems++;
+                  recipe.matchingItemCount++;
+                  // add matching items
+                  recipe.matchingItems.push(ingredient);
                 }
               });
             });
@@ -282,7 +273,7 @@ Custom property | Description | Default
          * @method _compareRecipeMatchingAsc
          */
         _compareRecipeMatchingAsc: function(a, b) {
-          return a.matchingItems - b.matchingItems;
+          return a.matchingItemCount - b.matchingItemCount;
         },
 
         /**
@@ -294,20 +285,19 @@ Custom property | Description | Default
          * @method _compareRecipeMatchingDesc
          */
         _compareRecipeMatchingDesc: function(a, b) {
-          return b.matchingItems - a.matchingItems;
+          return b.matchingItemCount - a.matchingItemCount;
         },
 
-
+        /**
+         * Open Ranking Detail Dialog
+         * @param e
+         * @private
+         * @method _openRankingItem
+         */
         _openRankingItem: function(e) {
           var clickedItem = e.model.recipe;
-          var str = "";
-
-          clickedItem.ingredients.forEach(function(item) {
-
-          });
-
-          this.$.detailDialog.toggle();
-          this.$.detailDialog.recipe = clickedItem;
+          this.$.rankingDialog.toggleDialog();
+          this.$.rankingDialog.recipe = clickedItem;
         },
 
         /**
