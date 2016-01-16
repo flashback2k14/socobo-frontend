@@ -113,24 +113,25 @@ Custom property | Description | Default
               auto-validate
               required>
             </paper-input>
-              <paper-dropdown-menu
-                label="Measurement"
-                class="vertical-layout width-small"
-                id="measurementDropdown">
-                <paper-menu
-                  id="measurementDropdownMenu"
-                  class="dropdown-content">
-                  <template is="dom-repeat" items="[[measurements]]" as="measurement">
-                    <paper-item>[[measurement.value]]</paper-item>
-                  </template>
-                </paper-menu>
-              </paper-dropdown-menu>
-            </div>
-            <div class="horizontal-layout style-best-before">
-              <span>Best before</span>
-            </div>
-            <!-- 4. Row -->
-            <div class="horizontal-layout style-date-picker-row">
+            <paper-dropdown-menu
+              label="Measurement"
+              class="vertical-layout width-small"
+              id="measurementDropdown">
+              <paper-menu
+                id="measurementDropdownMenu"
+                class="dropdown-content">
+                <template is="dom-repeat" items="[[measurements]]" as="measurement">
+                  <paper-item>[[measurement.value]]</paper-item>
+                </template>
+              </paper-menu>
+            </paper-dropdown-menu>
+          </div>
+          <!-- 3. Row -->
+          <div class="horizontal-layout style-best-before">
+            <span>Best before</span>
+          </div>
+          <!-- 4. Row -->
+          <div class="horizontal-layout style-date-picker-row">
             <paper-input
               type="date"
               class="vertical-layout width-big"
@@ -203,7 +204,11 @@ Custom property | Description | Default
             this.item = item;
             this.$.bestBeforeInput.value = item.bestBefore;
             this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
-            this.$.measurementDropdownMenu.select(this.measurements.indexOf(item.measurement));
+            this.measurements.forEach(function(measurement, index) {
+              if (measurement.value.indexOf(item.measurement.value) !== -1) {
+                this.$.measurementDropdownMenu.select(index);
+              }
+            }.bind(this));
           } else {
             // resetting the item
             this.item = {};
@@ -221,14 +226,14 @@ Custom property | Description | Default
           if (!this._validate(this.item)) {
             alert("Some information is missing");
           } else {
-            this.item.info = this.item.count + " " + this.item.measurement;
+            this.item.info = this.item.count + " " + this.item.measurement.value;
             this.item.desc = this.item.name;
 
             this.fire('create-item', this.item);
           }
         },
 
-        _editItem: function(e,detail) {
+        _editItem: function() {
           var item = this._populateItem(this.item);
           if(this._validate(item)) {
             this.fire('edit-item', item);
@@ -242,9 +247,8 @@ Custom property | Description | Default
           item.category = this.categories[this.$.categoryDropdownMenu.selected];
 
           item.desc = item.name;
-          item.info = item.count + " " + item.measurement;
+          item.info = item.count + " " + item.measurement.value;
 
-          console.dir(item);
           return item;
         },
 
