@@ -254,7 +254,7 @@ Custom property | Description | Default
 
         _validate: function(item) {
           if(!item.name || item.name.length < 5) return false;
-          if(!item.measurement || item.measurement.length === 0) return false;
+          if(!item.measurement || !item.measurement.value || item.measurement.value.length === 0) return false;
           if(!item.count) return false;
           return true;
         }
