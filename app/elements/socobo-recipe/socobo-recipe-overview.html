@@ -288,6 +288,15 @@ Custom property | Description | Default
           //Create clone of the e.detail object
           var eClone = CloneModule.clone(e.detail);
           //Alternative: var eClone = (JSON.parse(JSON.stringify(e.detail)));
+          //get measurements and add these to the add dialog
+          RecipeDao.getInstance(this.userLogin)
+            .getMeasurements()
+            .then(function(data){
+              this.$.editDialog.measurements = data;
+            }.bind(this)).
+          catch(function(error){
+            this._notify(error);
+          }.bind(this));
           this.$.editDialog.toggleDialog();
           //Pass clone object and original object to the recipe dialog
           this.$.editDialog.recipe = {original: e.detail, clone: eClone};
@@ -301,6 +310,15 @@ Custom property | Description | Default
          * @private
          */
         _addRecipe: function () {
+          //get measurements and add these to the add dialog
+          RecipeDao.getInstance(this.userLogin)
+            .getMeasurements()
+            .then(function(data){
+              this.$.addDialog.measurements = data;
+            }.bind(this)).
+          catch(function(error){
+            this._notify(error);
+          }.bind(this));
           this.$.addDialog.state = "add";
           this.$.addDialog.toggleDialog();
           this.$.addDialog.clearInputFields();
@@ -327,7 +345,7 @@ Custom property | Description | Default
          * @param e
          */
         _removeRecipe: function (e) {
-          this._notifyOnLoading("Deleting recipe")
+          this._notifyOnLoading("Deleting recipe");
           RecipeDao.getInstance(this.userLogin)
             .remove(e.detail)
             .then(function (success) {
@@ -345,7 +363,7 @@ Custom property | Description | Default
          * @param e
          */
         _addNewRecipe: function (e) {
-          this._notifyOnLoading("Adding recipe")
+          this._notifyOnLoading("Adding recipe");
           RecipeDao.getInstance(this.userLogin)
             .add(e.detail)
             .then(function (success) {
@@ -374,7 +392,7 @@ Custom property | Description | Default
          * @param e
          */
         _editRecipe: function (e) {
-          this._notifyOnLoading("Updating recipe")
+          this._notifyOnLoading("Updating recipe");
           RecipeDao.getInstance(this.userLogin)
             .update(e.detail)
             .then(function (success) {
@@ -432,11 +450,8 @@ Custom property | Description | Default
                 // cut recipe from bounded arrays
                 this._updateAfterDeletion(recipe.item, this.recipes, 'recipes');
                 this._updateAfterDeletion(recipe.item, this._checkedBoxes.refs, "_checkedBoxes.refs");
-                this._checkedBoxes.number--;
-                // check to change FAB
-                this._trackCheckedBoxes();
               }.bind(this));
-              this._resetSearchElementCheckbox();
+              this.$.searchbar.resetQuery();
               // notify user
               this._notifyOnSuccess("Elements successfully removed!");
             }.bind(this))
@@ -487,7 +502,7 @@ Custom property | Description | Default
          */
         _checkItems: function () {
           var el = Polymer.dom(this.root).querySelectorAll(".singleItem");
-          for (e in el) {
+          for (var e in el) {
             var listItem = el[e];
             var internalEl = Polymer.dom(listItem.root).querySelector(".check paper-checkbox");
             if (internalEl.checked == false) {
@@ -505,7 +520,7 @@ Custom property | Description | Default
          */
         _uncheckItems: function () {
           var el = Polymer.dom(this.root).querySelectorAll(".singleItem");
-          for (e in el) {
+          for (var e in el) {
             var listItem = el[e];
             var internalEl = Polymer.dom(listItem.root).querySelector(".check paper-checkbox");
             if (internalEl.checked == true) {
@@ -561,7 +576,11 @@ Custom property | Description | Default
           if(item.info !== undefined){
             checkInfo = !((item.info).toLowerCase().indexOf(lowerCaseQuery) != -1);
           }
-          return checkDesc || checkInfo;
+          var result = checkDesc || checkInfo;
+          if(result){
+            this._updateAfterDeletion(item, this._checkedBoxes.refs, "_checkedBoxes.refs");
+          }
+          return result;
         }
       });
     })();
