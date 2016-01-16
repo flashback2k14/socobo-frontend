@@ -576,7 +576,11 @@ Custom property | Description | Default
           if(item.info !== undefined){
             checkInfo = !((item.info).toLowerCase().indexOf(lowerCaseQuery) != -1);
           }
-          return checkDesc || checkInfo;
+          var result = checkDesc || checkInfo;
+          if(result){
+            this._updateAfterDeletion(item, this._checkedBoxes.refs, "_checkedBoxes.refs");
+          }
+          return result;
         }
       });
     })();
