@@ -3,13 +3,12 @@ The following custom properties and mixins are available for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
-`--socobo-element-list-item-style-heading-font` | | `{--socobo-heading-font}`
-`--socobo-element-list-item-style-default-font` | | `{--socobo-text-font}`
-`--socobo-element-list-item-style-icon-text-color` | | `{--light-primary-color}`
+`--socobo-heading-font` | | `{--socobo-heading-font}`
+`--socobo-text-font` | | `{--socobo-text-font}`
 `--socobo-element-list-item-style-text-color` | | `{--secondary-text-color}`
 `--socobo-element-list-item-icon-focus-color` | | `{--accent-color}`
-`--socobo-element-list-item-style-border-color` | | `{--light-primary-color}`
-`--socobo-element-list-item-hover-color` | | `{--divider-color}`
+`--socobo-element-list-item-style-border-color` | | `{--bg-focus-color}`
+`--socobo-element-list-item-hover-color` | | `{--bg-focus-color}`
 `--socobo-element-list-style-heading-color` | | `{--default-primary-color}`
 
 @demo demo/socobo-element-list-item/demo.html
@@ -22,16 +21,15 @@ Custom property | Description | Default
     .short_info {
       @apply(--layout-horizontal);
       @apply(--layout-center);
-
-
+      @apply(--socobo-text-font);
       height: 50px;
-      border-bottom: solid 2px var(--socobo-element-list-item-style-border-color);
-      color: var(--socobo-element-list-item-style-text-color);
+      border-bottom: solid 2px var(--socobo-element-list-item-style-border-color, --bg-focus-color);
+      color: var(--socobo-element-list-item-style-text-color, --secondary-text-color);
       padding-right: 16px;
     }
 
     .short_info:hover{
-      background-color: var(--socobo-element-list-item-icon-focus-color);
+      background-color: var(--socobo-element-list-item-hover-color, --bg-focus-color);
     }
 
     .check {
@@ -39,7 +37,7 @@ Custom property | Description | Default
     }
 
     paper-checkbox {
-      --paper-checkbox-unchecked-color: var(--socobo-element-list-item-style-text-color);
+      --paper-checkbox-unchecked-color: var(--socobo-element-list-item-style-text-color, --secondary-text-color);
     }
 
     .desc, .info {
@@ -74,7 +72,7 @@ Custom property | Description | Default
     }
 
     paper-icon-button:hover{
-      color: var(--socobo-element-list-item-icon-focus-color);
+      color: var(--socobo-element-list-item-icon-focus-color, --accent-color);
     }
 
     .deletionConfirmation p {
@@ -82,7 +80,8 @@ Custom property | Description | Default
     }
     paper-dialog h3 {
       text-align: center;
-      color: var(--socobo-element-list-style-heading-color);
+      @apply(--socobo-heading-font);
+      color: var(--socobo-element-list-style-heading-color, --default-primary-color);
     }
 
   </style>
