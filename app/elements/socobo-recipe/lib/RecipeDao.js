@@ -268,14 +268,14 @@ var RecipeDao = (function(){
      */
     var getMeasurements = function(){
       return new Promise(function(resolve, reject){
-        var ref = new Firebase(_getGlobalMeasurementsUrl());
+        var ref = new Firebase(_measurementsUrl);
         ref.once("value",function(data){
           resolve(data.val());
         },function(error){
           reject(error.message);
         });
       });
-    }
+    };
 
     /**
      * Public Functions
@@ -284,7 +284,7 @@ var RecipeDao = (function(){
       add    : add,
       update : update,
       remove : remove,
-      measurements : getMeasurements,
+      getMeasurements : getMeasurements,
       getAll : getAll
     };
   }

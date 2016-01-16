@@ -290,7 +290,7 @@ Custom property | Description | Default
           //Alternative: var eClone = (JSON.parse(JSON.stringify(e.detail)));
           //get measurements and add these to the add dialog
           RecipeDao.getInstance(this.userLogin)
-            .measurements()
+            .getMeasurements()
             .then(function(data){
               this.$.editDialog.measurements = data;
             }.bind(this)).
@@ -312,7 +312,7 @@ Custom property | Description | Default
         _addRecipe: function () {
           //get measurements and add these to the add dialog
           RecipeDao.getInstance(this.userLogin)
-            .measurements()
+            .getMeasurements()
             .then(function(data){
               this.$.addDialog.measurements = data;
             }.bind(this)).
@@ -345,7 +345,7 @@ Custom property | Description | Default
          * @param e
          */
         _removeRecipe: function (e) {
-          this._notifyOnLoading("Deleting recipe")
+          this._notifyOnLoading("Deleting recipe");
           RecipeDao.getInstance(this.userLogin)
             .remove(e.detail)
             .then(function (success) {
@@ -363,7 +363,7 @@ Custom property | Description | Default
          * @param e
          */
         _addNewRecipe: function (e) {
-          this._notifyOnLoading("Adding recipe")
+          this._notifyOnLoading("Adding recipe");
           RecipeDao.getInstance(this.userLogin)
             .add(e.detail)
             .then(function (success) {
@@ -392,7 +392,7 @@ Custom property | Description | Default
          * @param e
          */
         _editRecipe: function (e) {
-          this._notifyOnLoading("Updating recipe")
+          this._notifyOnLoading("Updating recipe");
           RecipeDao.getInstance(this.userLogin)
             .update(e.detail)
             .then(function (success) {
@@ -502,7 +502,7 @@ Custom property | Description | Default
          */
         _checkItems: function () {
           var el = Polymer.dom(this.root).querySelectorAll(".singleItem");
-          for (e in el) {
+          for (var e in el) {
             var listItem = el[e];
             var internalEl = Polymer.dom(listItem.root).querySelector(".check paper-checkbox");
             if (internalEl.checked == false) {
@@ -520,7 +520,7 @@ Custom property | Description | Default
          */
         _uncheckItems: function () {
           var el = Polymer.dom(this.root).querySelectorAll(".singleItem");
-          for (e in el) {
+          for (var e in el) {
             var listItem = el[e];
             var internalEl = Polymer.dom(listItem.root).querySelector(".check paper-checkbox");
             if (internalEl.checked == true) {
