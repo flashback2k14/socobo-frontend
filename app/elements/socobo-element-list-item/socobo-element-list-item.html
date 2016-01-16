@@ -98,7 +98,7 @@ Custom property | Description | Default
       <p>Do you realy want to remove</p>
       <h3 id="currentItem"></h3>
       <div class="buttons">
-        <paper-button dialog-dismiss autofocus>Tap me to close</paper-button>
+        <paper-button dialog-dismiss autofocus>CANCEL</paper-button>
         <paper-button on-click="deleteElement" dialog-confirm>OK</paper-button>
       </div>
     </paper-dialog>  </template>
@@ -146,6 +146,7 @@ Custom property | Description | Default
       this.fire("edit_request", this.obj);
     },
     deleteElement : function () {
+      alert("fire delete request");
       this.fire("delete_request", this.obj);
     },
     _showConfirmation : function () {
