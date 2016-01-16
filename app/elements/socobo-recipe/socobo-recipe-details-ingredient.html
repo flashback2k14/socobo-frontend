@@ -229,8 +229,8 @@ Custom property | Description | Default
          * Called if the component is ready
          */
         ready : function () {
-          this._chooseState();
           this.$.measurementDropdownMenu.selected = this._selectExistingValue();
+          this._chooseState();
         }
       });
     })();

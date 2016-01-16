@@ -292,17 +292,20 @@ Custom property | Description | Default
           RecipeDao.getInstance(this.userLogin)
             .getMeasurements()
             .then(function(data){
+              this.$.editDialog.recipe = {original: e.detail, clone: eClone};
               this.$.editDialog.measurements = data;
+              this.$.editDialog.initIngredients();
+              this.$.editDialog.initSteps();
+              this.$.editDialog.initImage();
+              this.$.editDialog.toggleDialog();
             }.bind(this)).
           catch(function(error){
             this._notify(error);
           }.bind(this));
-          this.$.editDialog.toggleDialog();
+
           //Pass clone object and original object to the recipe dialog
-          this.$.editDialog.recipe = {original: e.detail, clone: eClone};
-          this.$.editDialog.initSteps();
-          this.$.editDialog.initIngredients();
-          this.$.editDialog.initImage();
+
+
         },
         /**
          * Handle for the add event fired by the main action button.
