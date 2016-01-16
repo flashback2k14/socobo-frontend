@@ -28,13 +28,21 @@ var RecipeDao = (function(){
     var _getUserRecipesUrl = function() {
       return _baseUrl + "users/" + _id + "/recipes";
     };
-
+    /**
+     * Get measurements url
+     * @returns {string}
+     * @private
+     */
+    var _getGlobalMeasurementsUrl = function(){
+      return _baseUrl + "measurements/";
+    }
     /**
      * Private Variables
      */
     var _baseUrl = user.firebaseUrl;
     var _id = user.userId;
     var _recipesUrl = _getGlobalRecipesUrl();
+    var _measurementsUrl = _getGlobalMeasurementsUrl();
     var _userUrl = _getUserRecipesUrl();
 
     /**
@@ -254,6 +262,20 @@ var RecipeDao = (function(){
           });
       });
     };
+    /**
+     * Gets all measurements from the database
+     * @returns {Promise}
+     */
+    var getMeasurements = function(){
+      return new Promise(function(resolve, reject){
+        var ref = new Firebase(_measurementsUrl);
+        ref.once("value",function(data){
+          resolve(data.val());
+        },function(error){
+          reject(error.message);
+        });
+      });
+    };
 
     /**
      * Public Functions
@@ -262,6 +284,7 @@ var RecipeDao = (function(){
       add    : add,
       update : update,
       remove : remove,
+      getMeasurements : getMeasurements,
       getAll : getAll
     };
   }

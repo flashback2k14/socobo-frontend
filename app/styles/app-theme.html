@@ -1,3 +1,5 @@
+<!-- Font -->
+<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 <style is="custom-style">
   /*
    Polymer includes a shim for CSS Custom Properties that we can use for application theming.
@@ -31,6 +33,14 @@
     /* paper-menu */
     --paper-menu-background-color:  var(--text-primary-color);
     --menu-link-color:              var(--primary-text-color);
+
+    /* App fonts */
+    --socobo-heading-font: {
+      font-family: 'Pacifico', cursive;
+    };
+    --socobo-text-font: {
+      font-family: sans-serif;
+    };
   }
 
   /* General styles */
@@ -193,10 +203,10 @@
     --socobo-recipe-style-spinner-color-level3: var(--accent-color);
     --socobo-recipe-style-spinner-color-level4: var(--accent-color);
     --socobo-recipe-style-heading-font: {
-      font-family: 'Lobster', cursive;
+      @apply(--socobo-heading-font);
     };
     --socobo-recipe-style-default-font: {
-      font-family: sans-serif;
+      @apply(--socobo-text-font);
     }
   }
 

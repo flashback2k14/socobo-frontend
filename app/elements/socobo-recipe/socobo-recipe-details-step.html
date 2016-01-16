@@ -4,6 +4,7 @@
 The following custom properties and mixins are available for styling:
 
 Custom property | Description | Default
+----------------|-------------|--------
 `--socobo-recipe-style-border-color`  | | `{--light-primary-color}`
 `--socobo-recipe-style-text-color`  | | `{--secondary-text-color}`
 `--socobo-recipe-style-icon-focus-color`  | |  `{--accent-color}`
@@ -14,6 +15,7 @@ Custom property | Description | Default
 `--socobo-recipe-style-step-content-focus-color`  | |   `{--light-primary-color}`
 `--socobo-recipe-style-heading-font`  | | `{Lobster cursive}`
 `--socobo-recipe-style-default-font`  | | `{sans serif}`
+
 @demo demo/socobo-recipe/demo.html
 -->
 <dom-module id="socobo-recipe-details-step">
@@ -146,7 +148,7 @@ Custom property | Description | Default
             value : "show"
           }
         },
-        chooseState :function(){
+        _chooseState : function(){
           if(this.state === "add"){
             this.$.steps_default.style.display = "none";
             this.$.sep.style.display = "none";
@@ -159,10 +161,10 @@ Custom property | Description | Default
           }
         },
         removeStep : function (){
-          this.fire("rem_step", this.step)
+          this.fire("rem_step", this.step);
         },
         ready : function (){
-          this.chooseState();
+          this._chooseState();
         }
       });
     })();

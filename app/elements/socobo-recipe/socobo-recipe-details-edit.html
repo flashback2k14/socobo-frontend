@@ -16,6 +16,7 @@ Custom property | Description | Default
 `--socobo-recipe-style-image-overlay-color`  | |   `{--default-primary-color}`
 `--socobo-recipe-style-heading-font`  | | `{Lobster cursive}`
 `--socobo-recipe-style-default-font`  | | `{sans serif}`
+
 @demo demo/socobo-recipe/demo.html
 -->
 <dom-module id="socobo-recipe-details-edit">
@@ -258,7 +259,8 @@ Custom property | Description | Default
               class="inputs"
               ingredient="{{item}}"
               id="{{item}}"
-              on-rem_ingr="removeIngr">
+              measurements="{{measurements}}"
+              on-rem_ingr="_removeIngr">
             </socobo-recipe-details-ingredient>
           </template>
           <!-- ADD DETAIL INGREDIENT-->
@@ -361,9 +363,20 @@ Custom property | Description | Default
             type : Array,
             value : []
           },
+          /**
+           * Used to switch between input fields and text
+           */
           state : {
             type: String,
             value: "show"
+          },
+          /**
+           * Measurements from the database
+           * which are usable for the ingredients
+           */
+          measurements: {
+            type : Array,
+            value: []
           }
         },
 
@@ -442,7 +455,7 @@ Custom property | Description | Default
         /**
          * REMOVE
          */
-        removeIngr : function(e) {
+        _removeIngr : function(e) {
           var model = e.model;
           var itemIndex = model.get('index');
           this.cutElementOffArray(itemIndex, 'ingredient_inputs');
@@ -484,7 +497,7 @@ Custom property | Description | Default
         /**
          * CLEAR
          */
-        revokeEdit:function() {
+        revokeEdit : function() {
           //Reset the temporary arrays
           this.recipe_inputs = [];
           this.ingredient_inputs = [];
@@ -545,7 +558,7 @@ Custom property | Description | Default
          */
         validateRecipe : function(){
           var check = function(obj, value){
-            return obj.recipe.clone[value] != "" && obj.recipe.clone[value] != undefined
+            return obj.recipe.clone[value] != "" && obj.recipe.clone[value] != undefined;
           };
           var checkContainer = function(obj, container){
             return obj.recipe[container].lenght > 0;
@@ -574,7 +587,7 @@ Custom property | Description | Default
           }
           var ingredientsComplete = true;
           if(!ingredientsExist){
-            message += "Ingredients\n"
+            message += "Ingredients\n";
           }else{
             for(var ingr in this.recipe.clone.ingredients){
               if(this.recipe.clone.ingredients[ingr].desc == ""){

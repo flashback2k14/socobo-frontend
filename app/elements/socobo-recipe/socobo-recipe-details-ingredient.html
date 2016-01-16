@@ -2,13 +2,14 @@
 
 <!--
 The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
 `--socobo-recipe-style-border-color`  | | `{--light-primary-color}`
 `--socobo-recipe-style-text-color`  | | `{--secondary-text-color}`
 `--socobo-recipe-style-icon-focus-color`  | |  `{--accent-color}`
 `--socobo-recipe-style-heading-font`  | | `{Lobster cursive}`
 `--socobo-recipe-style-default-font`  | | `{sans serif}`
-Custom property | Description | Default
-----------------|-------------|----------
 
 @demo demo/socobo-recipe/demo.html
 -->
@@ -78,7 +79,17 @@ Custom property | Description | Default
         color: var(--socobo-recipe-style-icon-focus-color);
       }
 
-    </style>
+      paper-tabs {
+        --paper-tabs-selection-bar-color: var(--accent-color);
+      }
+      paper-tab{
+        color: var(--primary-text-color);
+        font-size: 14px;
+        margin: 0 10px 0 10px;
+
+      }
+
+  </style>
 
     <!---->
     <div class="wrapper_output" id="ingr_default">
@@ -114,14 +125,24 @@ Custom property | Description | Default
         </span>
           <!---->
         <span>
-          <paper-input label="Measurement"
-                       class="unit_input"
-                       value="{{ingredient.unit}}"
-                       pattern="[a-zA-z]{1,5}"
-                       auto-validate
-                       error-message="Invalid characters"></paper-input>
+          <div class="horizontal-section">
+          <paper-dropdown-menu
+            label="Measurement"
+            class="vertical-layout width-small"
+            id="measurementDropdown"
+            vertical-align="bottom">
+            <paper-menu
+              id="measurementDropdownMenu"
+              class="dropdown-content"
+              noink="true">
+              <template is="dom-repeat" items="[[measurements]]" as="measurement">
+                <paper-item on-click="_select">[[measurement]]</paper-item>
+              </template>
+            </paper-menu>
+          </paper-dropdown-menu>
+            </div>
         </span>
-        <span><paper-icon-button class="delete_icon" icon="delete" on-click="removeIngr"></paper-icon-button></span>
+        <span><paper-icon-button class="delete_icon" icon="delete" on-click="_removeIngr"></paper-icon-button></span>
       </div>
 
     </paper-material>
@@ -132,17 +153,39 @@ Custom property | Description | Default
       Polymer({
         is: 'socobo-recipe-details-ingredient',
         properties: {
+          /**
+           * The current ingredient with:
+           * - desc
+           * - unit
+           * - amount
+           */
           ingredient: {
             type: Object,
             value: {
             }
           },
+          /**
+           * Measurements from the database
+           * which are usable for the ingredients
+           */
+          measurements : {
+            type : Array,
+            value: []
+          },
+          /**
+           * State to determine if the ingredients are only shown or
+           * if input fields are provided to change the values
+           */
           state : {
             type : String,
             value : "show"
           }
         },
-        chooseState :function(){
+        /**
+         * Determines the state
+         * @private
+         */
+        _chooseState :function(){
           if(this.state === "add"){
             this.$.ingr_default.style.display = "none";
             this.$.sep.style.display = "none";
@@ -154,11 +197,40 @@ Custom property | Description | Default
             this.$.ingr_input.style.display = "none";
           }
         },
-        removeIngr : function(){
+        /**
+         * Fire event to remove the ingredient
+         * @private
+         */
+        _removeIngr : function(){
           this.fire("rem_ingr", this.ingredient);
         },
+        /**
+         * Sets the measurement attribute of the ingredients object
+         * @param e
+         * @private
+           */
+        _select : function(e){
+          this.ingredient.unit = this.measurements[this.$.measurementDropdownMenu.selected];
+        },
+        /**
+         * Transforms the current unit of the ingredient to
+         * the index in the measurements array
+         * @private
+         */
+        _selectExistingValue : function(){
+          var searchedValue = this.ingredient.unit;
+          for(var measurement in this.measurements){
+            if(searchedValue === this.measurements[measurement]){
+              return measurement;
+            }
+          }
+        },
+        /**
+         * Called if the component is ready
+         */
         ready : function () {
-          this.chooseState();
+          this._chooseState();
+          this.$.measurementDropdownMenu.selected = this._selectExistingValue();
         }
       });
     })();
