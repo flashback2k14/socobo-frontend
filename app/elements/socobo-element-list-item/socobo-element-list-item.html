@@ -3,6 +3,13 @@ The following custom properties and mixins are available for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
+`--socobo-heading-font` | | `{--socobo-heading-font}`
+`--socobo-text-font` | | `{--socobo-text-font}`
+`--socobo-element-list-item-style-text-color` | | `{--secondary-text-color}`
+`--socobo-element-list-item-icon-focus-color` | | `{--accent-color}`
+`--socobo-element-list-item-style-border-color` | | `{--bg-focus-color}`
+`--socobo-element-list-item-hover-color` | | `{--bg-focus-color}`
+`--socobo-element-list-style-heading-color` | | `{--default-primary-color}`
 
 @demo demo/socobo-element-list-item/demo.html
 -->
@@ -14,14 +21,15 @@ Custom property | Description | Default
     .short_info {
       @apply(--layout-horizontal);
       @apply(--layout-center);
+      @apply(--socobo-text-font);
       height: 50px;
-      border-bottom: solid 2px #F4F0EC;
-      color: #8A7F80;
+      border-bottom: solid 2px var(--socobo-element-list-item-style-border-color, --bg-focus-color);
+      color: var(--socobo-element-list-item-style-text-color, --secondary-text-color);
       padding-right: 16px;
     }
 
     .short_info:hover{
-      background-color: #F4F0EC;
+      background-color: var(--socobo-element-list-item-hover-color, --bg-focus-color);
     }
 
     .check {
@@ -29,11 +37,10 @@ Custom property | Description | Default
     }
 
     paper-checkbox {
-      --paper-checkbox-unchecked-color: #8A7F80;
+      --paper-checkbox-unchecked-color: var(--socobo-element-list-item-style-text-color, --secondary-text-color);
     }
 
     .desc, .info {
-      font-family: sans-serif;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -65,8 +72,18 @@ Custom property | Description | Default
     }
 
     paper-icon-button:hover{
-      color: var(--default-primary-color);
+      color: var(--socobo-element-list-item-icon-focus-color, --accent-color);
     }
+
+    .deletionConfirmation p {
+      text-align: center;
+    }
+    paper-dialog h3 {
+      text-align: center;
+      @apply(--socobo-heading-font);
+      color: var(--socobo-element-list-style-heading-color, --default-primary-color);
+    }
+
   </style>
 
   <template>
@@ -74,9 +91,16 @@ Custom property | Description | Default
       <span class="check"><paper-checkbox checked="{{isChecked}}" on-click="changeCheckBox"></paper-checkbox></span>
       <span class="desc" on-click="showElement">{{obj.desc}}</span><span class="info" on-click="showElement">{{obj.info}}</span>
       <span class="edit"><paper-icon-button icon="create" on-click="editElement"></paper-icon-button></span>
-      <span class="delete"><paper-icon-button icon="delete" on-click="deleteElement"></paper-icon-button></span>
+      <span class="delete"><paper-icon-button icon="delete" on-click="_showConfirmation"></paper-icon-button></span>
     </paper-material>
-  </template>
+    <paper-dialog id="deletionConfirmation" class="deletionConfirmation" modal>
+      <p>Do you realy want to remove</p>
+      <h3 id="currentItem"></h3>
+      <div class="buttons">
+        <paper-button class="btnDeleteOk" dialog-dismiss autofocus>CANCEL</paper-button>
+        <paper-button class="btnDeleteNotOk" on-click="deleteElement" dialog-confirm>OK</paper-button>
+      </div>
+    </paper-dialog>  </template>
 
 </dom-module>
 
@@ -122,6 +146,10 @@ Custom property | Description | Default
     },
     deleteElement : function () {
       this.fire("delete_request", this.obj);
+    },
+    _showConfirmation : function () {
+      this.$.currentItem.innerHTML = this.obj.desc;
+      this.$.deletionConfirmation.open();
     },
     ready : function(){
       this.playAnimation();

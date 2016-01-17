@@ -250,8 +250,9 @@ Custom property | Description | Default
             <socobo-recipe-details-ingredient
               state="add"
               ingredient="{{item}}"
+              measurements="[[measurements]]"
               id="{{item}}"
-              on-rem_ingr="removeIngr">
+              on-rem_ingr="_removeIngr">
             </socobo-recipe-details-ingredient>
           </template>
           <paper-fab
@@ -352,6 +353,14 @@ Custom property | Description | Default
           state : {
             type: String,
             value: "show"
+          },
+          /**
+           * Measurements from the database
+           * which are usable for the ingredients
+           */
+          measurements: {
+            type : Array,
+            value : []
           }
         },
 
@@ -405,7 +414,7 @@ Custom property | Description | Default
         /**
          * REMOVE
          */
-        removeIngr : function(e){
+        _removeIngr : function(e){
           var model = e.model;
           var itemIndex = model.get('index');
           this.cutElementOffArray(itemIndex, 'ingredient_inputs');
@@ -496,7 +505,7 @@ Custom property | Description | Default
          */
         validateRecipe : function() {
           var check = function(obj, value){
-            return obj.recipe[value] != "" && obj.recipe[value] != undefined
+            return obj.recipe[value] != "" && obj.recipe[value] != undefined;
           };
           var checkContainer = function(obj, container){
             return obj.recipe[container].lenght > 0;
@@ -525,7 +534,7 @@ Custom property | Description | Default
           }
           var ingredientsComplete = true;
           if (!ingredientsExist) {
-            message.push("ingredients")
+            message.push("ingredients");
           } else {
             for(var ingr in this.recipe.ingredients){
               if(this.recipe.ingredients[ingr].desc == ""){
@@ -541,7 +550,7 @@ Custom property | Description | Default
             msg = "Please add the missing information: ";
             message.forEach(function(element){
               msg += element + ", ";
-            })
+            });
             msg = msg.slice(0, msg.length - 2);
           }
           return msg;
