@@ -89,8 +89,11 @@
 
         overview.data = [{desc: "foo", info: "foo"}, {desc: "bar", info: "bar"}];
         flush(function() {
-          var button = overview.querySelector('.delete').querySelector('.paper-icon-button');
-          MockInteractions.tap(button);
+          var dialog_ok_button = overview.querySelector('.deletionConfirmation');
+          var item_delete_button = dialog_ok_button.querySelector('.btnDeleteNotOk');
+          expect(item_delete_button).to.not.be.eql(undefined);
+          expect(item_delete_button).to.not.be.eql(null);
+          MockInteractions.tap(item_delete_button);
         });
       })
     });
