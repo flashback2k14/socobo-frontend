@@ -19,6 +19,9 @@ var SocoboRanking = (function() {
     var _userId = userLogin.userId;
     var _inventoryRoute = _baseUrl + "inventory/" + _userId;
     var _recipeRoute = _baseUrl + "recipes";
+    // global refs for register
+    var _refInventory = new Firebase(_inventoryRoute);
+    var _refRecipes = new Firebase(_recipeRoute);
     /**
      * Public Get Data Function
      */
@@ -46,8 +49,7 @@ var SocoboRanking = (function() {
     var _getDataFromInventory = function() {
       return new Promise(function(resolve, reject) {
         var inventoryItems = [];
-        var ref = new Firebase(_inventoryRoute);
-        ref.on("value", function(snapshot) {
+        _refInventory.once("value", function(snapshot) {
           snapshot.forEach(function(item) {
             inventoryItems.push(item.val());
           });
@@ -65,8 +67,7 @@ var SocoboRanking = (function() {
     var _getDataFromRecipe = function() {
       return new Promise(function(resolve, reject) {
         var recipeItems = [];
-        var ref = new Firebase(_recipeRoute);
-        ref.orderByChild("userId").startAt(_userId).on("value", function(snapshot) {
+        _refRecipes.orderByChild("userId").startAt(_userId).once("value", function(snapshot) {
           snapshot.forEach(function(item) {
             var recItem = item.val();
             recItem.id = item.key();
@@ -79,10 +80,25 @@ var SocoboRanking = (function() {
       });
     };
     /**
+     * Workaround for tracking changes in inventory items and recipes
+     * @param context
+     */
+    var registerChangedListener = function(context) {
+      // inventory
+      _refInventory.on("child_added", function(snapshot) { context.fire("ranking_inventory_item_changed"); }, function(err) { context.fire("ranking_inventory_error", err.message); });
+      _refInventory.on("child_changed", function(snapshot) { context.fire("ranking_inventory_item_changed"); }, function(err) { context.fire("ranking_inventory_error", err.message); });
+      _refInventory.on("child_removed", function(snapshot) { context.fire("ranking_inventory_item_changed"); }, function(err) { context.fire("ranking_inventory_error", err.message); });
+      // recipes
+      _refRecipes.on("child_added", function(snapshot) { context.fire("ranking_recipes_item_changed"); }, function(err) { context.fire("ranking_recipes_error", err.message); });
+      _refRecipes.on("child_changed", function(snapshot) { context.fire("ranking_recipes_item_changed"); }, function(err) { context.fire("ranking_recipes_error", err.message); });
+      _refRecipes.on("child_removed", function(snapshot) { context.fire("ranking_recipes_item_changed"); }, function(err) { context.fire("ranking_recipes_error", err.message); });
+    };
+    /**
      * Public API
      */
     return {
-      getData : getData
+      getData : getData,
+      registerChangedListener : registerChangedListener
     }
   };
 

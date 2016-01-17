@@ -144,11 +144,25 @@ Custom property | Description | Default
             notify: true
           }
         },
+
+        /**
+         * register listeners for changed items
+         */
+        listeners: {
+          "ranking_inventory_item_changed": "_onInventoryItemChanged",
+          "ranking_inventory_error": "_onInventoryError",
+          "ranking_recipes_item_changed": "_onRecipesItemChanged",
+          "ranking_recipes_error": "_onRecipesError"
+        },
+
         /**
          * Load Data for Ranking.</br>
          * @method loadData
          */
         loadData: function() {
+          // set loading flag
+          this.isLoading = true;
+          // load data
           SocoboRanking.getInstance(this.userLogin)
             .getData()
             .then(function(data) {
@@ -158,6 +172,11 @@ Custom property | Description | Default
             .catch(function(error) {
               this._notify(error.message);
             }.bind(this));
+          // register changed listener
+          if (this.isFirstLoad) {
+            SocoboRanking.getInstance(this.userLogin).registerChangedListener(this);
+            this.isFirstLoad = false;
+          }
         },
 
         /**
@@ -194,8 +213,8 @@ Custom property | Description | Default
                 // check if inventory items is available for recipe
                 if (ingredient.desc === item.name) {
                   // check measurements and amount
-                  //if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement.value)) {
-                  if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement)) {
+                  if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement.value)) {
+                  //if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement)) {
                     // count matching items
                     recipe.matchingItemCount++;
                     // add matching items
@@ -221,6 +240,8 @@ Custom property | Description | Default
           this._sortList(true);
           // notify user
           this._notify("Calculating finished!");
+          // reset loading flag
+          this.isLoading = false;
         },
 
         /**
@@ -484,6 +505,44 @@ Custom property | Description | Default
           if (!this.$.infoRanking.opened) {
             this.$.infoRanking.show();
           }
+        },
+
+        /**
+         * Workaround for tracking changes in inventory items
+         */
+        _onInventoryItemChanged: function() {
+          if (!this.isLoading) {
+            // reset recipes
+            this.set("recipeRanking", []);
+            // reload data
+            this.loadData();
+          }
+        },
+        _onInventoryError: function(e) {
+          console.error("Ranking:", "Inventory error:", e.detail);
+        },
+
+        /**
+         * Workaround for tracking changes in recipes
+         */
+        _onRecipesItemChanged: function() {
+          if (!this.isLoading) {
+            // reset recipes
+            this.set("recipeRanking", []);
+            // reload data
+            this.loadData();
+          }
+        },
+        _onRecipesError: function(e) {
+          console.error("Ranking:", "Inventory error:", e.detail);
+        },
+
+        /**
+         * init variables
+         */
+        ready: function() {
+          this.isFirstLoad = true;
+          this.isLoading = false;
         }
       });
     })();
