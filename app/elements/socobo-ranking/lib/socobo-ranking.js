@@ -49,11 +49,7 @@ var SocoboRanking = (function() {
         var ref = new Firebase(_inventoryRoute);
         ref.on("value", function(snapshot) {
           snapshot.forEach(function(item) {
-            var invItem = {
-              id   : item.key(),
-              name : item.val().name
-            };
-            inventoryItems.push(invItem);
+            inventoryItems.push(item.val());
           });
           resolve(inventoryItems);
         }, function(err) {

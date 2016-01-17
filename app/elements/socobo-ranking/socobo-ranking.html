@@ -31,7 +31,7 @@ Custom property | Description | Default
       .style-ranking {
         @apply(--layout-vertical);
         @apply(--laout-start-justified);
-        width: 50%;
+        width: 100%;
       }
       .style-main-toolbar {
         @apply(--layout-horizontal);
@@ -66,7 +66,7 @@ Custom property | Description | Default
         border-radius: 2px;
       }
 
-      .stlye-item-name {
+      .style-item-name {
         font-size: x-large;
         padding: 3px;
       }
@@ -103,7 +103,7 @@ Custom property | Description | Default
           <template is="dom-repeat" items="{{recipeRanking}}" as="recipe">
             <paper-item class="style-paper-item" on-tap="_openRankingItem">
               <paper-item-body two-line>
-                <div class="stlye-item-name">[[recipe.desc]]</div>
+                <div class="style-item-name">[[recipe.desc]]</div>
                 <div class="style-item-matching">Matching Ingredients: [[recipe.matchingItemCount]] / [[recipe.ingredients.length]]</div>
               </paper-item-body>
             </paper-item>
@@ -185,21 +185,35 @@ Custom property | Description | Default
             // init matching items
             recipe.matchingItemCount = 0;
             recipe.matchingItems = [];
+            // init missing items
+            recipe.missingItems = [];
             // iterate over ingredients from recipe
             recipe.ingredients.forEach(function(ingredient) {
               // iterate over available inventory items
               inventoryItems.forEach(function(item) {
                 // check if inventory items is available for recipe
                 if (ingredient.desc === item.name) {
-                  // count matching items
-                  recipe.matchingItemCount++;
-                  // add matching items
-                  recipe.matchingItems.push(ingredient);
+                  // check measurements and amount
+                  //if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement.value)) {
+                  if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement)) {
+                    // count matching items
+                    recipe.matchingItemCount++;
+                    // add matching items
+                    recipe.matchingItems.push(ingredient);
+                  } else {
+                    // add missing items
+                    recipe.missingItems.push(ingredient);
+                  }
                 }
-              });
-            });
+              }.bind(this));
+            }.bind(this));
             // find missing inventory items
-            recipe.missingItems = this._findMissing(recipe.ingredients, inventoryItems);
+            var missing = this._findMissing(recipe.ingredients, inventoryItems);
+            if (missing.length > 0) {
+              missing.forEach(function(item) {
+                recipe.missingItems.push(item);
+              });
+            }
             // push recipe into data binding array
             this.push("recipeRanking", recipe);
           }.bind(this));
@@ -207,6 +221,124 @@ Custom property | Description | Default
           this._sortList(true);
           // notify user
           this._notify("Calculating finished!");
+        },
+
+        /**
+         * check measurements and calculate if enough item count is available for the recipe
+         * @param ingredientAmount
+         * @param ingredientUnit
+         * @param itemCount
+         * @param itemMeasurements
+         * @returns {Boolean}
+         * @private
+         * @method _checkMeasurements
+         */
+        _checkMeasurements: function(ingredientAmount, ingredientUnit, itemCount, itemMeasurements) {
+          // Enums
+          var WEIGHTS = {
+            G       : "g",
+            KG      : "kg",
+            ML      : "ml",
+            L       : "l",
+            PCS     : "pcs",
+            TBSP    : "tbsp",
+            TSP     : "tsp",
+            CUP     : "cup",
+            OUNCES  : "ounces"
+          };
+          // Convert Values
+          var CONVERT = {
+            kgToG     : 1000,
+            lToMl     : 1000,
+            ozToG     : 28.3495,
+            gToOz     : 0.03527,
+            cupToG    : 236.588,
+            gToCup    : 0.00423,
+            tbspToG   : 15,
+            gToTbsp   : 0.06667,
+            tspToG    : 4.92892,
+            gToTsp    : 0.20288
+          };
+          // Checks
+          switch (itemMeasurements) {
+            // inventory item measurement
+            case WEIGHTS.KG:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.KG:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.G:
+                  return ingredientAmount <= itemCount * CONVERT.kgToG;
+                case WEIGHTS.TBSP:
+                  return ingredientAmount <= itemCount * CONVERT.kgToG * CONVERT.gToTbsp;
+                case WEIGHTS.TSP:
+                  return ingredientAmount <= itemCount * CONVERT.kgToG * CONVERT.gToTsp;
+                case WEIGHTS.CUP:
+                  return ingredientAmount <= itemCount * CONVERT.kgToG * CONVERT.gToCup;
+                case WEIGHTS.OUNCES:
+                  return ingredientAmount <= itemCount * CONVERT.kgToG * CONVERT.gToOz;
+                default:
+                  return false;
+              }
+              break;
+            // inventory item measurement
+            case WEIGHTS.G:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.G:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.KG:
+                  return ingredientAmount * CONVERT.kgToG <= itemCount;
+                case WEIGHTS.TBSP:
+                  return ingredientAmount * CONVERT.tbspToG <= itemCount;
+                case WEIGHTS.TSP:
+                  return ingredientAmount * CONVERT.tspToG <= itemCount;
+                case WEIGHTS.CUP:
+                  return ingredientAmount * CONVERT.cupToG <= itemCount;
+                case WEIGHTS.OUNCES:
+                  return ingredientAmount * CONVERT.ozToG <= itemCount;
+                default:
+                  return false;
+              }
+              break;
+            // inventory item measurement
+            case WEIGHTS.L:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.L:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.ML:
+                  return ingredientAmount <= itemCount * CONVERT.lToMl;
+                default:
+                  return false;
+              }
+              break;
+            // inventory item measurement
+            case WEIGHTS.ML:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.ML:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.L:
+                  return ingredientAmount * CONVERT.lToMl <= itemCount;
+                default:
+                  break;
+              }
+              break;
+            // inventory item measurement
+            case WEIGHTS.PCS:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.PCS:
+                  return ingredientAmount <= itemCount;
+                default:
+                  return false;
+              }
+              break;
+            // default
+            default:
+              return false;
+          }
         },
 
         /**
@@ -228,7 +360,7 @@ Custom property | Description | Default
           // check for missing inventory items
           for (var i = 0; i < ingredients.length; i++) {
             if (itemNames.indexOf(ingredients[i].desc) === -1) {
-              missing.push(ingredients[i].desc);
+              missing.push(ingredients[i]);
             }
           }
           // return missing inventory items

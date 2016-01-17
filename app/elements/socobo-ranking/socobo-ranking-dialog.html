@@ -60,12 +60,12 @@ Custom property | Description | Default
           <paper-button id="btnGoToRecipe" class="style-buttons" on-tap="_goToRecipe" raised>Go to Recipe</paper-button>
         </template>
         <!-- Missing Items -->
-        <template is="dom-if" if="{{recipe.missingItems.length}}">
+        <template is="dom-if" if="[[recipe.missingItems.length]]">
           <!-- Headline -->
           <h2 class="style-headline">Missing Ingredients</h2>
           <!-- List Missing Items -->
           <template is="dom-repeat" items="[[recipe.missingItems]]" as="missingItem">
-            <paper-item class="style-paper-item">&bull; [[missingItem]]</paper-item>
+            <paper-item class="style-paper-item">&bull; [[missingItem.desc]] - [[missingItem.amount]] [[missingItem.unit]]</paper-item>
           </template>
           <!-- Action Button -->
           <paper-button id="btnAddToGroceryList" class="style-buttons" on-tap="_addToGroceryList" raised>Add to Grocery List</paper-button>
