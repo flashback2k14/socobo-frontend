@@ -204,8 +204,8 @@ Custom property | Description | Default
             this.item = item;
             this.$.bestBeforeInput.value = item.bestBefore;
             this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
-            this.measurements.forEach(function(measurement, index) {
-              if (measurement.value.indexOf(item.measurement.value) !== -1) {
+            this.measurements.forEach(function(measurement, index, arr) {
+              if (arr.indexOf(item.measurement) !== -1) {
                 this.$.measurementDropdownMenu.select(index);
               }
             }.bind(this));
