@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="generator" content="Socobo Project" />
+  <meta name="generator" content="Socobo Project">
   <title>Socobo Project</title>
   <!-- Place favicon.ico in the `app/` directory -->
 
@@ -19,7 +19,7 @@
 
   <!-- Add to homescreen for Chrome on Android -->
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="application-name" content="SF">
+  <meta name="application-name" content="SOCOBO">
   <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
 
   <!-- Add to homescreen for Safari on iOS -->
@@ -44,7 +44,7 @@
   <!-- endreplace-->
 </head>
 
-<body unresolved class="fullbleed layout vertical">
+<body unresolved>
   <span id="browser-sync-binding"></span>
   <template is="dom-bind" id="app">
     <paper-drawer-panel id="paperDrawerPanel" force-narrow>
@@ -96,11 +96,11 @@
         <!-- Main Toolbar -->
         <paper-toolbar id="mainToolbar" class="style-main-toolbar">
           <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
-          <span class="flex"></span>
+          <span class="space"></span>
           <!-- Toolbar icons -->
           <paper-icon-button id="btnLogout" icon="eject" on-click="logoutUser"></paper-icon-button>
           <!-- Application name -->
-          <div class="middle">Socobo Project</div>
+          <div class="middle middle-container">Socobo Project</div>
         </paper-toolbar>
 
         <!-- Main Content -->
@@ -171,32 +171,35 @@
       </paper-header-panel>
     </paper-drawer-panel>
 
-    <paper-toast id="info-toast"
-                 duration="6000"
-                 text="Placeholder">
+    <paper-toast
+      id="info-toast"
+      duration="6000"
+      text="Placeholder">
     </paper-toast>
 
-    <!-- Uncomment next block to enable Service Worker support (1/2) -->
-    <!--
-    <paper-toast id="caching-complete"
-                 duration="6000"
-                 text="Caching complete! This app will work offline.">
+    <!-- Service Worker support -->
+    <paper-toast
+      id="caching-complete"
+      duration="6000"
+      text="Caching complete! This app will work offline.">
     </paper-toast>
 
-    <platinum-sw-register auto-register
-                          clients-claim
-                          skip-waiting
-                          on-service-worker-installed="displayInstalledToast">
-      <platinum-sw-cache default-cache-strategy="networkFirst"
-                         precache-file="precache.json">
-      </platinum-sw-cache>
+    <platinum-sw-register
+      auto-register
+      clients-claim
+      skip-waiting
+      base-uri="bower_components/platinum-sw/bootstrap"
+      on-service-worker-installed="displayInstalledToast">
+        <platinum-sw-cache
+          default-cache-strategy="fastest"
+          cache-config-file="cache-config.json">
+        </platinum-sw-cache>
     </platinum-sw-register>
-    -->
 
   </template>
 
   <!--firebase-->
-  <script src='https://cdn.firebase.com/js/client/2.3.2/firebase.js'></script>
+  <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
   <!-- build:js scripts/app.js -->
   <script src="scripts/app.js"></script>
   <!-- endbuild-->
