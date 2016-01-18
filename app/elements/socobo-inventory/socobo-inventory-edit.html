@@ -15,7 +15,7 @@ Custom property | Description | Default
 @demo demo/socobo-inventory/demo.html
 -->
 
-<dom-module id="socobo-inventory-create">
+<dom-module id="socobo-inventory-edit">
   <template>
     <style>
       :host {
@@ -76,7 +76,9 @@ Custom property | Description | Default
         entry-animation="scale-up-animation"
         exit-animation="fade-out-animation"
         modal>
-        <h2>Create a new item</h2>
+
+        <h2>Change the item</h2>
+
         <paper-dialog-scrollable class="style-paper-dialog-scrollable">
           <!-- 1. Row -->
           <div class="horizontal-layout">
@@ -107,25 +109,24 @@ Custom property | Description | Default
               auto-validate
               required>
             </paper-input>
-            <paper-dropdown-menu
-              label="Measurement"
-              class="vertical-layout width-small"
-              id="measurementDropdown">
-              <paper-menu
-                id="measurementDropdownMenu"
-                class="dropdown-content">
-                <template is="dom-repeat" items="[[measurements]]" as="measurement">
-                  <paper-item>[[measurement.value]]</paper-item>
-                </template>
-              </paper-menu>
-            </paper-dropdown-menu>
-          </div>
-          <!-- 3. Row -->
-          <div class="horizontal-layout style-best-before">
-            <span>Best before</span>
-          </div>
-          <!-- 4. Row -->
-          <div class="horizontal-layout style-date-picker-row">
+              <paper-dropdown-menu
+                label="Measurement"
+                class="vertical-layout width-small"
+                id="measurementDropdown">
+                <paper-menu
+                  id="measurementDropdownMenu"
+                  class="dropdown-content">
+                  <template is="dom-repeat" items="[[measurements]]" as="measurement">
+                    <paper-item>[[measurement.value]]</paper-item>
+                  </template>
+                </paper-menu>
+              </paper-dropdown-menu>
+            </div>
+            <div class="horizontal-layout style-best-before">
+              <span>Best before</span>
+            </div>
+            <!-- 4. Row -->
+            <div class="horizontal-layout style-date-picker-row">
             <paper-input
               type="date"
               class="vertical-layout width-big"
@@ -148,7 +149,7 @@ Custom property | Description | Default
         </paper-dialog-scrollable>
         <div class="buttons">
           <paper-button id="cancelDialogButton" dialog-dismiss>Cancel</paper-button>
-          <paper-button id="createItemButton" on-click="_createItem">Ok</paper-button>
+          <paper-button id="editItemButton" on-click="_editItem">Save</paper-button>
         </div>
       </paper-dialog>
     </div>
@@ -156,7 +157,7 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-inventory-create',
+        is: 'socobo-inventory-edit',
         properties: {
           /* Array of measurement objects. {value: value}.
           */
@@ -179,9 +180,9 @@ Custom property | Description | Default
         @param {Object} userLogin
         @param {Object} itemToEdit
         */
-        show: function() {
+        show: function(itemToEdit) {
           this.$.dialog.toggle();
-          this._resetItem();
+          this._resetItem(itemToEdit);
         },
 
         /* Hide the dialog
@@ -191,38 +192,46 @@ Custom property | Description | Default
         },
 
         _resetItem: function(item) {
-          // resetting the item
-          this.item = {};
-          this.$.bestBeforeInput.value = "";
-          this.$.categoryDropdownMenu.select(-1);
-          this.$.measurementDropdownMenu.select(-1);
+          if (item != undefined) {
+            this.item = item;
+            this.$.bestBeforeInput.value = item.bestBefore;
+            this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
+            this.measurements.forEach(function (m, i, arr) {
+              if(item.measurement.value === m.value)
+                this.$.measurementDropdownMenu.select(i);
+            }.bind(this));
+          } else {
+            // resetting the item
+            this.item = {};
+            this.$.bestBeforeInput.value = "";
+            this.$.categoryDropdownMenu.select(-1);
+            this.$.measurementDropdownMenu.select(-1);
+          }
         },
 
-        _createItem: function() {
+        _editItem: function(e,detail) {
           var item = this._populateItem(this.item);
-
-          if (!this._validate(this.item)) {
-            alert("Some information is missing");
+          if(this._validate(item)) {
+            this.fire('edit-item', item);
           } else {
-            this.fire('create-item', this.item);
+            alert('Some information is missing');
           }
         },
 
         _populateItem: function(item) {
           item.measurement = this.measurements[this.$.measurementDropdownMenu.selected];
-          if (this.$.categoryDropdownMenu.selected != -1) {
-            this.item.category = this.categories[this.$.categoryDropdownMenu.selected];
-          }
+          item.category = this.categories[this.$.categoryDropdownMenu.selected];
 
           item.desc = item.name;
-          item.info = item.count + " " + item.measurement.value;
+          item.info = item.count + " " + item.measurement;
 
+          console.dir(item);
           return item;
         },
 
         _validate: function(item) {
           if(!item.name || item.name.length < 5) return false;
-          if(!item.measurement || !item.measurement.value || item.measurement.value.length === 0) return false;
+          if(!item.measurement || item.measurement.length === 0) return false;
           if(!item.count) return false;
           return true;
         }

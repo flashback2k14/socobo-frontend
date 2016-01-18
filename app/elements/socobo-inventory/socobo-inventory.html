@@ -24,10 +24,14 @@ Custom property | Description | Default
     <div>
       <socobo-inventory-create
         id="inventoryCreateDialog"
-        on-edit-item="_saveItem"
         on-create-item="_onCreateItem"
         measurements="[[measurements]]">
       </socobo-inventory-create>
+      <socobo-inventory-edit
+        id="inventoryEditDialog"
+        on-edit-item="_saveItem"
+        measurements="[[measurements]]">
+      </socobo-inventory-edit>
 
       <firebase-collection
         id="inventoryCollection"
@@ -114,12 +118,11 @@ Custom property | Description | Default
           var item = e.detail;
           item.created = Firebase.ServerValue.TIMESTAMP;
 
-          //var ref = new Firebase(this.userLogin.firebaseUrl + "inventory/" + this.userLogin.userId).push();
           this.$.inventoryCollection.add(item);
           this.$.inventoryCreateDialog.hide();
         },
         /**
-         * Hanler for the delet_request event fired by the corresponding
+         * Handler for the delete_request event fired by the corresponding
          * socobo-element-list-item. Deletes this item from the database.
          * @param {Event} e
          */
@@ -130,8 +133,8 @@ Custom property | Description | Default
         /* Display dialog to edit inventory items
         */
         _editItem: function(e) {
-          this.$.inventoryCreateDialog.style.display = "block";
-          this.$.inventoryCreateDialog.show(e.detail);
+          this.$.inventoryEditDialog.style.display = "block";
+          this.$.inventoryEditDialog.show(e.detail);
         },
 
         /* Save changes made to inventory items
