@@ -206,7 +206,7 @@
   /**
    * show toast after caching is completed
    */
-  //app.displayInstalledToast = function() {
-  //  document.querySelector("#caching-complete").show();
-  //};
+  app.displayInstalledToast = function() {
+    document.querySelector("#caching-complete").show();
+  };
 }(document));
