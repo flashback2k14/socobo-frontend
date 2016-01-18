@@ -16,6 +16,7 @@ Custom property | Description | Default
         font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
       }
       .style-detail-dialog {
+        min-width: 450px;
         width: 20%;
       }
       .style-headline {
@@ -54,7 +55,9 @@ Custom property | Description | Default
           <h2 class="style-headline">Matching Ingredients</h2>
           <!-- List Matching Items -->
           <template is="dom-repeat" items="[[recipe.matchingItems]]" as="matchingItem">
-            <paper-item class="style-paper-item">&bull; [[matchingItem.desc]] - [[matchingItem.amount]] [[matchingItem.unit]]</paper-item>
+            <paper-item class="style-paper-item">
+              &bull; [[matchingItem.desc]] - [[matchingItem.amount]] [[matchingItem.unit]]
+            </paper-item>
           </template>
           <!-- Action Button -->
           <paper-button id="btnGoToRecipe" class="style-buttons" on-tap="_goToRecipe" raised>Go to Recipe</paper-button>
@@ -65,7 +68,9 @@ Custom property | Description | Default
           <h2 class="style-headline">Missing Ingredients</h2>
           <!-- List Missing Items -->
           <template is="dom-repeat" items="[[recipe.missingItems]]" as="missingItem">
-            <paper-item class="style-paper-item">&bull; [[missingItem.desc]] - [[missingItem.amount]] [[missingItem.unit]]</paper-item>
+            <paper-item class="style-paper-item">
+              &bull; [[missingItem.desc]] - [[missingItem.amount]] [[missingItem.unit]]
+            </paper-item>
           </template>
           <!-- Action Button -->
           <paper-button id="btnAddToGroceryList" class="style-buttons" on-tap="_addToGroceryList" raised>Add to Grocery List</paper-button>
@@ -100,8 +105,7 @@ Custom property | Description | Default
            */
           recipe: {
             type: Object,
-            value: {},
-            notify: true
+            value: {}
           }
         },
         /**

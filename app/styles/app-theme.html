@@ -70,7 +70,7 @@
 
   paper-material {
     height: 100%;
-    background: white;
+    background: var(--primary-background-color);
     border-radius: 2px;
   }
   paper-menu iron-icon {
@@ -140,6 +140,13 @@
   .style-pm-height {
     height: 700px;
     overflow: auto;
+  }
+  .style-pm-home {
+    @apply(--layout-horizontal);
+    @apply(--layout-justified);
+  }
+  .style-pm-home-width {
+    width: 48%;
   }
 
   /*Show / Hide Menu Items*/

@@ -150,9 +150,8 @@ Custom property | Description | Default
          */
         listeners: {
           "ranking_inventory_item_changed": "_onInventoryItemChanged",
-          "ranking_inventory_error": "_onInventoryError",
           "ranking_recipes_item_changed": "_onRecipesItemChanged",
-          "ranking_recipes_error": "_onRecipesError"
+          "ranking_changed_error": "_onChangedError"
         },
 
         /**
@@ -204,6 +203,7 @@ Custom property | Description | Default
             // init matching items
             recipe.matchingItemCount = 0;
             recipe.matchingItems = [];
+            recipe.availableItems = [];
             // init missing items
             recipe.missingItems = [];
             // iterate over ingredients from recipe
@@ -219,6 +219,8 @@ Custom property | Description | Default
                     recipe.matchingItemCount++;
                     // add matching items
                     recipe.matchingItems.push(ingredient);
+                    // add available items
+                    recipe.availableItems.push(item.info);
                   } else {
                     // add missing items
                     recipe.missingItems.push(ingredient);
@@ -431,8 +433,11 @@ Custom property | Description | Default
          * @method _reload
          */
         _reload: function() {
+          // notify user
           this._notify("Reloading...");
+          // reset recipe ranking
           this.set("recipeRanking", []);
+          // reload data
           this.loadData();
         },
 
@@ -445,7 +450,7 @@ Custom property | Description | Default
          * @method _compareRecipeMatchingAsc
          */
         _compareRecipeMatchingAsc: function(a, b) {
-          return a.matchingItemCount - b.matchingItemCount;
+          return (a.ingredients.length * a.matchingItemCount) - (b.ingredients.length * b.matchingItemCount);
         },
 
         /**
@@ -457,7 +462,7 @@ Custom property | Description | Default
          * @method _compareRecipeMatchingDesc
          */
         _compareRecipeMatchingDesc: function(a, b) {
-          return b.matchingItemCount - a.matchingItemCount;
+          return (b.ingredients.length * b.matchingItemCount) - (a.ingredients.length * a.matchingItemCount);
         },
 
         /**
@@ -479,7 +484,6 @@ Custom property | Description | Default
          * @method _handleGoToRecipe
          */
         _handleGoToRecipe: function(e) {
-          this.$.recipeShow.state = "show";
           this.$.recipeShow.toggleDialog();
           this.$.recipeShow.recipe = e.detail.item;
         },
@@ -508,33 +512,35 @@ Custom property | Description | Default
         },
 
         /**
-         * Workaround for tracking changes in inventory items
+         * tracking changes in inventory items
+         * @private
+         * @method _onInventoryItemChanged
          */
         _onInventoryItemChanged: function() {
           if (!this.isLoading) {
-            // reset recipes
-            this.set("recipeRanking", []);
-            // reload data
-            this.loadData();
+            this._reload();
           }
-        },
-        _onInventoryError: function(e) {
-          console.error("Ranking:", "Inventory error:", e.detail);
         },
 
         /**
-         * Workaround for tracking changes in recipes
+         * tracking changes in recipes
+         * @private
+         * @method _onRecipesItemChanged
          */
         _onRecipesItemChanged: function() {
           if (!this.isLoading) {
-            // reset recipes
-            this.set("recipeRanking", []);
-            // reload data
-            this.loadData();
+            this._reload();
           }
         },
-        _onRecipesError: function(e) {
-          console.error("Ranking:", "Inventory error:", e.detail);
+
+        /**
+         * tracking error from changes in recipes or inventory
+         * @param e
+         * @private
+         * @method _onChangedError
+         */
+        _onChangedError: function(e) {
+          this._notify("Ranking - Reloading Error: " + e.detail.message);
         },
 
         /**

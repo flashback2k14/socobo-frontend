@@ -80,18 +80,42 @@ var SocoboRanking = (function() {
       });
     };
     /**
-     * Workaround for tracking changes in inventory items and recipes
+     * tracking changes in inventory items and recipes
      * @param context
      */
     var registerChangedListener = function(context) {
       // inventory
-      _refInventory.on("child_added", function(snapshot) { context.fire("ranking_inventory_item_changed"); }, function(err) { context.fire("ranking_inventory_error", err.message); });
-      _refInventory.on("child_changed", function(snapshot) { context.fire("ranking_inventory_item_changed"); }, function(err) { context.fire("ranking_inventory_error", err.message); });
-      _refInventory.on("child_removed", function(snapshot) { context.fire("ranking_inventory_item_changed"); }, function(err) { context.fire("ranking_inventory_error", err.message); });
+      _refInventory.on("child_added", _onCompleteInventory, _onError, context);
+      _refInventory.on("child_changed", _onCompleteInventory, _onError, context);
+      _refInventory.on("child_removed", _onCompleteInventory, _onError, context);
       // recipes
-      _refRecipes.on("child_added", function(snapshot) { context.fire("ranking_recipes_item_changed"); }, function(err) { context.fire("ranking_recipes_error", err.message); });
-      _refRecipes.on("child_changed", function(snapshot) { context.fire("ranking_recipes_item_changed"); }, function(err) { context.fire("ranking_recipes_error", err.message); });
-      _refRecipes.on("child_removed", function(snapshot) { context.fire("ranking_recipes_item_changed"); }, function(err) { context.fire("ranking_recipes_error", err.message); });
+      _refRecipes.on("child_added", _onCompleteRecipe, _onError, context);
+      _refRecipes.on("child_changed", _onCompleteRecipe, _onError, context);
+      _refRecipes.on("child_removed", _onCompleteRecipe, _onError, context);
+    };
+    /**
+     * Fire Event if inventory item changed
+     * this is context from registerChangedListener
+     * @private
+     */
+    var _onCompleteInventory = function() {
+      this.fire("ranking_inventory_item_changed");
+    };
+    /**
+     * Fire Event if recipe item changed
+     * this is context from registerChangedListener
+     * @private
+     */
+    var _onCompleteRecipe = function() {
+      this.fire("ranking_recipes_item_changed");
+    };
+    /**
+     * Fire Event if inventory or recipe throws an error
+     * this is context from registerChangedListener
+     * @private
+     */
+    var _onError = function(err) {
+      this.fire("ranking_changed_error", err);
     };
     /**
      * Public API
@@ -101,7 +125,9 @@ var SocoboRanking = (function() {
       registerChangedListener : registerChangedListener
     }
   };
-
+  /**
+   * Get Singleton Instance
+   */
   return {
     /**
      * Get Singleton Instance

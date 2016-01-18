@@ -119,13 +119,19 @@
             </section>
 
             <section data-route="home">
-              <paper-material class="style-pm-margin-padding style-pm-height" elevation="1">
-                <socobo-ranking
-                  id="elRanking"
-                  user-login="[[userlogin]]"
-                  on-add-missing-items-to-grocery-list="handleAddMissingItemsToGroceryList">
-                </socobo-ranking>
-              </paper-material>
+              <div class="style-pm-home">
+                <paper-material class="style-pm-margin-padding style-pm-height style-pm-home-width" elevation="1">
+                  <socobo-ranking
+                    id="elRanking"
+                    user-login="[[userlogin]]"
+                    on-add-missing-items-to-grocery-list="handleAddMissingItemsToGroceryList">
+                  </socobo-ranking>
+                </paper-material>
+
+                <paper-material class="style-pm-margin-padding style-pm-heigh style-pm-home-width" elevation="1">
+                  <!-- Placeholder for socobo-grocery-list -->
+                </paper-material>
+              </div>
             </section>
 
             <section data-route="recipes">
@@ -147,7 +153,6 @@
             </section>
 
             <section data-route="profile">
-              <!--<paper-material class="style-pm-margin-padding style-pm-height" elevation="1">-->
               <div class="style-pm-margin-padding style-pm-height">
                 <socobo-profile
                   id="elProfile"
@@ -159,7 +164,6 @@
                   on-profile-info-changed="handleProfileInfoChanged">
                 </socobo-profile>
               </div>
-              <!--</paper-material>-->
             </section>
 
           </iron-pages>
