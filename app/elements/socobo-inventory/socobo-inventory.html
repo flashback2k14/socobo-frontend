@@ -29,15 +29,6 @@ Custom property | Description | Default
         measurements="[[measurements]]">
       </socobo-inventory-create>
 
-      <paper-dialog id="confirmationDialog" modal>
-        <h2>Remove item</h2>
-        <span>Are you sure you want to remove this item?</span>
-        <div class="buttons">
-          <paper-button dialog-dismiss>Cancel</paper-button>
-          <paper-button dialog-confirm on-click="_confirmDelete">Ok</paper-button>
-        </div>
-      </paper-dialog>
-
       <firebase-collection
         id="inventoryCollection"
         order-by-child="created"
@@ -53,7 +44,7 @@ Custom property | Description | Default
 
       <socobo-inventory-overview
         on-edit_request="_editItem"
-        on-delete_request="_deleteInventoryItem"
+        on-delete_request="_confirmDelete"
         data="[[data]]">
       </socobo-inventory-overview>
 
@@ -127,16 +118,13 @@ Custom property | Description | Default
           this.$.inventoryCollection.add(item);
           this.$.inventoryCreateDialog.hide();
         },
-
-        /*Handles delete events bubbling up from the overview element
+        /**
+         * Hanler for the delet_request event fired by the corresponding
+         * socobo-element-list-item. Deletes this item from the database.
+         * @param {Event} e
          */
-        _deleteInventoryItem(e) {
-          this.$.confirmationDialog.item = e.detail;
-          this.$.confirmationDialog.toggle();
-        },
-
         _confirmDelete: function(e) {
-          this.$.inventoryCollection.remove(this.$.confirmationDialog.item);
+          this.$.inventoryCollection.remove(e.detail);
         },
 
         /* Display dialog to edit inventory items

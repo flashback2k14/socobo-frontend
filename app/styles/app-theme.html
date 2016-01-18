@@ -22,6 +22,7 @@
     --secondary-text-color:       #727272;
     --disabled-text-color:        #BDBDBD;
     --divider-color:              #B6B6B6;
+    --bg-focus-color:             #E0E0E0;
     --border-color:               #000000;
 
     /* Components */
@@ -169,6 +170,15 @@
     };
   }
 
+  socobo-element-list-item {
+    --socobo-element-list-item-style-border-color: var(--bg-focus-color);
+    --socobo-element-list-item-style-text-color: var(--secondary-text-color);
+    --socobo-element-list-item-icon-focus-color: var(--accent-color);
+    --socobo-element-list-item-hover-color: var(--bg-focus-color);
+    --socobo-element-list-style-heading-color: var(--default-primary-color);
+    --socobo-element-list-style-hover-text-color: var(--primary-background-color);
+  }
+
   socobo-inventory {
     --socobo-inventory-create-style-input-color: var(--secondary-text-color);
     --socobo-inventory-create-style-input-focus-color: var(--dark-primary-color);
@@ -196,14 +206,14 @@
     --socobo-recipe-style-step-number-color: var(--light-primary-color);
     --socobo-recipe-style-step-number-text-color: var(--dark-primary-color);
     --socobo-recipe-style-step-number-focus-color: var(--default-primary-color);
-    --socobo-recipe-style-step-number-text-focus-color: var(--light-primary-color);
+    --socobo-recipe-style-step-number-text-focus-color: var(--divider-color);
     --socobo-recipe-style-step-content-focus-color: var(--light-primary-color);
     --socobo-recipe-style-spinner-color-level1: var(--accent-color);
     --socobo-recipe-style-spinner-color-level2: var(--accent-color);
     --socobo-recipe-style-spinner-color-level3: var(--accent-color);
     --socobo-recipe-style-spinner-color-level4: var(--accent-color);
     --socobo-recipe-style-heading-font: {
-      @apply(--socobo-heading-font);
+      font-family: 'Pacifico', cursive;
     };
     --socobo-recipe-style-default-font: {
       @apply(--socobo-text-font);
