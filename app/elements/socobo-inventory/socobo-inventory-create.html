@@ -204,11 +204,7 @@ Custom property | Description | Default
             this.item = item;
             this.$.bestBeforeInput.value = item.bestBefore;
             this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
-            this.measurements.forEach(function(measurement, index) {
-              if (this.measurements.indexOf(item.measurement) !== -1) {
-                this.$.measurementDropdownMenu.select(index);
-              }
-            }.bind(this));
+            this.$.measurementDropdownMenu.select(item.measurement.__firebaseKey__);
           } else {
             // resetting the item
             this.item = {};
