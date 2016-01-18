@@ -1,0 +1,89 @@
+<script src="lib/socobo-grocery.js"></script>
+
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+@demo demo/socobo-grocery-list/demo.html
+-->
+<dom-module id="socobo-grocery-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+
+      .container {
+        @apply(--layout-vertical);
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+
+    <div class="container">
+
+    </div>
+    <!-- Notification-->
+    <paper-toast id="infoGroceryList" duration="2000"></paper-toast>
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: "socobo-grocery-list",
+        /**
+         * This Event is fired if...<br/>
+         * `Detail`: Object: {} <br/>
+         * @event ToDo
+         */
+        /**
+         * Element Properties.
+         */
+        properties: {
+          /**
+           * User Login Object
+           */
+          userLogin: {
+            type: Object,
+            value: {}
+          },
+          /**
+           * data binding array
+           */
+          groceryItems: {
+            type: Array,
+            value: [],
+            notify: true
+          }
+        },
+
+        /**
+         * register listeners for changed items
+         */
+        listeners: {
+
+        },
+
+        /**
+         * Load Data</br>
+         * @method loadData
+         */
+        loadData: function() {
+
+        },
+
+        /**
+         * add items to List from ranking
+         * @param items
+         * @method addToList
+         */
+        addToList: function(items) {
+          console.log("Missing Items for Grocery List:", items);
+        }
+      });
+    })();
+  </script>
+</dom-module>

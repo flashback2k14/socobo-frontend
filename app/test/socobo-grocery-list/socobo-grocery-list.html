@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>socobo grocery list basic tests</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../../elements/elements.html">
+</head>
+<body>
+
+  <test-fixture id="SocoboGroceryList">
+    <template>
+      <socobo-grocery-list></socobo-grocery-list>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite("<socobo-grocery-list>", function() {
+      var socoboGroceryList;
+
+      setup(function() {
+        socoboGroceryList = fixture("SocoboGroceryList");
+      });
+
+      test('exists', function(done) {
+        expect(socoboGroceryList).to.not.be.eql(undefined);
+        done();
+      });
+
+    });
+  </script>
+</body>
+</html>
