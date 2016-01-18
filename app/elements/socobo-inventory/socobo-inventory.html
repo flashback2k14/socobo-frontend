@@ -25,7 +25,8 @@ Custom property | Description | Default
       <socobo-inventory-create
         id="inventoryCreateDialog"
         on-edit-item="_saveItem"
-        on-create-item="_onCreateItem">
+        on-create-item="_onCreateItem"
+        measurements="[[measurements]]">
       </socobo-inventory-create>
 
       <firebase-collection
@@ -33,6 +34,12 @@ Custom property | Description | Default
         order-by-child="created"
         location="{{location}}"
         data="{{data}}">
+      </firebase-collection>
+      <firebase-collection
+        id="measurementCollection"
+        order-by-child="name"
+        location="{{measurementLocation}}"
+        data="{{measurements}}">
       </firebase-collection>
 
       <socobo-inventory-overview
@@ -68,13 +75,23 @@ Custom property | Description | Default
             computed: "_handleLogin(userLogin)",
             type: String,
             value: "https://socobo.firebaseio.com/"
+          },
+
+          measurementLocation: {
+            computed: "_handleMeasurement(userLogin)",
+            type: String,
+            value: "https://socobo.firebaseio.com/"
           }
         },
 
+        _handleMeasurement: function(login){
+          return login ? login.firebaseUrl + "measurements/" : this.measurementLocation;
+        },
+
         /*Construct firebase url for user's inventory from userLogin object</br>
-        @param {Object} login
-        @method _handleLogin
-        */
+         @param {Object} login
+         @method _handleLogin
+         */
         _handleLogin: function(login) {
           var url = "";
           if (login) {

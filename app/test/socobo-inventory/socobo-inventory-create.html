@@ -45,7 +45,8 @@
       });
 
       test('show sets item data if present', function(done) {
-        var item = {desc: 'test item', info: 'test info'};
+        var item = {measurement: {value: 'pcs'}, desc: 'test item', info: 'test info'};
+        dialog.measurements = [{value: "pcs"}];
         dialog.show(item);
         expect(dialog.item.desc).to.be.eql(item.desc);
         expect(dialog.item.info).to.be.eql(item.info);
@@ -66,7 +67,9 @@
       });
 
       test('create button is hidden when in edit mode', function(done) {
-        dialog.show({});
+        var item = {measurement: {value: 'pcs'}, desc: 'test item', info: 'test info'};
+        dialog.measurements = [{value: "pcs"}];
+        dialog.show(item);
         expect(dialog.$.createItemButton.hidden).to.be.eql(true);
         done();
       });
@@ -78,14 +81,15 @@
           done();
         });
 
-        dialog.show({name: "Valid name", count: "4", measurement: "pcs"});
+        dialog.show({name: "Valid name", count: "4", desc: 'test item', info: 'test info', measurement: {value: "pcs"}});
+        dialog.measurements = [{value: "Foo"}, {value: "g"}];
         dialog.$.measurementDropdownMenu.select(0);
         var saveButton = dialog.$.editItemButton;
         MockInteractions.tap(saveButton);
       });
 
       test('valid items are validated correctly', function(done) {
-        var validItem = {name: "Valid name", count: "4", measurement: "g"};
+        var validItem = {name: "Valid name", count: "4", measurement: {value: "g"}};
         expect(dialog._validate(validItem)).to.be.eql(true);
 
         done();
@@ -93,7 +97,7 @@
 
       test('items without measurement are not valid', function(done) {
         var invalidItem = {name: "Valid name", count: "4"};
-        var anotherInvalidItem = {name: "Valid name", count: "4", measurement: ""};
+        var anotherInvalidItem = {name: "Valid name", count: "4", measurement: {}};
         expect(dialog._validate(invalidItem)).to.be.eql(false);
         expect(dialog._validate(anotherInvalidItem)).to.be.eql(false);
 
@@ -115,7 +119,7 @@
       });
 
       test('items without count are not valid', function(done) {
-        var invalidItem = {name: "Valid name", measurement: "kg"};
+        var invalidItem = {name: "Valid name", measurement: {value: "kg"}};
         expect(dialog._validate(invalidItem)).to.be.eql(false);
 
         done();
@@ -130,7 +134,8 @@
         });
 
         dialog.show();
-        dialog.item = {name: "Valid name", count: "4", measurement: "g"};
+        dialog.item = {name: "Valid name", count: "4", measurement: {value: "g"}};
+        dialog.measurements = [{value: "Foo"}, {value: "g"}];
         dialog.$.measurementDropdownMenu.selected = 1;
         var createButton = dialog.$.createItemButton;
         MockInteractions.tap(createButton);

@@ -76,45 +76,49 @@ Custom property | Description | Default
         class="create-dialog"
         id="showInventoryDialog"
         entry-animation="scale-up-animation"
-        exit-animation="fade-out-animation"
-        >
-        <paper-dialog-scrollable
-          class="style-paper-dialog-scrollable">
+        exit-animation="fade-out-animation">
+        <paper-dialog-scrollable class="style-paper-dialog-scrollable">
           <!-- 1. Row -->
           <div class="horizontal-layout">
             <paper-input
               readonly
               label="Name"
               class="horizontal-layout width-full style-input style-disabled-inputs"
-              value="[[item.name]]"></paper-input>
+              value="[[item.name]]">
+            </paper-input>
           </div>
-            <!-- 2. Row -->
+          <!-- 2. Row -->
           <div class="horizontal-layout">
-                <paper-input
-                  label="Amount/Number"
-                  readonly
-                  class="vertical-layout width-big style-input-only-color style-disabled-inputs"
-                  value="[[item.count]]"></paper-input>
-                <paper-input
-                  readonly
-                  label="Measurement"
-                  class="vertical-layout width-small style-disabled-inputs"
-                  value="[[item.measurement]]"></paper-input>
-            </div>
-            <div class="horizontal-layout style-best-before">
-              <span>Best before</span>
-            </div>
-            <!-- 4. Row -->
-            <div class="horizontal-layout style-date-picker-row">
-              <paper-input
-                readonly
-                class="vertical-layout width-big style-disabled-inputs"
-                value="[[item.bestBefore]]"></paper-input>
-              <paper-input
-                readonly
-                label="Category"
-                class="vertical-layout width-small style-disabled-inputs"
-                value="[[item.category]]"></paper-input>
+            <paper-input
+              label="Amount/Number"
+              readonly
+              class="vertical-layout width-big style-input-only-color style-disabled-inputs"
+              value="[[item.count]]">
+            </paper-input>
+            <paper-input
+              readonly
+              label="Measurement"
+              class="vertical-layout width-small style-disabled-inputs"
+              value="[[item.measurement.value]]">
+            </paper-input>
+          </div>
+          <!-- 3. Row -->
+          <div class="horizontal-layout style-best-before">
+            <span>Best before</span>
+          </div>
+          <!-- 4. Row -->
+          <div class="horizontal-layout style-date-picker-row">
+            <paper-input
+              readonly
+              class="vertical-layout width-big style-disabled-inputs"
+              value="[[item.bestBefore]]">
+            </paper-input>
+            <paper-input
+              readonly
+              label="Category"
+              class="vertical-layout width-small style-disabled-inputs"
+              value="[[item.category]]">
+            </paper-input>
           </div>
         </paper-dialog-scrollable>
       </paper-dialog>
@@ -133,7 +137,7 @@ Custom property | Description | Default
         show: function(itemToEdit) {
           this.item = itemToEdit;
           this.$.showInventoryDialog.toggle();
-        },
+        }
     })})();
   </script>
 </dom-module>
