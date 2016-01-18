@@ -34,7 +34,7 @@ Custom property | Description | Default
         margin-bottom: 20px;
         overflow: auto;
         background-color: white;
-        color: var(--socobo-recipe-style-text-color);
+        color: var(--socobo-recipe-style-text-color, --secondary-text-color);
         @apply(--socobo-recipe-style-default-font);
         border-radius: 5px;
         line-height: 2;
@@ -44,7 +44,7 @@ Custom property | Description | Default
         padding-left: 30px;
         margin: 0;
         letter-spacing: -1px;
-        color: var(--socobo-recipe-style-heading-color);
+        color: var(--socobo-recipe-style-heading-color, --default-primary-color);
         font-weight: 400;
         font-size: 30px;
       }
@@ -73,11 +73,11 @@ Custom property | Description | Default
         margin: 0;
         top: 0;
         right: 0;
-        color: var(--socobo-recipe-style-text-color);
+        color: var(--socobo-recipe-style-text-color, --secondary-text-color);
         font-weight: 100;
       }
       .style-exit-show-button:hover {
-        color: var(--socobo-recipe-style-icon-focus-color);
+        color: var(--socobo-recipe-style-icon-focus-color, --accent-color);
         cursor: pointer;
       }
       .style-exit-show-button iron-icon {
@@ -88,25 +88,22 @@ Custom property | Description | Default
 
       /* TITLE */
       .default-title-style.default {
-        color: var(--socobo-recipe-style-heading-color);
-        border-bottom: 2px solid var(--socobo-recipe-style-border-color);
+        color: var(--socobo-recipe-style-heading-color, --default-primary-color);
+        border-bottom: 2px solid var(--socobo-recipe-style-border-color, --default-primary-color);
         @apply(--socobo-recipe-style-heading-font);
         margin-bottom: 10px;
-      }
-
-      .default-title-style.default {
         display: block;
       }
 
       .subHeadings {
-        color: var(--socobo-recipe-style-sub-heading-color);
+        color: var(--socobo-recipe-style-sub-heading-color, --default-primary-color);
         font-size: 18px;
         @apply(--socobo-recipe-style-heading-font);
         text-align: center;
       }
 
       .separator {
-        border: 1px solid var(--socobo-recipe-style-border-color);
+        border: 1px solid var(--socobo-recipe-style-border-color, --light-primary-color);
         margin-top: 2px;
       }
 

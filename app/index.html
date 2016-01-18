@@ -68,7 +68,7 @@
               <span>Login</span>
             </a>
 
-            <a data-route="home" href="/home">
+            <a data-route="home" id="menuItemHome" class="hide-menu-item" href="/home">
               <iron-icon icon="home"></iron-icon>
               <span>Home</span>
             </a>
@@ -119,9 +119,19 @@
             </section>
 
             <section data-route="home">
-              <paper-material elevation="1">
-                <p class="paper-font-body2">ToDo: Place here your Elements!</p>
-              </paper-material>
+              <div class="style-pm-home">
+                <paper-material class="style-pm-margin-padding style-pm-height style-pm-home-width" elevation="1">
+                  <socobo-ranking
+                    id="elRanking"
+                    user-login="[[userlogin]]"
+                    on-add-missing-items-to-grocery-list="handleAddMissingItemsToGroceryList">
+                  </socobo-ranking>
+                </paper-material>
+
+                <paper-material class="style-pm-margin-padding style-pm-heigh style-pm-home-width" elevation="1">
+                  <!-- Placeholder for socobo-grocery-list -->
+                </paper-material>
+              </div>
             </section>
 
             <section data-route="recipes">
@@ -143,7 +153,7 @@
             </section>
 
             <section data-route="profile">
-              <paper-material class="style-pm-margin-padding style-pm-height" elevation="1">
+              <div class="style-pm-margin-padding style-pm-height">
                 <socobo-profile
                   id="elProfile"
                   user-login="[[userlogin]]"
@@ -153,7 +163,7 @@
                   on-profile-image-changed="handleProfileImageChanged"
                   on-profile-info-changed="handleProfileInfoChanged">
                 </socobo-profile>
-              </paper-material>
+              </div>
             </section>
 
           </iron-pages>

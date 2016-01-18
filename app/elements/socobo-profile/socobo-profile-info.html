@@ -37,7 +37,8 @@ Custom property | Description | Default
       }
       .style-paper-card {
         --paper-card-header: {
-           background: var(--socobo-profile-info-paper-card-header-bg, #062F3C);
+           /*background: var(--socobo-profile-info-paper-card-header-bg, #062F3C);*/
+           background: var(--socobo-profile-info-paper-card-header-bg, --dark-primary-color);
          };
         --paper-card-header-text: {
            margin-left: 20px;
@@ -52,7 +53,7 @@ Custom property | Description | Default
         height: 230px;
       }
       .paper-card-height-large {
-        height: 400px;
+        height: 370px;
       }
       /*INPUT STYLING*/
       .width-for-inputs {
@@ -69,7 +70,7 @@ Custom property | Description | Default
       /*USER INFO*/
       .profile-info-standard {
         @apply(--layout-vertical);
-        margin: 0 20px;
+        margin: 0 5px 0 20px;
       }
       .style-fab-edit-info-standard {
         position: absolute !important;
@@ -103,7 +104,8 @@ Custom property | Description | Default
       }
       .style-clear-button {
         --paper-button: {
-         background: var(--socobo-profile-info-style-clear-button-bg, --paper-pink-500);
+         /*background: var(--socobo-profile-info-style-clear-button-bg, --paper-pink-500);*/
+         background: var(--socobo-profile-info-style-clear-button-bg, --accent-color);
          color: var(--socobo-profile-info-style-clear-button-color, #FFFFFF);
          font-size: medium;
        };
@@ -111,7 +113,7 @@ Custom property | Description | Default
       /*USER BIOGRAPHY*/
       .profile-info-biography {
         @apply(--layout-vertical);
-        margin: 20px 20px;
+        margin: 20px 5px 0 20px;
       }
       .style-fab-edit-info-biography {
         position: absolute !important;
@@ -123,7 +125,7 @@ Custom property | Description | Default
       /*USER ADMINISTRATION*/
       .profile-info-admin {
         @apply(--layout-vertical);
-        margin: 0 20px;
+        margin: 20px 5px 0 20px;
       }
       .main-admin-container {
         @apply(--layout-horizontal);

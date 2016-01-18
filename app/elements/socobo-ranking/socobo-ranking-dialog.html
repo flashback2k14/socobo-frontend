@@ -1,0 +1,139 @@
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--socobo-ranking-dialog-style-headline-bg` | Styling Headline Background color. | `{--dark-primary-color}`
+`--socobo-ranking-dialog-style-headline-color` | Styling Headline Color. | `{--text-primary-color}`
+
+@demo demo/socobo-ranking/demo.html
+-->
+<dom-module id="socobo-ranking-dialog">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+      .style-detail-dialog {
+        min-width: 450px;
+        width: 20%;
+      }
+      .style-headline {
+        @apply(--layout-flex);
+        padding: 10px;
+        background: var(--socobo-ranking-dialog-style-headline-bg, --dark-primary-color);
+        color: var(--socobo-ranking-dialog-style-headline-color, --text-primary-color);
+        border-radius: 3px;
+        text-shadow: none;
+      }
+      .style-paper-item {
+        margin-top: 10px;
+        border-radius: 3px;
+      }
+      .style-buttons {
+        width: 100%;
+        margin: 10px 0 10px 0;
+      }
+      .style-cancel-button {
+        width: 100px;
+        margin-right: 10px;
+      }
+    </style>
+    <!-- Dialog Element -->
+    <paper-dialog
+      id="detailDialog"
+      class="style-detail-dialog"
+      entry-animation="scale-up-animation"
+      exit-animation="fade-out-animation"
+      modal>
+      <h1>Details - <span>[[recipe.desc]]</span></h1>
+      <div>
+        <!-- Matching Items -->
+        <template is="dom-if" if="[[recipe.matchingItemCount]]">
+          <!-- Headline -->
+          <h2 class="style-headline">Matching Ingredients</h2>
+          <!-- List Matching Items -->
+          <template is="dom-repeat" items="[[recipe.matchingItems]]" as="matchingItem">
+            <paper-item class="style-paper-item">
+              &bull; [[matchingItem.desc]] - [[matchingItem.amount]] [[matchingItem.unit]]
+            </paper-item>
+          </template>
+          <!-- Action Button -->
+          <paper-button id="btnGoToRecipe" class="style-buttons" on-tap="_goToRecipe" raised>Go to Recipe</paper-button>
+        </template>
+        <!-- Missing Items -->
+        <template is="dom-if" if="[[recipe.missingItems.length]]">
+          <!-- Headline -->
+          <h2 class="style-headline">Missing Ingredients</h2>
+          <!-- List Missing Items -->
+          <template is="dom-repeat" items="[[recipe.missingItems]]" as="missingItem">
+            <paper-item class="style-paper-item">
+              &bull; [[missingItem.desc]] - [[missingItem.amount]] [[missingItem.unit]]
+            </paper-item>
+          </template>
+          <!-- Action Button -->
+          <paper-button id="btnAddToGroceryList" class="style-buttons" on-tap="_addToGroceryList" raised>Add to Grocery List</paper-button>
+        </template>
+      </div>
+      <div class="buttons">
+        <paper-button class="style-cancel-button" dialog-dismiss>Cancel</paper-button>
+      </div>
+    </paper-dialog>
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'socobo-ranking-dialog',
+        /**
+         * This Event is fired if the go to recipe button is clicked. <br/>
+         * `Detail`: Object: {item: Recipe} <br/>
+         * @event go-to-recipe
+         */
+        /**
+         * This Event is fired if the add to grocery list button is clicked. <br/>
+         * `Detail`: Object: {items: "recipe.missingItems"} <br/>
+         * @event add-to-grocery-list
+         */
+        /**
+         * Element Properties.
+         */
+        properties: {
+          /**
+           * Recipe Object
+           */
+          recipe: {
+            type: Object,
+            value: {}
+          }
+        },
+        /**
+         * Show / Hide Dialog. <br/>
+         * @method toggleDialog
+         */
+        toggleDialog: function() {
+          this.$.detailDialog.toggle();
+        },
+        /**
+         * Go to Recipe - fires Event
+         * @private
+         * @method _goToRecipe
+         */
+        _goToRecipe: function() {
+          this.fire("go-to-recipe", {item: this.recipe});
+          this.toggleDialog();
+        },
+        /**
+         * Add to Grocery List - fires Event
+         * @private
+         * @method _addToGroceryList
+         */
+        _addToGroceryList: function() {
+          this.fire("add-to-grocery-list", {items: this.recipe.missingItems});
+          this.toggleDialog();
+        }
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,556 @@
+<script src="lib/socobo-ranking.js"></script>
+
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--socobo-profile-profile-wrapper` | Styling the Main Element Wrapper Container. | `{}`
+
+@demo demo/socobo-ranking/demo.html
+-->
+<dom-module id="socobo-ranking">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+
+      .container {
+        @apply(--layout-horizontal);
+        width: 100%;
+        height: 100%;
+      }
+
+      .style-ranking-dialog {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-center-justified);
+      }
+      .style-ranking {
+        @apply(--layout-vertical);
+        @apply(--laout-start-justified);
+        width: 100%;
+      }
+      .style-main-toolbar {
+        @apply(--layout-horizontal);
+        @apply(--layout-end-justified);
+      }
+      .style-title {
+        margin-left: 10px;
+        font-size: x-large;
+      }
+
+      .style-list {
+        margin-top: 20px;
+      }
+
+      .style-paper-item {
+        margin: 0 12px 12px 12px;
+        --paper-item: {
+          padding: 5px;
+          border-radius: 2px;
+        };
+      }
+      .style-paper-item:nth-child(2n+2) {
+        --paper-item: {
+          padding: 5px;
+          background: #EEEEEE;
+          border-radius: 2px;
+        };
+      }
+      .style-paper-item:hover {
+        cursor: pointer;
+        border: solid 1px lightgray;
+        border-radius: 2px;
+      }
+
+      .style-item-name {
+        font-size: x-large;
+        padding: 3px;
+      }
+      .style-item-matching {
+        font-size: small;
+        padding: 3px;
+      }
+
+    </style>
+
+    <div class="container">
+      <!-- Recipe Show Dialog -->
+      <socobo-recipe-details-show
+        id="recipeShow">
+      </socobo-recipe-details-show>
+      <!-- Detail Dialog -->
+      <socobo-ranking-dialog
+        id="rankingDialog"
+        class="style-ranking-dialog"
+        on-go-to-recipe="_handleGoToRecipe"
+        on-add-to-grocery-list="_handleAddToGroceryList">
+      </socobo-ranking-dialog>
+      <!-- Ranking -->
+      <div id="rankingWrapper" class="style-ranking">
+        <!-- Toolbar -->
+        <paper-toolbar class="style-main-toolbar">
+          <div class="middle style-title">Ranking</div>
+          <paper-icon-button id="btnReload" icon="refresh" on-tap="_reload"></paper-icon-button>
+          <paper-icon-button id="btnAsc" icon="arrow-upward" on-tap="_sortAsc"></paper-icon-button>
+          <paper-icon-button id="btnDesc" icon="arrow-downward" on-tap="_sortDesc"></paper-icon-button>
+        </paper-toolbar>
+        <!-- List View -->
+        <div class="style-list">
+          <template is="dom-repeat" items="{{recipeRanking}}" as="recipe">
+            <paper-item class="style-paper-item" on-tap="_openRankingItem">
+              <paper-item-body two-line>
+                <div class="style-item-name">[[recipe.desc]]</div>
+                <div class="style-item-matching">Matching Ingredients: [[recipe.matchingItemCount]] / [[recipe.ingredients.length]]</div>
+              </paper-item-body>
+            </paper-item>
+          </template>
+        </div>
+      </div>
+    </div>
+    <!-- Notification-->
+    <paper-toast id="infoRanking" duration="2000"></paper-toast>
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'socobo-ranking',
+        /**
+         * This Event is fired if the user click the "add-to-grocery-list" button on the ranking dialog. <br/>
+         * `Detail`: Object: {Missing Inventory Items} <br/>
+         * @event add-missing-items-to-grocery-list
+         */
+        /**
+         * Element Properties.
+         */
+        properties: {
+          /**
+           * User Login Object
+           */
+          userLogin: {
+            type: Object,
+            value: {}
+          },
+          /**
+           * data binding array
+           */
+          recipeRanking: {
+            type: Array,
+            value: [],
+            notify: true
+          }
+        },
+
+        /**
+         * register listeners for changed items
+         */
+        listeners: {
+          "ranking_inventory_item_changed": "_onInventoryItemChanged",
+          "ranking_recipes_item_changed": "_onRecipesItemChanged",
+          "ranking_changed_error": "_onChangedError"
+        },
+
+        /**
+         * Load Data for Ranking.</br>
+         * @method loadData
+         */
+        loadData: function() {
+          // set loading flag
+          this.isLoading = true;
+          // load data
+          SocoboRanking.getInstance(this.userLogin)
+            .getData()
+            .then(function(data) {
+              this._notify("Loading Data finished! Calculating started...");
+              this._calcRanking(data);
+            }.bind(this))
+            .catch(function(error) {
+              this._notify(error.message);
+            }.bind(this));
+          // register changed listener
+          if (this.isFirstLoad) {
+            SocoboRanking.getInstance(this.userLogin).registerChangedListener(this);
+            this.isFirstLoad = false;
+          }
+        },
+
+        /**
+         * Calculate Ranking
+         * @param data
+         * @private
+         * @method _calcRanking
+         */
+        _calcRanking: function(data) {
+          // check Data
+          if (data === null || typeof(data) === "undefined") {
+            this._notify("No Data for Ranking available!");
+            return false;
+          }
+          // check Data length
+          if (data.length !== 2) {
+            this._notify("Error - One needed Item is missing!");
+            return false;
+          }
+          //extract data
+          var inventoryItems = data[0];
+          var recipesItems = data[1];
+          // iterate over recipes
+          recipesItems.forEach(function(recipe) {
+            // init matching items
+            recipe.matchingItemCount = 0;
+            recipe.matchingItems = [];
+            recipe.availableItems = [];
+            // init missing items
+            recipe.missingItems = [];
+            // iterate over ingredients from recipe
+            recipe.ingredients.forEach(function(ingredient) {
+              // iterate over available inventory items
+              inventoryItems.forEach(function(item) {
+                // check if inventory items is available for recipe
+                if (ingredient.desc === item.name) {
+                  // check measurements and amount
+                  if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement.value)) {
+                  //if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement)) {
+                    // count matching items
+                    recipe.matchingItemCount++;
+                    // add matching items
+                    recipe.matchingItems.push(ingredient);
+                    // add available items
+                    recipe.availableItems.push(item.info);
+                  } else {
+                    // add missing items
+                    recipe.missingItems.push(ingredient);
+                  }
+                }
+              }.bind(this));
+            }.bind(this));
+            // find missing inventory items
+            var missing = this._findMissing(recipe.ingredients, inventoryItems);
+            if (missing.length > 0) {
+              missing.forEach(function(item) {
+                recipe.missingItems.push(item);
+              });
+            }
+            // push recipe into data binding array
+            this.push("recipeRanking", recipe);
+          }.bind(this));
+          // sort desc
+          this._sortList(true);
+          // notify user
+          this._notify("Calculating finished!");
+          // reset loading flag
+          this.isLoading = false;
+        },
+
+        /**
+         * check measurements and calculate if enough item count is available for the recipe
+         * @param ingredientAmount
+         * @param ingredientUnit
+         * @param itemCount
+         * @param itemMeasurements
+         * @returns {Boolean}
+         * @private
+         * @method _checkMeasurements
+         */
+        _checkMeasurements: function(ingredientAmount, ingredientUnit, itemCount, itemMeasurements) {
+          // Enums
+          var WEIGHTS = {
+            G       : "g",
+            KG      : "kg",
+            ML      : "ml",
+            L       : "l",
+            PCS     : "pcs",
+            TBSP    : "tbsp",
+            TSP     : "tsp",
+            CUP     : "cup",
+            OUNCES  : "ounces"
+          };
+          // Convert Values
+          var CONVERT = {
+            kgToG     : 1000,
+            lToMl     : 1000,
+            ozToG     : 28.3495,
+            gToOz     : 0.03527,
+            cupToG    : 236.588,
+            gToCup    : 0.00423,
+            tbspToG   : 15,
+            gToTbsp   : 0.06667,
+            tspToG    : 4.92892,
+            gToTsp    : 0.20288
+          };
+          // Checks
+          switch (itemMeasurements) {
+            // inventory item measurement
+            case WEIGHTS.KG:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.KG:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.G:
+                  return ingredientAmount <= itemCount * CONVERT.kgToG;
+                case WEIGHTS.TBSP:
+                  return ingredientAmount <= itemCount * CONVERT.kgToG * CONVERT.gToTbsp;
+                case WEIGHTS.TSP:
+                  return ingredientAmount <= itemCount * CONVERT.kgToG * CONVERT.gToTsp;
+                case WEIGHTS.CUP:
+                  return ingredientAmount <= itemCount * CONVERT.kgToG * CONVERT.gToCup;
+                case WEIGHTS.OUNCES:
+                  return ingredientAmount <= itemCount * CONVERT.kgToG * CONVERT.gToOz;
+                default:
+                  return false;
+              }
+              break;
+            // inventory item measurement
+            case WEIGHTS.G:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.G:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.KG:
+                  return ingredientAmount * CONVERT.kgToG <= itemCount;
+                case WEIGHTS.TBSP:
+                  return ingredientAmount * CONVERT.tbspToG <= itemCount;
+                case WEIGHTS.TSP:
+                  return ingredientAmount * CONVERT.tspToG <= itemCount;
+                case WEIGHTS.CUP:
+                  return ingredientAmount * CONVERT.cupToG <= itemCount;
+                case WEIGHTS.OUNCES:
+                  return ingredientAmount * CONVERT.ozToG <= itemCount;
+                default:
+                  return false;
+              }
+              break;
+            // inventory item measurement
+            case WEIGHTS.L:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.L:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.ML:
+                  return ingredientAmount <= itemCount * CONVERT.lToMl;
+                default:
+                  return false;
+              }
+              break;
+            // inventory item measurement
+            case WEIGHTS.ML:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.ML:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.L:
+                  return ingredientAmount * CONVERT.lToMl <= itemCount;
+                default:
+                  break;
+              }
+              break;
+            // inventory item measurement
+            case WEIGHTS.PCS:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.PCS:
+                  return ingredientAmount <= itemCount;
+                default:
+                  return false;
+              }
+              break;
+            // default
+            default:
+              return false;
+          }
+        },
+
+        /**
+         * Find missing inventory items
+         * @param ingredients
+         * @param items
+         * @returns {Array}
+         * @private
+         * @method _findMissing
+         */
+        _findMissing: function(ingredients, items) {
+          // init variables
+          var missing = [];
+          var itemNames = [];
+          // get names from inventory items
+          items.forEach(function(item) {
+            itemNames.push(item.name);
+          });
+          // check for missing inventory items
+          for (var i = 0; i < ingredients.length; i++) {
+            if (itemNames.indexOf(ingredients[i].desc) === -1) {
+              missing.push(ingredients[i]);
+            }
+          }
+          // return missing inventory items
+          return missing;
+        },
+
+        /**
+         * Sort List
+         * @param useDesc
+         * @private
+         * @method _sortList
+         */
+        _sortList: function(useDesc) {
+          // getting recipes
+          var recipes = this.get("recipeRanking");
+          // reset recipes
+          this.set("recipeRanking", []);
+          // sorting and set
+          if (useDesc) {
+            this.set("recipeRanking", recipes.sort(this._compareRecipeMatchingDesc));
+          } else {
+            this.set("recipeRanking", recipes.sort(this._compareRecipeMatchingAsc));
+          }
+        },
+
+        /**
+         * Sort List ASC
+         * @private
+         * @method _sortAsc
+         */
+        _sortAsc: function() {
+          this._sortList(false);
+        },
+
+        /**
+         * Sort List DESC
+         * @private
+         * @method _sortDesc
+         */
+        _sortDesc: function() {
+          this._sortList(true);
+        },
+
+        /**
+         * Reload List
+         * @private
+         * @method _reload
+         */
+        _reload: function() {
+          // notify user
+          this._notify("Reloading...");
+          // reset recipe ranking
+          this.set("recipeRanking", []);
+          // reload data
+          this.loadData();
+        },
+
+        /**
+         * Sorting Recipes (ASC)
+         * @param a
+         * @param b
+         * @private
+         * @return {number}
+         * @method _compareRecipeMatchingAsc
+         */
+        _compareRecipeMatchingAsc: function(a, b) {
+          return (a.ingredients.length * a.matchingItemCount) - (b.ingredients.length * b.matchingItemCount);
+        },
+
+        /**
+         * Sorting Recipes (DESC)
+         * @param a
+         * @param b
+         * @private
+         * @return {number}
+         * @method _compareRecipeMatchingDesc
+         */
+        _compareRecipeMatchingDesc: function(a, b) {
+          return (b.ingredients.length * b.matchingItemCount) - (a.ingredients.length * a.matchingItemCount);
+        },
+
+        /**
+         * Open Ranking Detail Dialog
+         * @param e
+         * @private
+         * @method _openRankingItem
+         */
+        _openRankingItem: function(e) {
+          var clickedItem = e.model.recipe;
+          this.$.rankingDialog.toggleDialog();
+          this.$.rankingDialog.recipe = clickedItem;
+        },
+
+        /**
+         * Handle Event - go to Recipe - open Recipe dialog
+         * @param e
+         * @private
+         * @method _handleGoToRecipe
+         */
+        _handleGoToRecipe: function(e) {
+          this.$.recipeShow.toggleDialog();
+          this.$.recipeShow.recipe = e.detail.item;
+        },
+
+        /**
+         * Handle Event - add to grocery list - fire Event
+         * @param e
+         * @private
+         * @method _handleAddToGroceryList
+         */
+        _handleAddToGroceryList: function(e) {
+          this.fire("add-missing-items-to-grocery-list", e.detail.items);
+        },
+
+        /**
+         * Show Toast with specific message
+         * @param msg
+         * @private
+         * @method _notify
+         */
+        _notify: function(msg) {
+          this.$.infoRanking.text = msg;
+          if (!this.$.infoRanking.opened) {
+            this.$.infoRanking.show();
+          }
+        },
+
+        /**
+         * tracking changes in inventory items
+         * @private
+         * @method _onInventoryItemChanged
+         */
+        _onInventoryItemChanged: function() {
+          if (!this.isLoading) {
+            this._reload();
+          }
+        },
+
+        /**
+         * tracking changes in recipes
+         * @private
+         * @method _onRecipesItemChanged
+         */
+        _onRecipesItemChanged: function() {
+          if (!this.isLoading) {
+            this._reload();
+          }
+        },
+
+        /**
+         * tracking error from changes in recipes or inventory
+         * @param e
+         * @private
+         * @method _onChangedError
+         */
+        _onChangedError: function(e) {
+          this._notify("Ranking - Reloading Error: " + e.detail.message);
+        },
+
+        /**
+         * init variables
+         */
+        ready: function() {
+          this.isFirstLoad = true;
+          this.isLoading = false;
+        }
+      });
+    })();
+  </script>
+</dom-module>

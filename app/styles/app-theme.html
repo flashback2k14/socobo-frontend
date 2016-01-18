@@ -12,11 +12,11 @@
   /* Application theme */
   :root {
     /* App Colors */
-    --dark-primary-color:         #303F9F;
-    --default-primary-color:      #3F51B5;
+    --dark-primary-color:         rgba(26, 35, 126,1.0); /*#303F9F;*/
+    --default-primary-color:      rgba(49, 27, 146,1.0); /*#3F51B5;*/
     --light-primary-color:        #C5CAE9;
     --text-primary-color:         #FFFFFF; /*text/icons*/
-    --accent-color:               #FF4081;
+    --accent-color:               rgba(242,0,63,1.0);    /*#FF4081;*/
     --primary-background-color:   #FFFFFF;
     --primary-text-color:         #212121;
     --secondary-text-color:       #727272;
@@ -70,7 +70,7 @@
 
   paper-material {
     height: 100%;
-    background: white;
+    background: var(--primary-background-color);
     border-radius: 2px;
   }
   paper-menu iron-icon {
@@ -140,6 +140,13 @@
   .style-pm-height {
     height: 700px;
     overflow: auto;
+  }
+  .style-pm-home {
+    @apply(--layout-horizontal);
+    @apply(--layout-justified);
+  }
+  .style-pm-home-width {
+    width: 48%;
   }
 
   /*Show / Hide Menu Items*/
