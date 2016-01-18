@@ -204,7 +204,7 @@ Custom property | Description | Default
             this.item = item;
             this.$.bestBeforeInput.value = item.bestBefore;
             this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
-            this.measurements.forEach(function (m, i, arr) {
+            this.measurements.forEach(function (m, i) {
               if(item.measurement.value === m.value)
                 this.$.measurementDropdownMenu.select(i);
             }.bind(this));
