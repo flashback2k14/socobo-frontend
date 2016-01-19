@@ -110,7 +110,6 @@ Custom property | Description | Default
         /*Display dialog to create new inventory items
         */
         _createItem: function () {
-          this.$.inventoryCreateDialog.style.display = "block";
           this.$.inventoryCreateDialog.show();
         },
 
@@ -133,7 +132,6 @@ Custom property | Description | Default
         /* Display dialog to edit inventory items
         */
         _editItem: function(e) {
-          this.$.inventoryEditDialog.style.display = "block";
           this.$.inventoryEditDialog.show(e.detail);
         },
 
