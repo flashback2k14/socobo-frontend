@@ -508,7 +508,7 @@ Custom property | Description | Default
           for (var e in el) {
             var listItem = el[e];
             var internalEl = Polymer.dom(listItem.root).querySelector(".check paper-checkbox");
-            if (internalEl.checked == false) {
+            if (internalEl.checked == false && listItem.hidden == false) {
               listItem.isChecked = true;
               internalEl.checked = true;
               this._checkedBoxes.number++;
