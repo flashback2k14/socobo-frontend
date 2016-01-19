@@ -223,9 +223,8 @@ Custom property | Description | Default
           item.category = this.categories[this.$.categoryDropdownMenu.selected];
 
           item.desc = item.name;
-          item.info = item.count + " " + item.measurement;
+          item.info = item.count + " " + item.measurement.value;
 
-          console.dir(item);
           return item;
         },
 
