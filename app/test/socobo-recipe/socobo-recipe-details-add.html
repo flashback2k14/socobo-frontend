@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>socobo-recipe-details-add basic tests</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../../elements/elements.html">
+</head>
+<body>
+
+  <test-fixture id="SocoboRecipeDetailsAdd">
+    <template>
+      <socobo-recipe-details-add></socobo-recipe-details-add>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('<socobo-recipe-details-add>', function() {
+
+      suite('Check existence of particular elements', function () {
+        var socoboRecipeDetailsAdd;
+
+        setup(function() {
+          socoboRecipeDetailsAdd = fixture('SocoboRecipeDetailsAdd');
+        });
+
+        test("has an input field for the recipe title", function(done) {
+          expect(socoboRecipeDetailsAdd.$.title_input).to.not.be.eql(undefined);
+          done();
+        });
+
+        test("has an input field for the recipe short description", function(done) {
+          expect(socoboRecipeDetailsAdd.$.text_input).to.not.be.eql(undefined);
+          done();
+        });
+
+        test("has an paper-icon-button field to exit the dialog", function(done) {
+          expect(socoboRecipeDetailsAdd.$.exit).to.not.be.eql(undefined);
+          done();
+        });
+
+        test("has an input field for the image", function(done) {
+          expect(socoboRecipeDetailsAdd.$.fileChooser).to.not.be.eql(undefined);
+          done();
+        });
+
+        test("has an button to add a step", function(done) {
+          expect(socoboRecipeDetailsAdd.$.addStep).to.not.be.eql(undefined);
+          done();
+        });
+
+        test("has an button to add an ingredient", function(done) {
+          expect(socoboRecipeDetailsAdd.$.addIngr).to.not.be.eql(undefined);
+          done();
+        });
+      });
+
+      suite('Check interactions', function () {
+
+        var socoboRecipeDetailsAdd;
+
+        setup(function() {
+          socoboRecipeDetailsAdd = fixture('SocoboRecipeDetailsAdd');
+          socoboRecipeDetailsAdd.recipe_inputs = [];
+          socoboRecipeDetailsAdd.ingredient_inputs = [];
+        });
+
+        test("Add step on clicking the add step button", function(){
+          var btn_add_stp = socoboRecipeDetailsAdd.$.addStep;
+          MockInteractions.tap(btn_add_stp);
+          expect(socoboRecipeDetailsAdd.recipe_inputs.length).to.be.eql(1);
+        });
+
+        test("Add multiple steps on clicking the add step button three times", function(){
+          var btn_add_stp = socoboRecipeDetailsAdd.$.addStep;
+          MockInteractions.tap(btn_add_stp);
+          MockInteractions.tap(btn_add_stp);
+          MockInteractions.tap(btn_add_stp);
+          expect(socoboRecipeDetailsAdd.recipe_inputs.length).to.be.eql(3);
+        });
+
+        test("Remove step on clicking the remove step button three times", function(){
+          var btn_add_stp = socoboRecipeDetailsAdd.$.addStep;
+          MockInteractions.tap(btn_add_stp);
+          MockInteractions.tap(btn_add_stp);
+          //stub for the event
+          var e = {
+            model : {
+              get : function () {
+                return 0;
+              }
+            }
+          }
+          socoboRecipeDetailsAdd.removeStep(e);
+          expect(socoboRecipeDetailsAdd.recipe_inputs.length).to.be.eql(1);
+        });
+
+        test("Add ingredient on clicking the add ingredient button", function(){
+          var btn_add_ingr = socoboRecipeDetailsAdd.$.addIngr;
+          MockInteractions.tap(btn_add_ingr);
+          expect(socoboRecipeDetailsAdd.ingredient_inputs.length).to.be.eql(1);
+        });
+
+        test("Add multiple ingredient on clicking the add ingredient button", function(){
+          var btn_add_ingr = socoboRecipeDetailsAdd.$.addIngr;
+          MockInteractions.tap(btn_add_ingr);
+          MockInteractions.tap(btn_add_ingr);
+          MockInteractions.tap(btn_add_ingr);
+          expect(socoboRecipeDetailsAdd.ingredient_inputs.length).to.be.eql(3);
+        });
+
+        test("Remove ingredient on clicking the remove ingredient button", function(){
+          var btn_add_stp = socoboRecipeDetailsAdd.$.addStep;
+          MockInteractions.tap(btn_add_stp);
+          MockInteractions.tap(btn_add_stp);
+          //stub for the event
+          var e = {
+            model : {
+              get : function () {
+                return 0;
+              }
+            }
+          }
+          socoboRecipeDetailsAdd.removeStep(e);
+          expect(socoboRecipeDetailsAdd.recipe_inputs.length).to.be.eql(1);
+        });
+
+      });
+
+
+    });
+  </script>
+</body>
+</html>
