@@ -220,7 +220,11 @@ Custom property | Description | Default
 
         _populateItem: function(item) {
           item.measurement = this.measurements[this.$.measurementDropdownMenu.selected];
-          item.category = this.categories[this.$.categoryDropdownMenu.selected];
+          if (this.$.categoryDropdownMenu.selected != -1) {
+            this.item.category = this.categories[this.$.categoryDropdownMenu.selected];
+          } else {
+            delete this.item.category
+          }
 
           item.desc = item.name;
           item.info = item.count + " " + item.measurement.value;
@@ -230,7 +234,7 @@ Custom property | Description | Default
 
         _validate: function(item) {
           if(!item.name || item.name.length < 5) return false;
-          if(!item.measurement || item.measurement.length === 0) return false;
+          if(!item.measurement || item.measurement.value.length === 0) return false;
           if(!item.count) return false;
           return true;
         }
