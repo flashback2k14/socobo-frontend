@@ -223,7 +223,7 @@ Custom property | Description | Default
          * @method resetQuery
          */
         resetQuery: function() {
-          this.searchStr = "";
+          this.searchStr = null;
           this._searchQueryChanged();
           this.$.chbCheckAllItems.checked = false;
           this.fire("uncheck-all-items");
@@ -245,7 +245,7 @@ Custom property | Description | Default
          * @method editItemForGroceryList
          */
         editItemForGroceryList: function(item) {
-          this.searchStr = item.value;
+          this.searchStr = item.desc;
         },
 
         /**
@@ -328,7 +328,7 @@ Custom property | Description | Default
           if (this.$.txtSearchQuery.value.length === 0) {
             this._toggleSearchElements();
           } else {
-            this.searchStr = "";
+            this.searchStr = null;
           }
           this._searchQueryChanged();
         },
@@ -366,8 +366,8 @@ Custom property | Description | Default
          * @method _addToGroceryList
          */
         _addToGroceryList: function() {
-          this.fire("add-to-grocery-list", {item: this.searchStr});
-          this.searchStr = "";
+          this.fire("add-to-grocery-list", {desc: this.searchStr});
+          this.searchStr = null;
           this._searchQueryChanged();
         },
 
@@ -378,7 +378,7 @@ Custom property | Description | Default
          */
         _clearForGroceryList: function() {
           if (this.searchStr.length > 0) {
-            this.searchStr = "";
+            this.searchStr = null;
             this._searchQueryChanged();
           }
         }

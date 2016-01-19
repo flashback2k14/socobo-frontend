@@ -47,6 +47,7 @@ Custom property | Description | Default
 
     <div class="container">
       <socobo-element-search
+        id="elSearch"
         elevation-height="0"
         hide-search-input
         hide-search-button
@@ -56,8 +57,8 @@ Custom property | Description | Default
         on-add-to-grocery-list="_handleAddToGroceryList">
       </socobo-element-search>
       <paper-tabs id="tabsList" class="style-paper-tabs" selected="{{selected}}">
-        <paper-tab id="tabActive" class="style-paper-tab">Active</paper-tab>
-        <paper-tab id="tabArchive" class="style-paper-tab">Archive</paper-tab>
+        <paper-tab id="tabActive" class="style-paper-tab">ACTIVE</paper-tab>
+        <paper-tab id="tabArchive" class="style-paper-tab">ARCHIVE</paper-tab>
       </paper-tabs>
       <iron-pages selected="{{selected}}">
         <div class="style-content-container">
@@ -65,18 +66,31 @@ Custom property | Description | Default
             <p class="style-no-recipe">No Grocery Items available.</p>
           </template>
           <template is="dom-repeat" items="{{groceryItems}}">
-            <socobo-element-list-item
-              obj="{{item}}"
-              on-check="_handleCheck"
-              on-uncheck="_handleUncheck"
-              on-edit_request="_handleEditRequest"
-              on-delete_request="_handleDeleteRequest">
-            </socobo-element-list-item>
+            <template is="dom-if" if="{{_searchForItems(item, searchQuery)}}">
+              <socobo-element-list-item
+                obj="{{item}}"
+                on-check="_handleCheck"
+                on-uncheck="_handleUncheck"
+                on-edit_request="_handleEditRequest"
+                on-delete_request="_handleDeleteRequest">
+              </socobo-element-list-item>
+            </template>
           </template>
         </div>
         <div class="style-content-container">
           <template is="dom-if" if="[[!groceryArchiveItems.length]]">
             <p class="style-no-recipe">No Grocery Items in Archive.</p>
+          </template>
+          <template is="dom-repeat" items="{{groceryArchiveItems}}">
+            <template is="dom-if" if="{{_searchForItems(item, searchQuery)}}">
+              <socobo-element-list-item
+                obj="{{item}}"
+                on-check="_handleCheck2"
+                on-uncheck="_handleUncheck2"
+                on-edit_request="_handleEditRequest2"
+                on-delete_request="_handleDeleteRequest2">
+              </socobo-element-list-item>
+            </template>
           </template>
         </div>
       </iron-pages>
@@ -86,6 +100,9 @@ Custom property | Description | Default
   </template>
 
   <script>
+    /**
+     * ToDo - Persist to Firebase
+     */
     (function() {
       Polymer({
         is: "socobo-grocery-list",
@@ -131,7 +148,7 @@ Custom property | Description | Default
         },
 
         /**
-         * register listeners for changed items
+         * ToDo - register listeners for changed items
          */
         listeners: {
 
@@ -141,7 +158,8 @@ Custom property | Description | Default
          * PUBLIC API
          */
         /**
-         * Load Data</br>
+         * ToDo - Load Data
+         *
          * @method loadData
          */
         loadData: function() {
@@ -154,11 +172,7 @@ Custom property | Description | Default
          */
         addToList: function(items) {
           items.forEach(function(item) {
-            var i = {
-              info : "Test Info",
-              desc : item.desc + " - " + item.amount + " " + item.unit
-            };
-            this.push("groceryItems", i);
+            this.push("groceryItems", { desc : item.desc + " - " + item.amount + " " + item.unit });
           }.bind(this));
         },
 
@@ -166,22 +180,177 @@ Custom property | Description | Default
          * PRIVATE API
          */
         /**
-         * EVENTS
+         * EVENTS SEARCH
+         */
+        /**
+         * ToDo
+         * @private
          */
         _handleCheckAllItems: function(){
 
         },
-
+        /**
+         * ToDo
+         * @private
+         */
         _handleUncheckAllItems: function() {
 
         },
-
-        _handleChangedSearchQuery: function(searchQuery) {
-
+        /**
+         * Handle Changed Search Query
+         * @param e
+         * @private
+         * @method _handleChangedSearchQuery
+         */
+        _handleChangedSearchQuery: function(e) {
+          this.searchQuery = e.detail.searchQuery;
+        },
+        /**
+         * Handle Add To Grocery List
+         * @param e
+         * @private
+         * @method _handleAddToGroceryList
+         */
+        _handleAddToGroceryList: function(e) {
+          this.push("groceryItems", e.detail);
         },
 
-        _handleAddToGroceryList: function(groceryItem) {
+        /**
+         * EVENTS LIST ITEM ACTIVE
+         */
+        /**
+         * Handle Check
+         * @param e
+         * @private
+         * @method _handleCheck
+         */
+        _handleCheck: function(e) {
+          this.checkItems.push(e.detail);
+        },
+        /**
+         * Handle Uncheck
+         * @param e
+         * @private
+         * @method _handleUncheck
+         */
+        _handleUncheck: function(e) {
+          // get index from checkItems
+          var checkItemIndex = this._getIndex(this.checkItems, e.detail);
+          if (checkItemIndex !== -1) {
+            this.checkItems.splice(checkItemIndex, 1);
+          } else {
+            this._notify("There is no Item checked for unchecking.");
+          }
+        },
+        /**
+         * Handle Edit Request
+         * @param e
+         * @private
+         * @method _handleEditRequest
+         */
+        _handleEditRequest: function(e) {
+          // get index from groceryItems
+          var groceryItemIndex = this._getIndex(this.get("groceryItems"), e.detail);
+          if (groceryItemIndex !== -1) {
+            // set item to edit
+            this.$.elSearch.editItemForGroceryList(e.detail);
+            // remove deleted item form groceryItems
+            this.splice("groceryItems", groceryItemIndex, 1);
+          } else {
+            // notify user
+            this._notify("The Item is not available");
+          }
+        },
+        /**
+         * Handle Delete Request
+         * @param e
+         * @private
+         * @method _handleDeleteRequest
+         */
+        _handleDeleteRequest: function(e) {
+          // get index from checkItems
+          var checkItemIndex = this._getIndex(this.checkItems, e.detail);
+          if (checkItemIndex !== -1) {
+            // push deleted item to archive
+            this.push("groceryArchiveItems", this.checkItems[checkItemIndex]);
+            // remove deleted item from checkItems
+            this.checkItems.splice(checkItemIndex, 1);
+            // get index from groceryItems
+            var groceryItemIndex = this._getIndex(this.get("groceryItems"), e.detail);
+            if (groceryItemIndex !== -1) {
+              // remove deleted item form groceryItems
+              this.splice("groceryItems", groceryItemIndex, 1);
+            } else {
+              // notify user
+              this._notify("The Item is not available");
+            }
+          } else {
+            // notify user
+            this._notify("The Item is not checked. Please check the Item before delete.");
+          }
+        },
 
+        /**
+         * ToDo - EVENTS LIST ITEM ARCHIVE
+         */
+
+        /**
+         * SEARCH
+         */
+        /**
+         * Search for Item
+         * @param item
+         * @param searchQuery
+         * @private
+         * @method _searchForItems
+         */
+        _searchForItems: function(item, searchQuery) {
+          if (searchQuery === null ||typeof searchQuery === 'undefined') return item;
+          else return item.desc.toUpperCase().match(searchQuery.toUpperCase());
+        },
+
+        /**
+         * UTIL
+         */
+        /**
+         * Get Index from selected item in Items
+         * @param items
+         * @param selectedItem
+         * @returns {Number}
+         * @private
+         * @method _getIndex
+         */
+        _getIndex: function(items, selectedItem) {
+          // set index for not found item
+          var index = -1;
+          // search the selected item
+          items.forEach(function(item, i) {
+            if (item.desc === selectedItem.desc) {
+              index = i;
+            }
+          }.bind(this));
+          // return selected item index
+          return index;
+        },
+        /**
+         * Show Toast with specific message
+         * @param msg
+         * @private
+         * @method _notify
+         */
+        _notify: function(msg) {
+          this.$.infoGroceryList.text = msg;
+          if (!this.$.infoGroceryList.opened) {
+            this.$.infoGroceryList.show();
+          }
+        },
+
+        /**
+         * init variable
+         */
+        ready: function() {
+          this.searchQuery = null;
+          this.checkItems = [];
         }
       });
     })();
