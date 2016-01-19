@@ -132,6 +132,9 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-element-search",
+
+        //behaviors: [Socobo.SearchBehaviour],
+
         /**
          * This Event is fired if the paper checkbox is checked. <br/>
          * @event check-all-items
@@ -150,17 +153,22 @@ Custom property | Description | Default
          * @method checkAllItems
          */
         checkAllItems: function() {
+          // call SearchBehaviour function
+          //this._checkAllItems(this.$.chbCheckAllItems.checked);
           if (this.$.chbCheckAllItems.checked) {
             this.fire("check-all-items");
           } else {
             this.fire("uncheck-all-items");
           }
         },
+
         /**
          * Method for listening for search query input and firing event. </br>
          * @method searchQueryChanged
          */
         searchQueryChanged: function() {
+          // call SearchBehaviour function
+          //this._searchQueryChanged(this.searchStr);
           this.fire("changed-search-query", { searchQuery: this.searchStr });
         },
 
@@ -197,6 +205,7 @@ Custom property | Description | Default
           }
           this.searchQueryChanged();
         },
+
         /**
          * Method for show / hide search input container. </br>
          * @method _toggleSearchElements

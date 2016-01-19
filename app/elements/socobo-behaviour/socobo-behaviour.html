@@ -1,0 +1,27 @@
+<script>
+  var Socobo = Socobo || {};
+  Socobo.SearchBehaviour = {
+    /**
+     * Method for firing event to check / uncheck all items. </br>
+     * @param checkState
+     * @private
+     * @method _checkAllItems
+     */
+    _checkAllItems: function(checkState) {
+      if (checkState) {
+        this.fire("check-all-items");
+      } else {
+        this.fire("uncheck-all-items");
+      }
+    },
+    /**
+     * Method for listening for search query input and firing event. </br>
+     * @param searchStr
+     * @private
+     * @method _searchQueryChanged
+     */
+    _searchQueryChanged: function(searchStr) {
+      this.fire("changed-search-query", {searchQuery: searchStr});
+    }
+  };
+</script>
