@@ -58,6 +58,12 @@
         expect(inventory._handleLogin({firebaseUrl: location, userId: null})).to.be.eql(location + "inventory/");
         done();
       });
+
+      test("has a socobo-inventory-edit dialog", function (done) {
+        expect(inventory.$.inventoryEditDialog).to.not.be.eql(undefined);
+        expect(inventory.querySelector("socobo-inventory-edit")).to.not.be.eql(undefined);
+        done();
+      })
     });
   </script>
 </body>
