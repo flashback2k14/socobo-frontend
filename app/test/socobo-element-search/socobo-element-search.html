@@ -50,7 +50,7 @@
 
       test("calling reset fires an changed-search-query event", function(done) {
         socoboElementSearch.addEventListener("changed-search-query", function(e) {
-          expect(e.detail.searchQuery).to.be.eql("");
+          expect(e.detail.searchQuery).to.be.eql(null);
           done();
         });
 
