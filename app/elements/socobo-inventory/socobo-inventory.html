@@ -3,6 +3,7 @@ The following custom properties and mixins are available for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
+--socobo-recipe-style-action-btn-color | Background color of the action buttons | --accent-color
 
 @demo demo/socobo-inventory/demo.html
 -->
@@ -15,10 +16,11 @@ Custom property | Description | Default
       }
 
       .button-add {
-        position: absolute;
-        right: 30px;
-        bottom: 30px;
-        --paper-fab-background: var(--accent-color);
+        position: fixed;
+        top: 36px;
+        right: 80px;
+        --paper-fab-background: var(--socobo-recipe-style-action-btn-color);
+        --paper-fab-keyboard-focus-background: var(--socobo-recipe-style-action-btn-color);
       }
     </style>
     <div>
