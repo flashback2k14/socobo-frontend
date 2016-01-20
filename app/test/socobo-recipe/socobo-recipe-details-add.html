@@ -64,12 +64,18 @@
       suite('Check interactions', function () {
 
         var socoboRecipeDetailsAdd;
+        var mock_add;
 
         setup(function() {
           socoboRecipeDetailsAdd = fixture('SocoboRecipeDetailsAdd');
+          mock_add = sinon.mock(socoboRecipeDetailsAdd);
           socoboRecipeDetailsAdd.recipe_inputs = [];
           socoboRecipeDetailsAdd.ingredient_inputs = [];
         });
+
+        teardown(function(){
+          mock_add.restore();
+        })
 
         test("Add step on clicking the add step button", function(){
           var btn_add_stp = socoboRecipeDetailsAdd.$.addStep;
@@ -96,7 +102,8 @@
                 return 0;
               }
             }
-          }
+          };
+
           socoboRecipeDetailsAdd.removeStep(e);
           expect(socoboRecipeDetailsAdd.recipe_inputs.length).to.be.eql(1);
         });
@@ -126,10 +133,115 @@
                 return 0;
               }
             }
-          }
+          };
           socoboRecipeDetailsAdd.removeStep(e);
           expect(socoboRecipeDetailsAdd.recipe_inputs.length).to.be.eql(1);
         });
+
+        test("Call clearInputFields on clicking the exit cross button", function(){
+          mock_add.expects("clearInputFields").once();
+          var btn_exit = socoboRecipeDetailsAdd.$.exit;
+          MockInteractions.tap(btn_exit);
+          mock_add.verify();
+        });
+
+        test("Call clearInputFields on clicking the exit fab button", function(){
+          mock_add.expects("clearInputFields").once();
+          var btn_exit = socoboRecipeDetailsAdd.$.abort;
+          MockInteractions.tap(btn_exit);
+          mock_add.verify();
+        });
+
+        test("clearInputFields", function(){
+          socoboRecipeDetailsAdd.querySelector("#add_image").src = "#";
+          var inputFields = socoboRecipeDetailsAdd.querySelectorAll(".inputs");
+          socoboRecipeDetailsAdd.ingredient_inputs = [{desc : "test_ingr"}];
+          socoboRecipeDetailsAdd.recipe_inputs = [{desc : "test_step"}];
+          for(var field in inputFields){
+            inputFields[field].value="TEST";
+          }
+
+          expect(socoboRecipeDetailsAdd.ingredient_inputs.length).is.not.eql(0);
+          expect(socoboRecipeDetailsAdd.recipe_inputs.length).is.not.eql(0);
+          expect(socoboRecipeDetailsAdd.$.title_input.value).is.not.eql("");
+          expect(socoboRecipeDetailsAdd.$.text_input.value).is.not.eql("");
+          expect(socoboRecipeDetailsAdd.querySelector("#add_image").src).is.not.eql("");
+
+          socoboRecipeDetailsAdd.clearInputFields();
+
+          expect(socoboRecipeDetailsAdd.ingredient_inputs.length).is.eql(0);
+          expect(socoboRecipeDetailsAdd.recipe_inputs.length).is.eql(0);
+          expect(socoboRecipeDetailsAdd.$.title_input.value).is.eql("");
+          expect(socoboRecipeDetailsAdd.$.text_input.value).is.eql("");
+          expect(socoboRecipeDetailsAdd.querySelector("#add_image").src).is.eql("");
+        });
+
+        test('call openFileChooser on clicking the image overlay', function () {
+          mock_add.expects("_openFileChooser").once();
+          var image_overlay = socoboRecipeDetailsAdd.$.overlay;
+          MockInteractions.tap(image_overlay);
+          mock_add.verify();
+        });
+
+        test('createNewRecipe is called on clicking the add fab button', function () {
+          mock_add.expects("createNewRecipe").once();
+          var btn_ok = socoboRecipeDetailsAdd.$.ok;
+          MockInteractions.tap(btn_ok);
+          mock_add.verify();
+        });
+
+        test('createNewRecipe fires an add_request event if the recipe is valid', function (done) {
+          socoboRecipeDetailsAdd.addEventListener("add_request", function(){
+            done();
+          });
+          sinon.stub(socoboRecipeDetailsAdd, "validateRecipe", function(){
+            return "";
+          });
+          flush(function () {
+            socoboRecipeDetailsAdd.createNewRecipe();
+          });
+        });
+
+        test('createNewRecipe fires no add_request event if the recipe is invalid', function (done) {
+          mock_add.expects("_notify").once();
+          socoboRecipeDetailsAdd.addEventListener("add_request", function(){
+            throw new Error("Should not catch an event");
+          });
+          sinon.stub(socoboRecipeDetailsAdd, "validateRecipe", function(){
+            return "not empty";
+          });
+          flush(function () {
+            socoboRecipeDetailsAdd.createNewRecipe();
+            mock_add.verify();
+            done();
+          });
+        });
+
+        test('createNewRecipe creates a recipe correctly', function (done) {
+          var steps = [{number: 0, desc: "testStep"}];
+          var ingredients = [{desc : "test_ingr", amount: 12, unit: "kg"}];
+          var title = "test_title";
+          var text = "test_text";
+          sinon.stub(socoboRecipeDetailsAdd.image, "getImageAsString", function(){
+            return "test_image";
+          });
+
+
+          mock_add.expects("_notify").once();
+          socoboRecipeDetailsAdd.addEventListener("add_request", function(){
+            throw new Error("Should not catch an event");
+          });
+          sinon.stub(socoboRecipeDetailsAdd, "validateRecipe", function(){
+            return "not empty";
+          });
+          flush(function () {
+            socoboRecipeDetailsAdd.createNewRecipe();
+            mock_add.verify();
+            done();
+          });
+        });
+
+        //TODO: test encode method
 
       });
 
