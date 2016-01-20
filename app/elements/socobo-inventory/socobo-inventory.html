@@ -47,12 +47,17 @@ Custom property | Description | Default
       </firebase-collection>
 
       <socobo-inventory-overview
+        id="inventoryOverview"
         on-edit_request="_editItem"
         on-delete_request="_confirmDelete"
+        on-check = "_handleCheck"
+        on-uncheck = "_handleUncheck"
+        on-checked-all = "_handleCheckAll"
         data="[[data]]">
       </socobo-inventory-overview>
 
-      <paper-fab id="inventoryButtonAdd" class="button-add" icon="add" on-click="_createItem"></paper-fab>
+      <paper-fab hidden$="{{!_itemsChecked}}" id="deleteAll" class="button-add" icon="delete" on-click="_deleteAllItems"></paper-fab>
+      <paper-fab hidden$="{{_itemsChecked}}" id="inventoryButtonAdd" class="button-add" icon="add" on-click="_createItem"></paper-fab>
     </div>
   </template>
 
@@ -88,6 +93,11 @@ Custom property | Description | Default
           }
         },
 
+        ready: function () {
+          this._checkedItems = 0;
+          this._itemsChecked = false;
+        },
+
         _handleMeasurement: function(login){
           return login ? login.firebaseUrl + "measurements/" : this.measurementLocation;
         },
@@ -105,6 +115,25 @@ Custom property | Description | Default
             url = this.location;
           }
           return url;
+        },
+
+        _handleCheckAll: function (e) {
+          this._checkedItems = 0;
+          this._itemsChecked = e.detail.state;
+
+          if (e.detail.state) {
+            this._checkedItems = e.detail.number;
+          }
+        },
+
+        _handleCheck: function (e) {
+          this._checkedItems++;
+          this._itemsChecked = this._checkedItems !== 0;
+        },
+
+        _handleUncheck: function (e) {
+          this._checkedItems--;
+          this._itemsChecked = this._checkedItems !== 0
         },
 
         /*Display dialog to create new inventory items
@@ -133,6 +162,18 @@ Custom property | Description | Default
         */
         _editItem: function(e) {
           this.$.inventoryEditDialog.show(e.detail);
+        },
+
+        _deleteAllItems: function (e) {
+          var itemList = this.querySelectorAll(".inventory-list-item");
+          for (var i in itemList) {
+            var element = itemList[i];
+            if (!element.hidden && element.isChecked) {
+              this.$.inventoryCollection.removeByKey(element.obj.__firebaseKey__)
+            }
+          }
+          this._checkedItems = 0;
+          this._itemsChecked = false;
         },
 
         /* Save changes made to inventory items

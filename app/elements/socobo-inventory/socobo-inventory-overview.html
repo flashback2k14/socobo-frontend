@@ -34,9 +34,7 @@ Custom property | Description | Default
           <socobo-element-list-item
             class="inventory-list-item"
             obj="{{item}}"
-            on-check="_handleCheck"
             hidden="{{_setHidden(item, query)}}"
-            on-uncheck="_handleUncheck"
             on-show_request="_showItem">
           </socobo-element-list-item>
         </template>
@@ -59,6 +57,11 @@ Custom property | Description | Default
           this.query = null;
         },
 
+        resetSearch: function () {
+          this.$.searchHeader.resetCheckbox();
+          this.$.searchHeader.resetQuery();
+        },
+
         _setHidden: function (item, query) {
           return !(query === null || typeof query === 'undefined' || item.desc.indexOf(query) != -1 || item.info.indexOf(query) != -1);
         },
@@ -75,20 +78,18 @@ Custom property | Description | Default
           this._checkOrUncheck(false);
         },
 
-        _handleCheck: function () {
-        },
-
-        _handleUncheck: function () {
-        },
-
         _checkOrUncheck: function(state) {
-          var itemList = document.querySelectorAll(".inventory-list-item");
+          var itemList = this.querySelectorAll(".inventory-list-item");
+          var counter = 0;
           for (var i=0; i < itemList.length; i++) {
             var element = itemList[i];
             if (!element.hidden) {
+              counter++;
               element.isChecked = state;
             }
           }
+
+          this.fire("checked-all", {number: counter, state: state});
         },
 
         _showItem: function (e) {
