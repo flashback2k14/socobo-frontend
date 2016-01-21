@@ -507,10 +507,8 @@ Custom property | Description | Default
           var el = Polymer.dom(this.root).querySelectorAll(".singleItem");
           for (var e in el) {
             var listItem = el[e];
-            var internalEl = Polymer.dom(listItem.root).querySelector(".check paper-checkbox");
-            if (internalEl.checked == false) {
+            if (!listItem.hidden) {
               listItem.isChecked = true;
-              internalEl.checked = true;
               this._checkedBoxes.number++;
               this._checkedBoxes.refs.push(listItem.obj);
               this._trackCheckedBoxes();
@@ -525,25 +523,12 @@ Custom property | Description | Default
           var el = Polymer.dom(this.root).querySelectorAll(".singleItem");
           for (var e in el) {
             var listItem = el[e];
-            var internalEl = Polymer.dom(listItem.root).querySelector(".check paper-checkbox");
-            if (internalEl.checked == true) {
+            if (listItem.isChecked) {
               listItem.isChecked = false;
-              internalEl.checked = false;
               this._checkedBoxes.number--;
               this._updateAfterDeletion(listItem.obj, this._checkedBoxes.refs, "_checkedBoxes.refs");
               this._trackCheckedBoxes();
             }
-          }
-        },
-        /**
-         * Resets the checkbox of the search element after removing all checked recipes.
-         * @private
-         */
-        _resetSearchElementCheckbox : function(){
-          var searchElement = this.$.searchbar;
-          var checkBox = Polymer.dom(searchElement.root).querySelector("#chbCheckAllItems");
-          if(checkBox.checked === true){
-            checkBox.checked = false;
           }
         },
         /**
