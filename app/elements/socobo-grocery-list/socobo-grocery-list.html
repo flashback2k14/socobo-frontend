@@ -21,19 +21,36 @@ Custom property | Description | Default
         height: 100%;
       }
 
+      .style-paper-toolbar {
+        --paper-toolbar-height: var(--socobo-grocery-list-paper-toolbar-height, 55px);
+      }
       .style-paper-tabs {
+        @apply(--layout-horizontal);
+        @apply(--layout-self-start);
+        --paper-tabs: {
+          margin-left: 15px;
+          margin-bottom: 0;
+          padding-bottom: 0;
+        };
         --paper-tabs-selection-bar-color: var(--socobo-grocery-list-paper-tab-ink, --accent-color);
       }
       .style-paper-tab {
         --paper-tab: {
+          min-width: 25%;
+          width: 200px;
           background: var(--socobo-grocery-list-paper-tab-bg, --default-primary-color);
           color: var(--socobo-grocery-list-paper-tab-color, --text-primary-color);
         };
         --paper-tab-ink: var(--socobo-grocery-list-paper-tab-ink, --accent-color);
       }
-
+      .style-paper-fab {
+        @apply(--layout-horizontal);
+        @apply(--layout-self-end);
+        margin-top: -30px;
+        margin-right: 24px;
+      }
       .style-content-container {
-        margin-top: 20px;
+        margin-top: 5px;
       }
       .style-no-recipe {
         display: block;
@@ -43,6 +60,7 @@ Custom property | Description | Default
         color: var(--socobo-recipe-style-icon-text-color, --default-primary-color);
         line-height: 80px;
       }
+      .grocery-list-item {}
     </style>
 
     <div class="container">
@@ -56,42 +74,51 @@ Custom property | Description | Default
         on-changed-search-query="_handleChangedSearchQuery"
         on-add-to-grocery-list="_handleAddToGroceryList">
       </socobo-element-search>
-      <paper-tabs id="tabsList" class="style-paper-tabs" selected="{{selected}}">
-        <paper-tab id="tabActive" class="style-paper-tab">ACTIVE</paper-tab>
-        <paper-tab id="tabArchive" class="style-paper-tab">ARCHIVE</paper-tab>
-      </paper-tabs>
+      <paper-toolbar class="style-paper-toolbar">
+        <paper-tabs id="tabsList" class="style-paper-tabs" selected="{{selected}}">
+          <paper-tab id="tabActive" class="style-paper-tab">ACTIVE</paper-tab>
+          <paper-tab id="tabArchive" class="style-paper-tab">ARCHIVE</paper-tab>
+        </paper-tabs>
+      </paper-toolbar>
+      <paper-fab
+        id="btnDelete"
+        class="style-paper-fab"
+        icon="delete"
+        elevation="3"
+        disabled
+        on-tap="_deleteAll">
+      </paper-fab>
       <iron-pages selected="{{selected}}">
         <div class="style-content-container">
           <template is="dom-if" if="[[!groceryItems.length]]">
             <p class="style-no-recipe">No Grocery Items available.</p>
           </template>
-          <template is="dom-repeat" items="{{groceryItems}}">
-            <template is="dom-if" if="{{_searchForItems(item, searchQuery)}}">
-              <socobo-element-list-item
-                obj="{{item}}"
-                on-check="_handleCheck"
-                on-uncheck="_handleUncheck"
-                on-edit_request="_handleEditRequest"
-                on-delete_request="_handleDeleteRequest">
-              </socobo-element-list-item>
-            </template>
+          <template id="listGroceryItems" is="dom-repeat" items="{{groceryItems}}" as="activeItem">
+            <socobo-element-list-item
+              obj="{{activeItem}}"
+              class="grocery-list-item"
+              hidden$="{{_setHidden(activeItem, searchQuery)}}"
+              on-check="_handleCheck"
+              on-uncheck="_handleUncheck"
+              on-edit_request="_handleEditRequest"
+              on-delete_request="_handleDeleteRequest">
+            </socobo-element-list-item>
           </template>
         </div>
         <div class="style-content-container">
           <template is="dom-if" if="[[!groceryArchiveItems.length]]">
             <p class="style-no-recipe">No Grocery Items in Archive.</p>
           </template>
-          <template is="dom-repeat" items="{{groceryArchiveItems}}">
-            <template is="dom-if" if="{{_searchForItems(item, searchQuery)}}">
-              <socobo-element-list-item
-                obj="{{item}}"
-                on-check="_handleCheck2"
-                on-uncheck="_handleUncheck2"
-                on-edit_request="_handleEditRequest2"
-                on-delete_request="_handleDeleteRequest2">
-              </socobo-element-list-item>
-            </template>
-          </template>
+          <template is="dom-repeat" items="{{groceryArchiveItems}}" as="archiveItem">
+            <socobo-element-list-item
+              obj="{{archiveItem}}"
+              hidden$="{{_setHidden(archiveItem, searchQuery)}}"
+              on-check="_handleCheck2"
+              on-uncheck="_handleUncheck2"
+              on-edit_request="_handleEditRequest2"
+              on-delete_request="_handleDeleteRequest2">
+            </socobo-element-list-item>
+        </template>
         </div>
       </iron-pages>
     </div>
@@ -183,18 +210,22 @@ Custom property | Description | Default
          * EVENTS SEARCH
          */
         /**
-         * ToDo
+         * Handle Check All Items
          * @private
+         * @method _handleCheckAllItems
          */
         _handleCheckAllItems: function(){
-
+          this.toggleAttribute("disabled", false, this.$.btnDelete);
+          this._checkOrUncheck(true);
         },
         /**
-         * ToDo
+         * Handle Uncheck All Items
          * @private
+         * @method _handleUncheckAllItems
          */
         _handleUncheckAllItems: function() {
-
+          this.toggleAttribute("disabled", true, this.$.btnDelete);
+          this._checkOrUncheck(false);
         },
         /**
          * Handle Changed Search Query
@@ -213,6 +244,44 @@ Custom property | Description | Default
          */
         _handleAddToGroceryList: function(e) {
           this.push("groceryItems", e.detail);
+        },
+
+        /**
+         * handle check state
+         * @param state
+         * @private
+         * @method _checkOrUncheck
+         */
+        _checkOrUncheck: function(state) {
+          var list = this.querySelectorAll(".grocery-list-item");
+          for (var i=0; i < list.length; i++) {
+            var element = list[i];
+            if (!element.hidden) {
+              element.isChecked = state;
+              if (state) {
+                this._handleCheck({detail : {desc : element.innerText.trim()}});
+              } else {
+                this._handleUncheck({detail : {desc : element.innerText.trim()}});
+              }
+            }
+          }
+        },
+        /**
+         * delete all checked Items
+         * @private
+         * @method _deleteAll
+         */
+        _deleteAll: function() {
+          // clone array, because reference errors
+          var tmpCheckedItems = CloneModule.clone(this.checkItems);
+          // iterate over cloned array and delete all checked items
+          tmpCheckedItems.forEach(function(item) {
+            this._handleDeleteRequest({detail: item});
+          }.bind(this));
+          // reset fab
+          this.toggleAttribute("disabled", true, this.$.btnDelete);
+          // reset checkbox in search element
+          this.$.elSearch.resetCheckbox();
         },
 
         /**
@@ -298,15 +367,14 @@ Custom property | Description | Default
          * SEARCH
          */
         /**
-         * Search for Item
+         * set Item to hidden or not
          * @param item
          * @param searchQuery
          * @private
-         * @method _searchForItems
+         * @method _setHidden
          */
-        _searchForItems: function(item, searchQuery) {
-          if (searchQuery === null ||typeof searchQuery === 'undefined') return item;
-          else return item.desc.toUpperCase().match(searchQuery.toUpperCase());
+        _setHidden: function (item, searchQuery) {
+          return !(searchQuery === null || typeof searchQuery === 'undefined' || item.desc.toUpperCase().match(searchQuery.toUpperCase()));
         },
 
         /**
@@ -325,7 +393,7 @@ Custom property | Description | Default
           var index = -1;
           // search the selected item
           items.forEach(function(item, i) {
-            if (item.desc === selectedItem.desc) {
+            if (item.desc.trim() === selectedItem.desc.trim()) {
               index = i;
             }
           }.bind(this));
