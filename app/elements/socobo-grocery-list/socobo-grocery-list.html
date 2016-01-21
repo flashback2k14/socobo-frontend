@@ -124,7 +124,7 @@ Custom property | Description | Default
               hidden$="{{_setHidden(archiveItem, searchQuery)}}"
               on-check="_handleCheck"
               on-uncheck="_handleUncheck"
-              on-edit_request="_handleShowRequest"
+              on-edit_request="_handleMoveRequest"
               on-delete_request="_handleDeleteRequest">
             </socobo-element-list-item>
         </template>
@@ -184,10 +184,13 @@ Custom property | Description | Default
         },
 
         /**
-         * ToDo - register listeners for changed items
+         * register listeners for changed items
          */
         listeners: {
-
+          "grocery-active-item-added"     : "_groceryActiveItemAdded",
+          "grocery-active-item-removed"   : "_groceryActiveItemRemoved",
+          "grocery-archive-item-changed"  : "_groceryArchiveItemChanged",
+          "grocery-changed-error"         : "_groceryChangedError"
         },
 
         /**
@@ -199,7 +202,7 @@ Custom property | Description | Default
          * @method loadData
          */
         loadData: function() {
-
+          SocoboGrocery.getInstance(this, this.userLogin).registerGroceryItemListeners();
         },
         /**
          * add items to List from ranking
@@ -208,7 +211,7 @@ Custom property | Description | Default
          */
         addToList: function(items) {
           items.forEach(function(item) {
-            this.push("groceryItems", { desc : item.desc + " - " + item.amount + " " + item.unit });
+            SocoboGrocery.getInstance(this, this.userLogin).addItemToActiveList({ desc : item.desc + " - " + item.amount + " " + item.unit });
           }.bind(this));
         },
 
@@ -226,6 +229,10 @@ Custom property | Description | Default
          */
         _handleChangedSearchQuery: function(e) {
           this.searchQuery = e.detail.searchQuery;
+          if (this.fallbackItems) {
+            SocoboGrocery.getInstance(this, this.userLogin).addItemToActiveList({desc: this.fallbackItems[0].desc});
+            this.fallbackItems = [];
+          }
         },
         /**
          * Handle Add To Grocery List
@@ -234,14 +241,14 @@ Custom property | Description | Default
          * @method _handleAddToGroceryList
          */
         _handleAddToGroceryList: function(e) {
-          this.push("groceryItems", e.detail);
+          SocoboGrocery.getInstance(this, this.userLogin).addItemToActiveList(e.detail);
         },
         /**
          * Handle Check All Items
          * @private
          * @method _handleCheckAllItems
          */
-        _handleCheckAllItems: function(){
+        _handleCheckAllItems: function() {
           this.toggleAttribute("disabled", false, this.$.btnDelete);
           this._checkOrUncheck(true);
         },
@@ -428,6 +435,8 @@ Custom property | Description | Default
             this.$.elSearch.editItemForGroceryList(e.detail);
             // remove deleted item form groceryItems
             this.splice("groceryItems", groceryItemIndex, 1);
+            // Remove item from DB
+            SocoboGrocery.getInstance(this, this.userLogin).removeItemFromActiveList(e.detail);
           } else {
             // notify user
             this._notify("The Item is not available");
@@ -437,9 +446,9 @@ Custom property | Description | Default
          * Handle Show Request (Archive)
          * @param e
          * @private
-         * @method _handleShowRequest
+         * @method _handleMoveRequest
          */
-        _handleShowRequest: function(e) {
+        _handleMoveRequest: function(e) {
           var showItemIndex = this._getIndex(this.checkItemsArchive, e.detail);
           if (showItemIndex !== -1) {
             this.splice("groceryArchiveItems", showItemIndex, 1);
@@ -500,6 +509,33 @@ Custom property | Description | Default
           }
         },
 
+
+        /**
+         * LISTENER METHODS
+         */
+        _groceryActiveItemAdded: function(item) {
+          var activeItem = {
+            key   : item.detail.key,
+            desc  : item.detail.desc
+          };
+          this.push("groceryItems", activeItem);
+        },
+        _groceryActiveItemRemoved: function(item) {
+          var fallbackItem = {
+            key   : item.detail.key,
+            desc  : item.detail.desc
+          };
+          this.fallbackItems.push(fallbackItem);
+        },
+
+        _groceryArchiveItemAdded: function(item) {
+          this.push("groceryArchiveItems", item.detail);
+        },
+
+        _groceryChangedError: function(error) {
+          this._notify(error.code + " - " + error.message);
+        },
+
         /**
          * init variable
          */
@@ -507,6 +543,7 @@ Custom property | Description | Default
           this.searchQuery = null;
           this.checkItems = [];
           this.checkItemsArchive = [];
+          this.fallbackItems = [];
         }
       });
     })();
