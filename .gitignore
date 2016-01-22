@@ -1,7 +1,2 @@
-node_modules
-dist
-bower_components
-.tmp
 .idea
-
 .idea/encodings.xml
