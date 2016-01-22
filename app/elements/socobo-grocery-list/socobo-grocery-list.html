@@ -444,7 +444,7 @@ Custom property | Description | Default
          * @method _handleMoveRequest
          */
         _handleMoveRequest: function(e) {
-          var moveItemIndex = this._getIndex(this.get("groceryArchiveItems"), e.detail); //this._getIndex(this.checkItemsArchive, e.detail);
+          var moveItemIndex = this._getIndex(this.get("groceryArchiveItems"), e.detail);
           if (moveItemIndex !== -1) {
             // Remove item from data binding
             this.splice("groceryArchiveItems", moveItemIndex, 1);
