@@ -136,17 +136,9 @@ Custom property | Description | Default
   </template>
 
   <script>
-    /**
-     * ToDo - Persist to Firebase
-     */
     (function() {
       Polymer({
         is: "socobo-grocery-list",
-        /**
-         * This Event is fired if...<br/>
-         * `Detail`: Object: {} <br/>
-         * @event ToDo
-         */
         /**
          * Element Properties.
          */
@@ -189,7 +181,7 @@ Custom property | Description | Default
         listeners: {
           "grocery-active-item-added"     : "_groceryActiveItemAdded",
           "grocery-active-item-removed"   : "_groceryActiveItemRemoved",
-          "grocery-archive-item-changed"  : "_groceryArchiveItemChanged",
+          "grocery-archive-item-added"    : "_groceryArchiveItemAdded",
           "grocery-changed-error"         : "_groceryChangedError"
         },
 
@@ -197,8 +189,7 @@ Custom property | Description | Default
          * PUBLIC API
          */
         /**
-         * ToDo - Load Data
-         *
+         * Load Data
          * @method loadData
          */
         loadData: function() {
@@ -219,9 +210,6 @@ Custom property | Description | Default
          * PRIVATE API
          */
         /**
-         * EVENTS SEARCH
-         */
-        /**
          * Handle Changed Search Query
          * @param e
          * @private
@@ -229,7 +217,7 @@ Custom property | Description | Default
          */
         _handleChangedSearchQuery: function(e) {
           this.searchQuery = e.detail.searchQuery;
-          if (this.fallbackItems) {
+          if (this.searchQuery === null && this.setItemToFallback) {
             SocoboGrocery.getInstance(this, this.userLogin).addItemToActiveList({desc: this.fallbackItems[0].desc});
             this.fallbackItems = [];
           }
@@ -241,14 +229,20 @@ Custom property | Description | Default
          * @method _handleAddToGroceryList
          */
         _handleAddToGroceryList: function(e) {
+          if (this.setItemToFallback) {
+            this.setItemToFallback = false;
+          }
           SocoboGrocery.getInstance(this, this.userLogin).addItemToActiveList(e.detail);
         },
+
         /**
          * Handle Check All Items
          * @private
          * @method _handleCheckAllItems
          */
         _handleCheckAllItems: function() {
+          this.checkItems = [];
+          this.checkItemsArchive = [];
           this.toggleAttribute("disabled", false, this.$.btnDelete);
           this._checkOrUncheck(true);
         },
@@ -282,48 +276,14 @@ Custom property | Description | Default
             if (!element.hidden) {
               element.isChecked = state;
               if (state) {
-                this._handleCheck({detail : {desc : element.innerText.trim()}});
+                this._handleCheck({detail : element.obj});
               } else {
-                this._handleUncheck({detail : {desc : element.innerText.trim()}});
+                this._handleUncheck({detail : element.obj});
               }
             }
           }
         },
 
-        /**
-         * delete all checked Items
-         * @private
-         * @method _deleteAllItems
-         */
-        _deleteAllItems: function() {
-          if (this.selected === 0) {
-            this._deleteAll(this.checkItems);
-          } else {
-            this._deleteAll(this.checkItemsArchive);
-          }
-        },
-        /**
-         * delete all given Items
-         * @param items
-         * @private
-         * @method _deleteAll
-         */
-        _deleteAll: function(items) {
-          // clone array, because reference errors
-          var clonedArray = CloneModule.clone(items);
-          // iterate over cloned array and delete all checked items
-          clonedArray.forEach(function(item) {
-            this._handleDeleteRequest({detail: item});
-          }.bind(this));
-          // reset fab
-          this.toggleAttribute("disabled", true, this.$.btnDelete);
-          // reset checkbox in search element
-          this.$.elSearch.resetQuery();
-        },
-
-        /**
-         * EVENTS LIST ITEM
-         */
         /**
          * Handle Check
          * @param e
@@ -372,6 +332,36 @@ Custom property | Description | Default
         },
 
         /**
+         * delete all checked Items
+         * @private
+         * @method _deleteAllItems
+         */
+        _deleteAllItems: function() {
+          if (this.selected === 0) {
+            this._deleteAll(this.checkItems);
+          } else {
+            this._deleteAll(this.checkItemsArchive);
+          }
+        },
+        /**
+         * delete all given Items
+         * @param items
+         * @private
+         * @method _deleteAll
+         */
+        _deleteAll: function(items) {
+          // clone array, because reference errors
+          var clonedArray = CloneModule.clone(items);
+          // iterate over cloned array and delete all checked items
+          clonedArray.forEach(function(item) {
+            this._handleDeleteRequest({detail: item});
+          }.bind(this));
+          // reset fab
+          this.toggleAttribute("disabled", true, this.$.btnDelete);
+          // reset checkbox in search element
+          this.$.elSearch.resetQuery();
+        },
+        /**
          * Handle Delete Request
          * @param e
          * @private
@@ -399,18 +389,22 @@ Custom property | Description | Default
           if (checkItemIndex !== -1) {
             // push deleted item to archive
             if (pushToPath !== null) {
-              this.push(pushToPath, items[checkItemIndex]);
-              if (this._getIndex(this.checkItemsArchive, items[checkItemIndex]) === -1) {
-                this.checkItemsArchive.push(items[checkItemIndex]);
-              }
+              // Add Item to Archive List
+              SocoboGrocery.getInstance(this, this.userLogin).addItemToArchiveList({desc: item.desc});
             }
             // remove deleted item from checkItems
             items.splice(checkItemIndex, 1);
             // get index from groceryItems
             var groceryItemIndex = this._getIndex(this.get(spliceFromPath), item);
             if (groceryItemIndex !== -1) {
-              // remove deleted item form groceryItems
+              // remove item from data binding
               this.splice(spliceFromPath, groceryItemIndex, 1);
+              // delete item from DB
+              if (spliceFromPath === "groceryItems") {
+                SocoboGrocery.getInstance(this, this.userLogin).removeItemFromActiveList(item);
+              } else {
+                SocoboGrocery.getInstance(this, this.userLogin).removeItemFromArchiveList(item);
+              }
             } else {
               // notify user
               this._notify("The Item is not available");
@@ -436,6 +430,7 @@ Custom property | Description | Default
             // remove deleted item form groceryItems
             this.splice("groceryItems", groceryItemIndex, 1);
             // Remove item from DB
+            this.setItemToFallback = true;
             SocoboGrocery.getInstance(this, this.userLogin).removeItemFromActiveList(e.detail);
           } else {
             // notify user
@@ -449,10 +444,14 @@ Custom property | Description | Default
          * @method _handleMoveRequest
          */
         _handleMoveRequest: function(e) {
-          var showItemIndex = this._getIndex(this.checkItemsArchive, e.detail);
-          if (showItemIndex !== -1) {
-            this.splice("groceryArchiveItems", showItemIndex, 1);
-            this.push("groceryItems", e.detail);
+          var moveItemIndex = this._getIndex(this.get("groceryArchiveItems"), e.detail); //this._getIndex(this.checkItemsArchive, e.detail);
+          if (moveItemIndex !== -1) {
+            // Remove item from data binding
+            this.splice("groceryArchiveItems", moveItemIndex, 1);
+            // Remove item from DB
+            SocoboGrocery.getInstance(this, this.userLogin).removeItemFromArchiveList(e.detail);
+            // Add item to data binding
+            SocoboGrocery.getInstance(this, this.userLogin).addItemToActiveList({desc: e.detail.desc});
           } else {
             // notify user
             this._notify("The Item is not available");
@@ -489,7 +488,7 @@ Custom property | Description | Default
           var index = -1;
           // search the selected item
           items.forEach(function(item, i) {
-            if (item.desc.trim() === selectedItem.desc.trim()) {
+            if (item.desc === selectedItem.desc) {
               index = i;
             }
           }.bind(this));
@@ -509,7 +508,6 @@ Custom property | Description | Default
           }
         },
 
-
         /**
          * LISTENER METHODS
          */
@@ -521,17 +519,22 @@ Custom property | Description | Default
           this.push("groceryItems", activeItem);
         },
         _groceryActiveItemRemoved: function(item) {
-          var fallbackItem = {
+          if (this.setItemToFallback) {
+            this.fallbackItems = [];
+            var fallbackItem = {
+              key   : item.detail.key,
+              desc  : item.detail.desc
+            };
+            this.fallbackItems.push(fallbackItem);
+          }
+        },
+        _groceryArchiveItemAdded: function(item) {
+          var archiveItem = {
             key   : item.detail.key,
             desc  : item.detail.desc
           };
-          this.fallbackItems.push(fallbackItem);
+          this.push("groceryArchiveItems", archiveItem);
         },
-
-        _groceryArchiveItemAdded: function(item) {
-          this.push("groceryArchiveItems", item.detail);
-        },
-
         _groceryChangedError: function(error) {
           this._notify(error.code + " - " + error.message);
         },
@@ -544,6 +547,7 @@ Custom property | Description | Default
           this.checkItems = [];
           this.checkItemsArchive = [];
           this.fallbackItems = [];
+          this.setItemToFallback = false;
         }
       });
     })();

@@ -23,7 +23,7 @@ var SocoboGrocery = (function() {
      * @private
      * @method _getGroceryItemPath
      */
-    var _getGroceryItemPath = function (section){
+    var _getGroceryItemPath = function (section) {
       return _baseUrl + "grocery/" + _userId + section
     };
     // specify routes
@@ -34,6 +34,18 @@ var SocoboGrocery = (function() {
     var _refArchive = new Firebase(_archiveItemsRoute);
 
     /**
+     * Handle Errors for changed items
+     * @param error
+     * @private
+     * @method _onErrorActive
+     */
+    var _onError = function(err) {
+      if (err) {
+        _ctx.fire("grocery-changed-error", err);
+      }
+    };
+
+    /**
      * Register Changed Listener for active and archive Items
      * @method registerGroceryItemListeners
      */
@@ -41,7 +53,6 @@ var SocoboGrocery = (function() {
       _registerGroceryActiveListeners();
       _registerGroceryArchiveListeners();
     };
-
     /**
      * Register Changed Listener for active Items
      * @private
@@ -66,27 +77,39 @@ var SocoboGrocery = (function() {
       }, _onError);
     };
     /**
-     * Handle Errors for changed items
-     * @param error
-     * @private
-     * @method _onErrorActive
+     * Add Item to active List
+     * @param item
+     * @method addItemToActiveList
      */
-    var _onError = function(err) {
-      if (err) {
-        _ctx.fire("grocery-changed-error", err);
-      }
-    };
-
-
     var addItemToActiveList = function(item) {
       _refActive.push(item, _onError);
     };
-
+    /**
+     * Remove Item from active List
+     * @param item
+     * @method removeItemFromActiveList
+     */
     var removeItemFromActiveList = function(item) {
       var removePath = new Firebase(_activeItemsRoute + "/" + item.key);
       removePath.remove();
     };
-
+    /**
+     * Add Item to archive List
+     * @param item
+     * @method addItemToArchiveList
+     */
+    var addItemToArchiveList = function(item) {
+      _refArchive.push(item, _onError);
+    };
+    /**
+     * Remove Item from archive List
+     * @param item
+     * @method removeItemFromArchiveList
+     */
+    var removeItemFromArchiveList = function(item) {
+      var removePath = new Firebase(_archiveItemsRoute + "/" + item.key);
+      removePath.remove();
+    };
 
     /**
      * Public API
@@ -94,7 +117,9 @@ var SocoboGrocery = (function() {
     return {
       registerGroceryItemListeners  : registerGroceryItemListeners,
       addItemToActiveList           : addItemToActiveList,
-      removeItemFromActiveList      : removeItemFromActiveList
+      removeItemFromActiveList      : removeItemFromActiveList,
+      addItemToArchiveList          : addItemToArchiveList,
+      removeItemFromArchiveList     : removeItemFromArchiveList
     }
   };
 
