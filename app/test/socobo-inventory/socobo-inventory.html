@@ -29,8 +29,8 @@
         inventory = fixture('Inventory');
       });
 
-      test('has an add button', function(done) {
-        expect(inventory.$.inventoryButtonAdd).to.not.be.eql(undefined);
+      test('has an add/delete button group', function(done) {
+        expect(inventory.querySelector('socobo-element-buttons')).to.not.be.eql(undefined);
         done();
       });
 
@@ -65,15 +65,6 @@
         done();
       });
 
-      test("has a delete all button", function (done) {
-        expect(inventory.$.deleteAll).to.not.be.eql(undefined);
-        done();
-      });
-
-      test("has two paper fabs", function(done) {
-        expect(inventory.querySelectorAll("paper-fab").length).to.be.eql(2);
-        done();
-      });
     });
 
     suite("<socobo-inventory> mass deletion", function () {
@@ -83,17 +74,11 @@
         inventory = fixture("Inventory");
       });
 
-      test("delete all button is hidden by default", function(done) {
-        var button = inventory.$.deleteAll;
-        inventory._checkedItems = 0;
-        expect(button.hidden).to.be.eql(true);
-        done();
-      });
-
-      test("setting selected shows the delete button", function (done) {
+      test("setting selected sets the checked property", function (done) {
         var button = inventory.$.deleteAll;
         inventory._handleCheck({});
-        expect(button.hidden).to.be.eql(false);
+        expect(inventory._checkedItems).to.be.eql(1);
+        expect(inventory._itemsChecked).to.be.eql(true);
         done();
       });
     });

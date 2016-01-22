@@ -3,7 +3,7 @@ The following custom properties and mixins are available for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
---socobo-recipe-style-action-btn-color | Background color of the action buttons | --accent-color
+`--socobo-recipe-style-action-btn-color` | Background color of the action buttons | --accent-color
 
 @demo demo/socobo-inventory/demo.html
 -->
@@ -19,8 +19,6 @@ Custom property | Description | Default
         position: fixed;
         top: 36px;
         right: 80px;
-        --paper-fab-background: var(--socobo-recipe-style-action-btn-color);
-        --paper-fab-keyboard-focus-background: var(--socobo-recipe-style-action-btn-color);
       }
     </style>
     <div>
@@ -57,9 +55,12 @@ Custom property | Description | Default
         on-checked-all = "_handleCheckAll"
         data="[[data]]">
       </socobo-inventory-overview>
-
-      <paper-fab hidden$="{{!_itemsChecked}}" id="deleteAll" class="button-add" icon="delete" on-click="_deleteAllItems"></paper-fab>
-      <paper-fab hidden$="{{_itemsChecked}}" id="inventoryButtonAdd" class="button-add" icon="add" on-click="_createItem"></paper-fab>
+    <socobo-element-buttons
+      class="button-add"
+      show-delete="{{_itemsChecked}}"
+      on-add-item="_createItem"
+      on-delete-item="_deleteAllItems">
+    </socobo-element-buttons>
     </div>
   </template>
 
