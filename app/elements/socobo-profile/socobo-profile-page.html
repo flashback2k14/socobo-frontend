@@ -54,14 +54,14 @@ Custom property | Description | Default
 
     <!-- Dialog Element -->
     <paper-dialog
-      id='confirmRemoveAccountDialog'
-      entry-animation='scale-up-animation'
-      exit-animation='fade-out-animation'
+      id="confirmRemoveAccountDialog"
+      entry-animation="scale-up-animation"
+      exit-animation="fade-out-animation"
       modal>
       <h2>Are you sure to delete your account by socobo project?</h2>
-      <div class='buttons'>
+      <div class="buttons">
         <paper-button dialog-dismiss autofocus>Cancel</paper-button>
-        <paper-button on-tap='_deleteAccount'>OK</paper-button>
+        <paper-button on-tap="_deleteAccount">OK</paper-button>
       </div>
     </paper-dialog>
     <!-- Main Page Element -->
@@ -98,7 +98,7 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-profile-page',
+        is: "socobo-profile-page",
         /**
          * This Event is fired if the user changed the profile image. <br/>
          * `Detail`: String: "profileImage Data" <br/>

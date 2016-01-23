@@ -32,13 +32,13 @@ var SocoboAuth = (function() {
      */
     var _getUserName = function(authData) {
       switch(authData.provider) {
-        case 'password':
-          return authData.password.email.replace(/@.*/, '');
-        case 'google':
+        case "password":
+          return authData.password.email.replace(/@.*/, "");
+        case "google":
           return authData.google.displayName;
-        case 'twitter':
+        case "twitter":
           return authData.twitter.displayName;
-        case 'facebook':
+        case "facebook":
           return authData.facebook.displayName;
       }
     };

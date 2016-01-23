@@ -46,7 +46,7 @@ Custom property | Description | Default
   <script>
     (function () {
       Polymer({
-        is: 'socobo-inventory-overview',
+        is: "socobo-inventory-overview",
 
         properties: {
           data: {
@@ -60,7 +60,7 @@ Custom property | Description | Default
         },
 
         _setHidden: function (item, query) {
-          return !(query === null || typeof query === 'undefined' || item.desc.indexOf(query) != -1 || item.info.indexOf(query) != -1);
+          return !(query === null || typeof query === "undefined" || item.desc.indexOf(query) != -1 || item.info.indexOf(query) != -1);
         },
 
         _searchQueryChanged: function(e) {
