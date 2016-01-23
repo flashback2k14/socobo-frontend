@@ -1,0 +1,39 @@
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+
+@demo demo/socobo-about/demo.html
+-->
+<dom-module id="socobo-about">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+    </style>
+
+    <div>Hello from <span>{{socobo}}</span></div>
+
+    <socobo-about-github-card></socobo-about-github-card>
+
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: "socobo-about",
+        properties: {
+          socobo: {
+            type: String,
+            value: "socobo-about",
+            notify: true
+          }
+        }
+      });
+    })();
+  </script>
+</dom-module>
