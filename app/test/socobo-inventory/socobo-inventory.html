@@ -63,7 +63,39 @@
         expect(inventory.$.inventoryEditDialog).to.not.be.eql(undefined);
         expect(inventory.querySelector("socobo-inventory-edit")).to.not.be.eql(undefined);
         done();
-      })
+      });
+
+      test("has a delete all button", function (done) {
+        expect(inventory.$.deleteAll).to.not.be.eql(undefined);
+        done();
+      });
+
+      test("has two paper fabs", function(done) {
+        expect(inventory.querySelectorAll("paper-fab").length).to.be.eql(2);
+        done();
+      });
+    });
+
+    suite("<socobo-inventory> mass deletion", function () {
+      var inventory;
+
+      setup(function () {
+        inventory = fixture("Inventory");
+      });
+
+      test("delete all button is hidden by default", function(done) {
+        var button = inventory.$.deleteAll;
+        inventory._checkedItems = 0;
+        expect(button.hidden).to.be.eql(true);
+        done();
+      });
+
+      test("setting selected shows the delete button", function (done) {
+        var button = inventory.$.deleteAll;
+        inventory._handleCheck({});
+        expect(button.hidden).to.be.eql(false);
+        done();
+      });
     });
   </script>
 </body>

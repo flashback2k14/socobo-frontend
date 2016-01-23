@@ -34,9 +34,7 @@ Custom property | Description | Default
           <socobo-element-list-item
             class="inventory-list-item"
             obj="{{item}}"
-            on-check="_handleCheck"
             hidden="{{_setHidden(item, query)}}"
-            on-uncheck="_handleUncheck"
             on-show_request="_showItem">
           </socobo-element-list-item>
         </template>
@@ -47,7 +45,10 @@ Custom property | Description | Default
     (function () {
       Polymer({
         is: 'socobo-inventory-overview',
-
+        /**
+         * This event is fired if all items have been (un-)checked. at once<br/>
+         * @event check-all
+         */
         properties: {
           data: {
             type: Array,
@@ -57,6 +58,14 @@ Custom property | Description | Default
 
         ready: function() {
           this.query = null;
+        },
+
+        /** Resets the state of the contained search box. This includes the checkbox as well as the actual query
+        * @method resetSearch
+         */
+        resetSearch: function () {
+          this.$.searchHeader.resetCheckbox();
+          this.$.searchHeader.resetQuery();
         },
 
         _setHidden: function (item, query) {
@@ -75,20 +84,18 @@ Custom property | Description | Default
           this._checkOrUncheck(false);
         },
 
-        _handleCheck: function () {
-        },
-
-        _handleUncheck: function () {
-        },
-
         _checkOrUncheck: function(state) {
-          var itemList = document.querySelectorAll(".inventory-list-item");
+          var itemList = this.querySelectorAll(".inventory-list-item");
+          var counter = 0;
           for (var i=0; i < itemList.length; i++) {
             var element = itemList[i];
             if (!element.hidden) {
+              counter++;
               element.isChecked = state;
             }
           }
+
+          this.fire("checked-all", {number: counter, state: state});
         },
 
         _showItem: function (e) {
