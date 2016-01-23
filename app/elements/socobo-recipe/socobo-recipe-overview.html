@@ -300,7 +300,7 @@ Custom property | Description | Default
               this.$.editDialog.toggleDialog();
             }.bind(this)).
           catch(function(error){
-            this._notify(error);
+            this._notifyOnError(error);
           }.bind(this));
 
           //Pass clone object and original object to the recipe dialog
@@ -320,7 +320,7 @@ Custom property | Description | Default
               this.$.addDialog.measurements = data;
             }.bind(this)).
           catch(function(error){
-            this._notify(error);
+            this._notifyOnError(error);
           }.bind(this));
           this.$.addDialog.state = "add";
           this.$.addDialog.toggleDialog();

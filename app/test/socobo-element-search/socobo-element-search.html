@@ -57,17 +57,6 @@
         socoboElementSearch.resetQuery();
       });
 
-      test("calling reset fires an uncheck all event", function(done) {
-        socoboElementSearch.addEventListener("uncheck-all-items", function(e) {
-          expect(socoboElementSearch.$.chbCheckAllItems.checked).to.be.eql(false);
-          done();
-        });
-
-        socoboElementSearch.$.chbCheckAllItems.checked = true;
-        socoboElementSearch.resetQuery();
-
-      });
-
       test("calling reset on hidden search bar does not toggle the search bar", function(done) {
         expect(socoboElementSearch.$.searchInputContainer.classList.contains("hide-search-input-container")).to.be.eql(true);
         socoboElementSearch.resetQuery();
