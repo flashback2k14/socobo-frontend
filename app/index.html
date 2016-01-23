@@ -9,13 +9,13 @@
   <!-- Place favicon.ico in the `app/` directory -->
 
   <!-- Chrome for Android theme color -->
-  <meta name="theme-color" content="#303F9F">
+  <meta name="theme-color" content="#311B92">
 
   <!-- Web Application Manifest -->
   <link rel="manifest" href="manifest.json">
 
   <!-- Tile color for Win8 -->
-  <meta name="msapplication-TileColor" content="#3372DF">
+  <meta name="msapplication-TileColor" content="#311B92">
 
   <!-- Add to homescreen for Chrome on Android -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -86,6 +86,11 @@
             <a data-route="profile" id="menuItemProfile" class="hide-menu-item" href="/profile">
               <iron-icon icon="face"></iron-icon>
               <span>Profile</span>
+            </a>
+
+            <a data-route="about" id="menuItemAbout" class="show-menu-item" href="/about">
+              <iron-icon icon="info-outline"></iron-icon>
+              <span>About</span>
             </a>
           </paper-menu>
         </div>
@@ -163,6 +168,14 @@
                   on-profile-image-changed="handleProfileImageChanged"
                   on-profile-info-changed="handleProfileInfoChanged">
                 </socobo-profile>
+              </div>
+            </section>
+
+            <section data-route="about">
+              <div class="style-pm-margin-padding style-pm-height">
+                <socobo-about
+                  id="elAbout">
+                </socobo-about>
               </div>
             </section>
 

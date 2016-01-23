@@ -75,7 +75,7 @@
        * @param searchQuery
        */
       demo._searchForItems = function(item, searchQuery) {
-        if (searchQuery === null ||typeof searchQuery === 'undefined') {
+        if (searchQuery === null ||typeof searchQuery === "undefined") {
           return item;
         } else {
           return item.desc.toUpperCase().match(searchQuery.toUpperCase()) || item.info.toUpperCase().match(searchQuery.toUpperCase());

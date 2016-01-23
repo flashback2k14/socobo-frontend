@@ -323,12 +323,12 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-recipe-details-add',
+        is: "socobo-recipe-details-add",
         /**
          * LISTENERS
          */
         listeners: {
-          'fileChooser.change': 'encode'
+          "fileChooser.change": "encode"
         },
 
         /**
@@ -407,7 +407,7 @@ Custom property | Description | Default
          */
         removeStep : function(e){
           var model = e.model;
-          var itemIndex = model.get('index');
+          var itemIndex = model.get("index");
           this.cutElementOffArray(itemIndex, "recipe_inputs");
         },
 
@@ -416,8 +416,8 @@ Custom property | Description | Default
          */
         _removeIngr : function(e){
           var model = e.model;
-          var itemIndex = model.get('index');
-          this.cutElementOffArray(itemIndex, 'ingredient_inputs');
+          var itemIndex = model.get("index");
+          this.cutElementOffArray(itemIndex, "ingredient_inputs");
         },
 
         /**
@@ -432,7 +432,7 @@ Custom property | Description | Default
          */
         clearInputFields : function() {
           // clear title and description
-          var inputFields = Polymer.dom(this.$.dialog).querySelectorAll('.inputs');
+          var inputFields = Polymer.dom(this.$.dialog).querySelectorAll(".inputs");
           inputFields.forEach(function(field) {
             field.value = "";
           });
@@ -510,7 +510,7 @@ Custom property | Description | Default
           var checkContainer = function(obj, container){
             return obj.recipe[container].lenght > 0;
           };
-          var titleExists = check(this, 'desc');
+          var titleExists = check(this, "desc");
           var textExists = check(this, "text");
           var stepsExist = this.recipe.steps.length > 0;
           var ingredientsExist = this.recipe.ingredients.length > 0;
