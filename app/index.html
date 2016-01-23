@@ -87,6 +87,11 @@
               <iron-icon icon="face"></iron-icon>
               <span>Profile</span>
             </a>
+
+            <a data-route="about" id="menuItemAbout" class="show-menu-item" href="/about">
+              <iron-icon icon="info-outline"></iron-icon>
+              <span>About</span>
+            </a>
           </paper-menu>
         </div>
       </paper-header-panel>
@@ -163,6 +168,14 @@
                   on-profile-image-changed="handleProfileImageChanged"
                   on-profile-info-changed="handleProfileInfoChanged">
                 </socobo-profile>
+              </div>
+            </section>
+
+            <section data-route="about">
+              <div class="style-pm-margin-padding style-pm-height">
+                <socobo-about
+                  id="elAbout">
+                </socobo-about>
               </div>
             </section>
 
