@@ -104,6 +104,8 @@ Custom property | Description | Default
             <socobo-element-list-item
               obj="{{activeItem}}"
               class="grocery-list-item"
+              delete-icon="assignment"
+              dialog-text="Do you really want to move the item to archive?"
               hidden$="{{_setHidden(activeItem, searchQuery)}}"
               on-check="_handleCheck"
               on-uncheck="_handleUncheck"
@@ -121,6 +123,7 @@ Custom property | Description | Default
             <socobo-element-list-item
               obj="{{archiveItem}}"
               class="grocery-list-item-archive"
+              edit-icon="assignment-return"
               hidden$="{{_setHidden(archiveItem, searchQuery)}}"
               on-check="_handleCheck"
               on-uncheck="_handleUncheck"
@@ -236,6 +239,9 @@ Custom property | Description | Default
         },
 
         /**
+         * MULTI CHECKS
+         */
+        /**
          * Handle Check All Items
          * @private
          * @method _handleCheckAllItems
@@ -285,6 +291,9 @@ Custom property | Description | Default
         },
 
         /**
+         * SINGLE CHECKS
+         */
+        /**
          * Handle Check
          * @param e
          * @private
@@ -332,6 +341,9 @@ Custom property | Description | Default
         },
 
         /**
+         * DELETE
+         */
+        /**
          * delete all checked Items
          * @private
          * @method _deleteAllItems
@@ -368,14 +380,39 @@ Custom property | Description | Default
          * @method _handleDeleteRequest
          */
         _handleDeleteRequest: function(e) {
-          if (this.selected === 0) {
-            this._delete(this.checkItems, e.detail, "groceryArchiveItems", "groceryItems");
-          } else {
-            this._delete(this.checkItemsArchive, e.detail, null, "groceryArchiveItems");
+          /* Check the selected Tab */
+          switch (this.selected) {
+            /* Active */
+            case 0:
+              /**
+               * if length is 0, then the delete button from the list item
+               * is pressed, otherwise the request comes from deleteAll
+               */
+              if (this.checkItems.length === 0) {
+                this._deleteSingle(true, e.detail, "groceryItems");
+              } else {
+                this._delete(this.checkItems, e.detail, "groceryArchiveItems", "groceryItems");
+              }
+              break;
+            /* Archive */
+            case 1:
+              /**
+               * if length is 0, then the delete button from the list item
+               * is pressed, otherwise the request comes from deleteAll
+               */
+              if (this.checkItemsArchive.length === 0) {
+                this._deleteSingle(false, e.detail, "groceryArchiveItems");
+              } else {
+                this._delete(this.checkItemsArchive, e.detail, null, "groceryArchiveItems");
+              }
+              break;
+            /* No valid value */
+            default:
+              break;
           }
         },
         /**
-         * Delete given Item, if exists
+         * Delete given Item, if exists - handle delete All request
          * @param items
          * @param item
          * @param pushToPath
@@ -414,6 +451,35 @@ Custom property | Description | Default
             this._notify("The Item is not checked. Please check the Item before delete.");
           }
         },
+        /**
+         * Delete given item, if exists - handle delete request from list item
+         * @param moveToArchive
+         * @param item
+         * @param spliceFromPath
+         * @private
+         * @method _deleteSingle
+         */
+        _deleteSingle: function(moveToArchive, item, spliceFromPath) {
+          // add item to archive
+          if (moveToArchive) {
+            SocoboGrocery.getInstance(this, this.userLogin).addItemToArchiveList({desc: item.desc});
+          }
+          // get index from groceryItems
+          var groceryItemIndex = this._getIndex(this.get(spliceFromPath), item);
+          if (groceryItemIndex !== -1) {
+            // remove item from data binding
+            this.splice(spliceFromPath, groceryItemIndex, 1);
+            // delete item from DB
+            if (spliceFromPath === "groceryItems") {
+              SocoboGrocery.getInstance(this, this.userLogin).removeItemFromActiveList(item);
+            } else {
+              SocoboGrocery.getInstance(this, this.userLogin).removeItemFromArchiveList(item);
+            }
+          } else {
+            // notify user
+            this._notify("The Item is not available");
+          }
+        },
 
         /**
          * Handle Edit Request (Active)
@@ -444,6 +510,7 @@ Custom property | Description | Default
          * @method _handleMoveRequest
          */
         _handleMoveRequest: function(e) {
+          // get index from groceryArchiveItems
           var moveItemIndex = this._getIndex(this.get("groceryArchiveItems"), e.detail);
           if (moveItemIndex !== -1) {
             // Remove item from data binding
@@ -511,6 +578,12 @@ Custom property | Description | Default
         /**
          * LISTENER METHODS
          */
+        /**
+         * Handle item added to active list
+         * @param item
+         * @private
+         * @method _groceryActiveItemAdded
+         */
         _groceryActiveItemAdded: function(item) {
           var activeItem = {
             key   : item.detail.key,
@@ -518,6 +591,12 @@ Custom property | Description | Default
           };
           this.push("groceryItems", activeItem);
         },
+        /**
+         * Handle item deleted from active list
+         * @param item
+         * @private
+         * @method _groceryActiveItemRemoved
+         */
         _groceryActiveItemRemoved: function(item) {
           if (this.setItemToFallback) {
             this.fallbackItems = [];
@@ -528,6 +607,12 @@ Custom property | Description | Default
             this.fallbackItems.push(fallbackItem);
           }
         },
+        /**
+         * Handle item added to archive list
+         * @param item
+         * @private
+         * @method _groceryArchiveItemAdded
+         */
         _groceryArchiveItemAdded: function(item) {
           var archiveItem = {
             key   : item.detail.key,
@@ -535,6 +620,12 @@ Custom property | Description | Default
           };
           this.push("groceryArchiveItems", archiveItem);
         },
+        /**
+         * Handle errors from changed data
+         * @param error
+         * @private
+         * @method _groceryChangedError
+         */
         _groceryChangedError: function(error) {
           this._notify(error.code + " - " + error.message);
         },
