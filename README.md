@@ -11,7 +11,7 @@
 
 ## Documentation:
 -----------------
-http://localhost:63342/socobo-frontend/app/elements/documentation.html
+http://flashback2k14.github.io/socobo-project
 
 ## Testing:
 -----------

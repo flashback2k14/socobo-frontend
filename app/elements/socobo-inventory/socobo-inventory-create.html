@@ -156,7 +156,7 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-inventory-create',
+        is: "socobo-inventory-create",
         properties: {
           /* Array of measurement objects. {value: value}.
           */
@@ -204,7 +204,7 @@ Custom property | Description | Default
           if (!this._validate(this.item)) {
             alert("Some information is missing");
           } else {
-            this.fire('create-item', this.item);
+            this.fire("create-item", this.item);
           }
         },
 

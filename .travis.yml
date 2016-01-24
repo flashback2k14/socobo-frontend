@@ -1,5 +1,9 @@
 language: node_js
 sudo: false
+cache:
+  directories:
+    - node_modules
+    - app/bower_components
 before_script:
   - npm install web-component-tester
   - npm install bower

@@ -258,7 +258,7 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-auth-login',
+        is: "socobo-auth-login",
         /**
          * This Event is fired if the hyperlink is pressed to navigate to the Registration Element. <br/>
          * @event go-to-register
@@ -305,13 +305,13 @@ Custom property | Description | Default
             type: Object,
             value: function() {
               return {
-                'entry': {
-                  name: 'scale-up-animation',
+                "entry": {
+                  name: "scale-up-animation",
                   node: this,
                   timing: {duration: 1000}
                 },
-                'exit': {
-                  name: 'fade-out-animation',
+                "exit": {
+                  name: "fade-out-animation",
                   node: this
                 }
               }
@@ -322,7 +322,7 @@ Custom property | Description | Default
          * Define Listener for finished Animation.
          */
         listeners: {
-          'neon-animation-finish': '_onAnimationFinish'
+          "neon-animation-finish": "_onAnimationFinish"
         },
         /**
          * Method for handle finished Animation. <br/>
@@ -331,7 +331,7 @@ Custom property | Description | Default
          */
         _onAnimationFinish: function() {
           if (!this.opened) {
-            this.style.display = 'none';
+            this.style.display = "none";
           }
         },
         /**
@@ -340,9 +340,9 @@ Custom property | Description | Default
          */
         show: function() {
           this.opened = true;
-          this.style.display = 'block';
+          this.style.display = "block";
           this.cancelAnimation();
-          this.playAnimation('entry');
+          this.playAnimation("entry");
         },
         /**
          * Method for hiding the Element. <br/>
@@ -351,7 +351,7 @@ Custom property | Description | Default
         hide: function() {
           this.opened = false;
           this.cancelAnimation();
-          this.playAnimation('exit');
+          this.playAnimation("exit");
         },
         /**
          * Method for login with Google+ Account. <br/>
@@ -359,7 +359,7 @@ Custom property | Description | Default
          * @method loginWithGooglePlus
          */
         _loginWithGooglePlus: function() {
-          this._handleLogin('google');
+          this._handleLogin("google");
         },
         /**
          * Method for login with Twitter Account. <br/>
@@ -367,7 +367,7 @@ Custom property | Description | Default
          * @method loginWithTwitter
          */
         _loginWithTwitter: function() {
-          this._handleLogin('twitter');
+          this._handleLogin("twitter");
         },
         /**
          * Method for login with Facebook Account. <br/>
@@ -375,7 +375,7 @@ Custom property | Description | Default
          * @method loginWithFacebook
          */
         _loginWithFacebook: function() {
-          this._handleLogin('facebook');
+          this._handleLogin("facebook");
         },
         /**
          * Method for login with Emailaddress Account. <br/>
@@ -383,7 +383,7 @@ Custom property | Description | Default
          * @method loginWithEmail
          */
         _loginWithEmail: function() {
-          this._handleLogin('email');
+          this._handleLogin("email");
         },
         /**
          * Method for go to Register Element. <br/>
@@ -391,7 +391,7 @@ Custom property | Description | Default
          * @method goToRegister
          */
         _goToRegister: function() {
-          this.fire('go-to-register');
+          this.fire("go-to-register");
         },
         /**
          * Method for clearing all input fields. <br/>
@@ -413,23 +413,23 @@ Custom property | Description | Default
           var fbBaseURL = this.firebasebaseurl;
           var userIsAdmin = false; //ToDo: Checkbox? Only for Development!?
 
-          if (provider === 'email') {
+          if (provider === "email") {
             var emailAddress = this.$.txtEmailaddress.value;
             var password = this.$.txtPassword.value;
 
             var userObj = {
-              'email': emailAddress,
-              'password': password
+              "email": emailAddress,
+              "password": password
             };
 
             SocoboAuth.getInstance().loginWithEmailaddress(fbBaseURL, userObj, false, userIsAdmin)
               .then(function(user) {
                 this._clearInputFields(true);
-                this.fire('login-successful', user);
+                this.fire("login-successful", user);
               }.bind(this))
               .catch(function(err) {
                 this._clearInputFields(false);
-                this.fire('login-failed', err);
+                this.fire("login-failed", err);
               }.bind(this));
 
           } else {
@@ -437,11 +437,11 @@ Custom property | Description | Default
             SocoboAuth.getInstance().loginWithProvider(fbBaseURL, provider, false, userIsAdmin)
               .then(function(user) {
                 this._clearInputFields(true);
-                this.fire('login-successful', user);
+                this.fire("login-successful", user);
               }.bind(this))
               .catch(function(err) {
                 this._clearInputFields(false);
-                this.fire('login-failed', err);
+                this.fire("login-failed", err);
               }.bind(this));
           }
         }

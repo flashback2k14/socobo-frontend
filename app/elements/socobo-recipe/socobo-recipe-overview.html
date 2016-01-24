@@ -195,7 +195,7 @@ Custom property | Description | Default
   <script>
     (function () {
       Polymer({
-        is: 'socobo-recipe-overview',
+        is: "socobo-recipe-overview",
         /**
          *Public properties
          * - reicpes [Array]
@@ -301,7 +301,7 @@ Custom property | Description | Default
               this.$.editDialog.toggleDialog();
             }.bind(this)).
           catch(function(error){
-            this._notify(error);
+            this._notifyOnError(error);
           }.bind(this));
         },
         /**
@@ -320,7 +320,7 @@ Custom property | Description | Default
               this.$.addDialog.clearInputFields();
             }.bind(this)).
             catch(function(error){
-              this._notify(error);
+              this._notifyOnError(error);
             }.bind(this));
         },
         /**
@@ -350,7 +350,7 @@ Custom property | Description | Default
             .remove(e.detail)
             .then(function (success) {
               this._notifyOnSuccess(success.value);
-              this._updateAfterDeletion(e.detail, this.recipes, 'recipes');
+              this._updateAfterDeletion(e.detail, this.recipes, "recipes");
             }.bind(this))
             .catch(function (error) {
               this._notifyOnError(error.value);
@@ -448,7 +448,7 @@ Custom property | Description | Default
               // iterate over successful removed recipes
               success.forEach(function (recipe) {
                 // cut recipe from bounded arrays
-                this._updateAfterDeletion(recipe.item, this.recipes, 'recipes');
+                this._updateAfterDeletion(recipe.item, this.recipes, "recipes");
                 this._updateAfterDeletion(recipe.item, this._checkedBoxes.refs, "_checkedBoxes.refs");
               }.bind(this));
               this.$.searchbar.resetQuery();
@@ -504,10 +504,8 @@ Custom property | Description | Default
           var el = Polymer.dom(this.root).querySelectorAll(".singleItem");
           for (var e in el) {
             var listItem = el[e];
-            var internalEl = Polymer.dom(listItem.root).querySelector(".check paper-checkbox");
-            if (internalEl.checked == false) {
+            if (!listItem.hidden) {
               listItem.isChecked = true;
-              internalEl.checked = true;
               this._checkedBoxes.number++;
               this._checkedBoxes.refs.push(listItem.obj);
               this._trackCheckedBoxes();
@@ -522,25 +520,12 @@ Custom property | Description | Default
           var el = Polymer.dom(this.root).querySelectorAll(".singleItem");
           for (var e in el) {
             var listItem = el[e];
-            var internalEl = Polymer.dom(listItem.root).querySelector(".check paper-checkbox");
-            if (internalEl.checked == true) {
+            if (listItem.isChecked) {
               listItem.isChecked = false;
-              internalEl.checked = false;
               this._checkedBoxes.number--;
               this._updateAfterDeletion(listItem.obj, this._checkedBoxes.refs, "_checkedBoxes.refs");
               this._trackCheckedBoxes();
             }
-          }
-        },
-        /**
-         * Resets the checkbox of the search element after removing all checked recipes.
-         * @private
-         */
-        _resetSearchElementCheckbox : function(){
-          var searchElement = this.$.searchbar;
-          var checkBox = Polymer.dom(searchElement.root).querySelector("#chbCheckAllItems");
-          if(checkBox.checked === true){
-            checkBox.checked = false;
           }
         },
         /**
@@ -570,7 +555,7 @@ Custom property | Description | Default
             lowerCaseQuery = searchquery;
           }
           var checkDesc = !(lowerCaseQuery === null
-          || typeof lowerCaseQuery === 'undefined'
+          || typeof lowerCaseQuery === "undefined"
           || (item.desc).toLowerCase().indexOf(lowerCaseQuery) != -1);
           var checkInfo = false;
           //if info is available it will be checked else not

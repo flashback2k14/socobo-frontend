@@ -19,6 +19,7 @@
   var menuItemRecipe = null;
   var menuItemInventory = null;
   var menuItemProfile = null;
+  var menuItemAbout = null;
   // Socobo Elements
   var elAuth = null;
   var elRanking = null;
@@ -26,6 +27,7 @@
   var elInventory = null;
   var elRecipe = null;
   var elProfile = null;
+  var elAbout = null;
   // Other
   var infoToast = null;
 
@@ -52,6 +54,7 @@
     menuItemRecipe = document.querySelector("#menuItemRecipe");
     menuItemInventory = document.querySelector("#menuItemInventory");
     menuItemProfile = document.querySelector("#menuItemProfile");
+    menuItemAbout = document.querySelector("#menuItemAbout");
     // Socobo Elements
     elAuth = document.querySelector("#elAuth");
     elRanking = document.querySelector("#elRanking");
@@ -59,6 +62,7 @@
     elInventory = document.querySelector("#elInventory");
     elRecipe = document.querySelector("#elRecipe");
     elProfile = document.querySelector("#elProfile");
+    elAbout = document.querySelector("#elAbout");
     // Other
     infoToast = document.querySelector("#info-toast");
     // init UserInfo
@@ -100,7 +104,7 @@
    * AUTH
    */
   app.closeAuthElement = function() {
-    app.route = "home";
+    app.route = "about";
   };
   app.loginSuccessful = function(e) {
     // declare variable
