@@ -10,15 +10,26 @@
   "indent": 2,
   "latedef": true,
   "noarg": true,
-  "quotmark": "double",
   "undef": true,
   "unused": true,
+  "nocomma": true,
   "globals": {
     "wrap": true,
     "unwrap": true,
+    "alert": true,
     "Polymer": true,
     "Platform": true,
     "page": true,
-    "app": true
+    "app": true,
+    "Firebase": true,
+    "UserInfo": true,
+    "Util": true,
+    "SocoboAuth": true,
+    "SocoboProfile": true,
+    "ProfileUtil": true,
+    "SocoboRanking": true,
+    "RecipeDao": true,
+    "ImageService": true,
+    "CloneModule": true
   }
 }

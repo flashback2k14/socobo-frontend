@@ -1,9 +1,11 @@
+/* exported UserInfo */
 var UserInfo = (function() {
   /**
    * Baseurl to Firebase DB
+   *
    * @private
    */
-  var _baseUrl = "";
+  var _baseUrl = null;
   /**
    * local storage keys
    */
@@ -15,30 +17,34 @@ var UserInfo = (function() {
   var PROFILEIMAGE = "Socobo.ProfileImage";
   /**
    * init UserInfo
-   * @param baseurl
+   *
+   * @param {String} baseurl
    */
   function init(baseurl) {
     _baseUrl = baseurl;
   }
   /**
    * set user info to local storage
-   * @param key
-   * @param value
+   *
+   * @param {String} key
+   * @param {String} value
    */
   function set(key, value) {
     window.localStorage.setItem(key, value);
   }
   /**
    * get user info from local storage
-   * @param key
-   * @return {String, Number, Object}
+   *
+   * @param {String} key
+   * @return {String | Number | Object}
    */
   function get(key) {
     return window.localStorage.getItem(key);
   }
   /**
    * remove specific user info from local storage
-   * @param key
+   *
+   * @param {String} key
    */
   function deleteItem(key) {
     window.localStorage.removeItem(key);
@@ -56,6 +62,7 @@ var UserInfo = (function() {
   }
   /**
    * Return Firebase Base URL
+   *
    * @return {String}
    */
   function getBaseUrl() {
@@ -63,6 +70,7 @@ var UserInfo = (function() {
   }
   /**
    * Return User Information for Subelements
+   *
    * @return {Object}
    */
   function getUserLogin() {
@@ -76,18 +84,18 @@ var UserInfo = (function() {
    * make const variables and functions public
    */
   return {
-    USEROBJECT    : USEROBJECT,
-    USERID        : USERID,
-    EXPIREDATE    : EXPIREDATE,
-    USERNAME      : USERNAME,
-    EMAILADDRESS  : EMAILADDRESS,
-    PROFILEIMAGE  : PROFILEIMAGE,
-    init            : init,
-    set             : set,
-    get             : get,
-    deleteItem      : deleteItem,
-    deleteAllItems  : deleteAllItems,
-    getUserLogin    : getUserLogin,
-    getBaseUrl      : getBaseUrl
+    USEROBJECT: USEROBJECT,
+    USERID: USERID,
+    EXPIREDATE: EXPIREDATE,
+    USERNAME: USERNAME,
+    EMAILADDRESS: EMAILADDRESS,
+    PROFILEIMAGE: PROFILEIMAGE,
+    init: init,
+    set: set,
+    get: get,
+    deleteItem: deleteItem,
+    deleteAllItems: deleteAllItems,
+    getUserLogin: getUserLogin,
+    getBaseUrl: getBaseUrl
   };
 })();

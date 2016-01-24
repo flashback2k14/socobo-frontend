@@ -132,7 +132,6 @@ gulp.task("lint", ["ensureFiles"], function() {
   .pipe($.jscs())
   .pipe($.jscsStylish.combineWithHintResults())
   .pipe($.jshint.reporter("jshint-stylish"));
-  //.pipe($.if(!browserSync.active, $.jshint.reporter("fail"))); --> this shows the error message
 });
 
 // Optimize images
