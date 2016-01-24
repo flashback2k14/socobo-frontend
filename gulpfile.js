@@ -107,11 +107,32 @@ gulp.task("elements", function() {
 // "dot" files are specifically tricky due to them being hidden on
 // some systems.
 gulp.task("ensureFiles", function(cb) {
-  var requiredFiles = [".bowerrc"];
+  var requiredFiles = [".jscsrc", ".jshintrc", ".bowerrc"];
 
   ensureFiles(requiredFiles.map(function(p) {
     return path.join(__dirname, p);
   }), cb);
+});
+
+// Lint JavaScript
+gulp.task("lint", ["ensureFiles"], function() {
+  return gulp.src([
+    "app/scripts/**/*.js",
+    "app/elements/**/*.js",
+    "app/elements/**/*.html",
+    "gulpfile.js"
+  ])
+  .pipe(reload({
+    stream: true,
+    once: true
+  }))
+  // JSCS has not yet a extract option
+  .pipe($.if("*.html", $.htmlExtract({strip: true})))
+  .pipe($.jshint())
+  .pipe($.jscs())
+  .pipe($.jscsStylish.combineWithHintResults())
+  .pipe($.jshint.reporter("jshint-stylish"));
+  //.pipe($.if(!browserSync.active, $.jshint.reporter("fail"))); --> this shows the error message
 });
 
 // Optimize images
@@ -239,6 +260,7 @@ gulp.task("serve", ["ensureFiles", "styles", "elements"], function() {
   gulp.watch(["app/**/*.html"], reload);
   gulp.watch(["app/styles/**/*.css"], ["styles", reload]);
   gulp.watch(["app/elements/**/*.css"], ["elements", reload]);
+  gulp.watch(["app/{scripts,elements}/**/{*.js,*.html}"], ["lint"]);
   gulp.watch(["app/images/**/*"], reload);
 });
 
@@ -271,7 +293,7 @@ gulp.task("default", ["clean"], function(cb) {
   runSequence(
     ["copy", "styles"],
     "elements",
-    ["images", "fonts", "html"],
+    ["lint", "images", "fonts", "html"],
     "vulcanize", "cache-config",
     cb);
 });

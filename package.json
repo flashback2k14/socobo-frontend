@@ -12,6 +12,9 @@
     "gulp-html-extract": "^0.1.0",
     "gulp-if": "^2.0.0",
     "gulp-imagemin": "^2.2.1",
+    "gulp-jscs": "^3.0.0",
+    "gulp-jscs-stylish": "^1.1.2",
+    "gulp-jshint": "^1.6.3",
     "gulp-load-plugins": "^1.1.0",
     "gulp-minify-css": "^1.2.1",
     "gulp-minify-html": "^1.0.2",
@@ -21,6 +24,7 @@
     "gulp-uglify": "^1.2.0",
     "gulp-useref": "^2.1.0",
     "gulp-vulcanize": "^6.0.0",
+    "jshint-stylish": "^2.0.0",
     "merge-stream": "^1.0.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.0.2",
@@ -29,7 +33,8 @@
   },
   "scripts": {
     "test": "gulp test:local",
-    "start": "gulp serve"
+    "start": "gulp serve",
+    "lint": "gulp lint"
   },
   "engines": {
     "node": ">=0.10.0"
