@@ -431,7 +431,10 @@ Custom property | Description | Default
                 this._updateAfterDeletion(recipe.item, this.recipes, 'recipes');
                 this._updateAfterDeletion(recipe.item, this._checkedBoxes.refs, "_checkedBoxes.refs");
               }.bind(this));
+              // reset searchbar
               this.$.searchbar.resetQuery();
+              // reset buttons
+              this._showDelete = false;
               // notify user
               this._notifyOnSuccess("Elements successfully removed!");
             }.bind(this))
@@ -546,6 +549,12 @@ Custom property | Description | Default
             this._updateAfterDeletion(item, this._checkedBoxes.refs, "_checkedBoxes.refs");
           }
           return result;
+        },
+        /**
+         * init variable
+         */
+        ready: function() {
+          this._showDelete = false;
         }
       });
     })();
