@@ -242,6 +242,9 @@ Custom property | Description | Default
          * @private
          */
         _trackCheckedBoxes: function () {
+          if(this._checkedBoxes.number === 0){
+            this.$.searchbar.resetCheckbox();
+          }
           this._showDelete = this._checkedBoxes.number > 0;
         },
         /**
@@ -502,11 +505,12 @@ Custom property | Description | Default
             var listItem = el[e];
             if (listItem.isChecked) {
               listItem.isChecked = false;
-              this._checkedBoxes.number--;
               this._updateAfterDeletion(listItem.obj, this._checkedBoxes.refs, "_checkedBoxes.refs");
-              this._trackCheckedBoxes();
             }
           }
+          this._checkedBoxes.number = 0;
+          this._checkedBoxes.refs = [];
+          this._trackCheckedBoxes();
         },
         /**
          * Handler for the changed search query event of the search-element.
