@@ -182,31 +182,33 @@ Custom property | Description | Default
         },
         /**
          * Get User Data from Github
-         * @param response
+         *
+         * @param {Object} response
          * @private
-         * @method _getUserData
+         * @function
          */
         _getUserData: function(response) {
           this._fillUserData(response.detail.response);
         },
         /**
          * Fill User Data to Element
-         * @param user
+         *
+         * @param {Object} user
          * @private
-         * method _fillUserData
+         * @function
          */
         _fillUserData: function(user) {
-          this.$["userAvatarImg"].src = user.avatar_url;
-          this.$["userName"].textContent = user.name;
-          this.$["userAccount"].textContent = user.login;
-          this.$["userRepos"].textContent = user.public_repos;
-          this.$["userFollowers"].textContent = user.followers;
-          this.$["userCard"].classList.remove("spinner");
-          this.$["userData"].classList.remove("hide-element");
-          this.$["userStats"].classList.remove("hide-element");
-          this.$["userGithubUrl"].href = user.html_url;
-          this.$["userReposUrl"].href = user.html_url.concat("?tab=repositories");
-          this.$["userFollowersUrl"].href = user.html_url.concat("/followers");
+          this.$.userAvatarImg.src = user.avatar_url;
+          this.$.userName.textContent = user.name;
+          this.$.userAccount.textContent = user.login;
+          this.$.userRepos.textContent = user.public_repos;
+          this.$.userFollowers.textContent = user.followers;
+          this.$.userCard.classList.remove("spinner");
+          this.$.userData.classList.remove("hide-element");
+          this.$.userStats.classList.remove("hide-element");
+          this.$.userGithubUrl.href = user.html_url;
+          this.$.userReposUrl.href = user.html_url.concat("?tab=repositories");
+          this.$.userFollowersUrl.href = user.html_url.concat("/followers");
         }
       });
     })();

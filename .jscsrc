@@ -4,5 +4,6 @@
   "disallowTrailingWhitespace": null,
   "maximumLineLength": 120,
   "excludeFiles": ["node_modules/**"],
-  "validateQuoteMarks": "\""
+  "validateQuoteMarks": "\"",
+  "requireCamelCaseOrUpperCaseIdentifiers" : {"ignoreProperties": true}
 }

@@ -179,15 +179,16 @@ var SocoboAuth = (function() {
      * @param {String} provider
      * @param {Object} userObj
      * @param {Boolean} isAdmin
+     * @param {Boolean} hasTermsAccepted
      * @return {Promise}
      */
-    var registerUserAndLogin = function(baseURL, provider, userObj, isAdmin) {
+    var registerUserAndLogin = function(baseURL, provider, userObj, isAdmin, hasTermsAccepted) {
       if (userObj === null) {
-        return loginWithProvider(baseURL ,provider, true, isAdmin);
+        return loginWithProvider(baseURL ,provider, true, isAdmin, hasTermsAccepted);
       } else {
         return _createUser(baseURL, userObj)
           .then(function() {
-            return loginWithEmailaddress(baseURL ,userObj, true, isAdmin);
+            return loginWithEmailaddress(baseURL ,userObj, true, isAdmin, hasTermsAccepted);
           }.bind(this))
           .catch(function(err) {
             return err;
