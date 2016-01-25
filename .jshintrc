@@ -30,6 +30,7 @@
     "SocoboRanking": true,
     "RecipeDao": true,
     "ImageService": true,
-    "CloneModule": true
+    "CloneModule": true,
+    "SocoboGrocery": true
   }
 }

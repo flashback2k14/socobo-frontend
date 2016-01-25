@@ -1,3 +1,4 @@
+/* exported SocoboGrocery */
 var SocoboGrocery = (function() {
   /**
    * Singleton Instance
@@ -39,7 +40,6 @@ var SocoboGrocery = (function() {
      *
      * @param {Object} err
      * @private
-     * @function
      */
     var _onError = function(err) {
       if (err) {
@@ -48,19 +48,9 @@ var SocoboGrocery = (function() {
     };
 
     /**
-     * Register Changed Listener for active and archive Items
-     *
-     * @function
-     */
-    var registerGroceryItemListeners = function() {
-      _registerGroceryActiveListeners();
-      _registerGroceryArchiveListeners();
-    };
-    /**
      * Register Changed Listener for active Items
      *
      * @private
-     * @function
      */
     var _registerGroceryActiveListeners = function() {
       _refActive.on("child_added", function(snapshot) {
@@ -74,18 +64,24 @@ var SocoboGrocery = (function() {
      * Register Changed Listener for archive Items
      *
      * @private
-     * @function
      */
     var _registerGroceryArchiveListeners = function() {
       _refArchive.on("child_added", function(snapshot) {
         _ctx.fire("grocery-archive-item-added", {key: snapshot.key(), desc: snapshot.val().desc});
       }, _onError);
     };
+
+    /**
+     * Register Changed Listener for active and archive Items
+     */
+    var registerGroceryItemListeners = function() {
+      _registerGroceryActiveListeners();
+      _registerGroceryArchiveListeners();
+    };
     /**
      * Add Item to active List
      *
      * @param {Object} item
-     * @function
      */
     var addItemToActiveList = function(item) {
       _refActive.push(item, _onError);
@@ -94,7 +90,6 @@ var SocoboGrocery = (function() {
      * Remove Item from active List
      *
      * @param {Object} item
-     * @function
      */
     var removeItemFromActiveList = function(item) {
       var removePath = new Firebase(_activeItemsRoute + "/" + item.key);
@@ -104,7 +99,6 @@ var SocoboGrocery = (function() {
      * Add Item to archive List
      *
      * @param {Object} item
-     * @function
      */
     var addItemToArchiveList = function(item) {
       _refArchive.push(item, _onError);
@@ -113,7 +107,6 @@ var SocoboGrocery = (function() {
      * Remove Item from archive List
      *
      * @param {Object} item
-     * @function
      */
     var removeItemFromArchiveList = function(item) {
       var removePath = new Firebase(_archiveItemsRoute + "/" + item.key);

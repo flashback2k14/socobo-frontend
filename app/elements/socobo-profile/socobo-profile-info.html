@@ -399,9 +399,11 @@ Custom property | Description | Default
          * @method _toggleEditInformationSection
          */
         _toggleEditInformationSection: function(e) {
-          ProfileUtil
-            .getInstance(this)
-            .toggleInformationArea(this.$.showInfoStandard, this.$.editInfoStandard, this.$.showInfoBio, this.$.editInfoBio, e);
+          ProfileUtil.getInstance()
+            .toggleInformationArea(
+              this.$.showInfoStandard, this.$.editInfoStandard,
+              this.$.showInfoBio, this.$.editInfoBio, e
+            );
         },
 
         /**
@@ -444,7 +446,7 @@ Custom property | Description | Default
          * @member _changeEmailAddress
          */
         _changeEmailAddress: function(e) {
-          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+          this._adminSection = ProfileUtil.getInstance().toggleRightAdminContainerElements(e);
         },
         /**
          * Toggle Change Password
@@ -453,7 +455,7 @@ Custom property | Description | Default
          * @method _changePassword
          */
         _changePassword: function(e) {
-          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+          this._adminSection = ProfileUtil.getInstance().toggleRightAdminContainerElements(e);
         },
         /**
          * Toggle Reset Password Section
@@ -462,7 +464,7 @@ Custom property | Description | Default
          * @method _resetPassword
          */
         _resetPassword: function(e) {
-          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+          this._adminSection = ProfileUtil.getInstance().toggleRightAdminContainerElements(e);
         },
         /**
          * Toggle Delete Account Section
@@ -471,7 +473,7 @@ Custom property | Description | Default
          * @method _deleteAccount
          */
         _deleteAccount: function(e) {
-          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+          this._adminSection = ProfileUtil.getInstance().toggleRightAdminContainerElements(e);
         },
 
         /**
@@ -531,7 +533,7 @@ Custom property | Description | Default
             default:
               alert("no valid operation chosen!");
           }
-          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+          this._adminSection = ProfileUtil.getInstance().toggleRightAdminContainerElements(e);
         },
         /**
          * Clear Input Fields

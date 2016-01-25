@@ -1,3 +1,4 @@
+/* exported SocoboAuth */
 var SocoboAuth = (function() {
   /**
    * Instance stores a reference to the Singleton
@@ -96,28 +97,6 @@ var SocoboAuth = (function() {
       }
     };
     /**
-     * register user on firebase and log user in
-     *
-     * @param {String} baseURL
-     * @param {String} provider
-     * @param {Object} userObj
-     * @param {Boolean} isAdmin
-     * @return {Promise}
-     */
-    var registerUserAndLogin = function(baseURL, provider, userObj, isAdmin) {
-      if (userObj === null) {
-        return loginWithProvider(baseURL ,provider, true, isAdmin);
-      } else {
-        return _createUser(baseURL, userObj)
-          .then(function() {
-            return loginWithEmailaddress(baseURL ,userObj, true, isAdmin);
-          }.bind(this))
-          .catch(function(err) {
-            return err;
-          });
-      }
-    };
-    /**
      * ToDo: Generate API Keys for
      *  - Facebook
      * auth user with social media provider
@@ -192,6 +171,28 @@ var SocoboAuth = (function() {
           }
         }.bind(this));
       });
+    };
+    /**
+     * register user on firebase and log user in
+     *
+     * @param {String} baseURL
+     * @param {String} provider
+     * @param {Object} userObj
+     * @param {Boolean} isAdmin
+     * @return {Promise}
+     */
+    var registerUserAndLogin = function(baseURL, provider, userObj, isAdmin) {
+      if (userObj === null) {
+        return loginWithProvider(baseURL ,provider, true, isAdmin);
+      } else {
+        return _createUser(baseURL, userObj)
+          .then(function() {
+            return loginWithEmailaddress(baseURL ,userObj, true, isAdmin);
+          }.bind(this))
+          .catch(function(err) {
+            return err;
+          });
+      }
     };
     /**
      * Provide public functions

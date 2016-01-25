@@ -2,7 +2,7 @@
   "preset": "google",
   "disallowSpacesInAnonymousFunctionExpression": null,
   "disallowTrailingWhitespace": null,
-  "maximumLineLength": 100,
+  "maximumLineLength": 110,
   "excludeFiles": ["node_modules/**"],
   "validateQuoteMarks": "\""
 }
