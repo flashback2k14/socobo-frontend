@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>socobo-element-list-item basic tests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../../elements/elements.html">
+</head>
+<body>
+
+  <test-fixture id="Buttons">
+    <template>
+      <socobo-element-buttons></socobo-element-buttons>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('<socobo-element-buttons>', function() {
+      var buttonGroup;
+      var addButton;
+      var deleteButton;
+
+      setup(function() {
+        buttonGroup = fixture('Buttons');
+        addButton = buttonGroup.querySelector(".button-add");
+        deleteButton = buttonGroup.querySelector(".button-delete");
+      });
+
+      test('exists', function(done) {
+        expect(buttonGroup).to.not.be.eql(undefined);
+        done();
+      });
+
+      test("has two paper fabs", function(done) {
+        expect(buttonGroup.querySelectorAll("paper-fab").length).to.be.eql(2);
+        done();
+      });
+
+      test("has a paper-fab with add icon", function (done) {
+        var fabs = buttonGroup.querySelectorAll("paper-fab");
+        expect(Array.from(fabs).some(function (fab) {
+          return fab.icon === "add";
+        })).to.be.eql(true);
+        done();
+      });
+
+      test("has a paper-fab with delete icon", function (done) {
+        var fabs = buttonGroup.querySelectorAll("paper-fab");
+        expect(Array.prototype.slice.call(fabs).some(function (fab) {
+          return fab.icon === "delete";
+        })).to.be.eql(true);
+        done();
+      });
+
+      test('delete button is hidden', function (done) {
+        expect(deleteButton.hidden).to.be.eql(true);
+        done();
+      });
+
+      test("clicking the add/create button fires an add-item event", function(done) {
+        buttonGroup.addEventListener('add-item', function (e) {
+          done();
+        });
+
+
+          MockInteractions.tap(addButton);
+      });
+
+      test("clicking the delete button fires a delete-items event", function(done) {
+        buttonGroup.addEventListener('delete-items', function (e) {
+          done();
+        });
+
+        MockInteractions.tap(deleteButton);
+      });
+
+      test("setting showDelete shows the delete button", function (done) {
+        buttonGroup.showDelete = true;
+        expect(deleteButton.hidden).to.be.eql(false);
+        expect(addButton.hidden).to.be.eql(true);
+        done();
+      })
+
+    });
+  </script>
+</body>
+</html>

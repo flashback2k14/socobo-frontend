@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>socobo-element-buttons Demo</title>
+    <link rel="import" href="elements.html">
+    <style>
+      .buttons-add {
+        position: fixed;
+        top: 36px;
+        right: 80px;
+        --socobo-style-action-btn-add-color: var(--accent-color);
+        height: 48px;
+        width: 48px;
+      }
+      .buttons-delete {
+        position: fixed;
+        top: 106px;
+        right: 80px;
+        --socobo-style-action-btn-add-color: var(--accent-color);
+        height: 48px;
+        width: 48px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <socobo-element-buttons class="buttons-add"></socobo-element-buttons>
+      <socobo-element-buttons class="buttons-delete" show-delete></socobo-element-buttons>
+      <div id="message"></div>
+    </div>
+
+    <script type="text/javascript">
+      window.addEventListener("WebComponentsReady", function() {
+        document.addEventListener("add-item", function(e) {
+          document.querySelector("#message").textContent = "Add Button clicked!";
+        });
+        document.addEventListener("delete-items", function(e) {
+          document.querySelector("#message").textContent = "Delete Button clicked!";
+        });
+      });
+    </script>
+  </body>
+</html>

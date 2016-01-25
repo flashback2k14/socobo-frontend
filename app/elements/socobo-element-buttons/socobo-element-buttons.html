@@ -1,0 +1,68 @@
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+--socobo-style-action-btn-add-color | Background color of the add paper-fab | --accent-color
+--socobo-style-action-btn-delete-color | Background color of the delete paper-fab | --accent-color
+--socobo-style-action-btn-color | Background color of the paper-fabs on keyboard focus | --accent-color
+
+@demo demo/socobo-element-buttons/demo.html
+-->
+
+<dom-module id="socobo-element-buttons">
+  <style>
+    :host{
+      display: block;
+    }
+
+    .button-add {
+      --paper-fab-background: var(--socobo-style-action-btn-add-color);
+      --paper-fab-keyboard-focus-background: var(--socobo-style-action-btn-color);
+    }
+
+    .button-delete {
+      --paper-fab-background: var(--socobo-style-action-btn-delete-color);
+      --paper-fab-keyboard-focus-background: var(--socobo-style-action-btn-color);
+    }
+  </style>
+
+  <template>
+    <paper-fab hidden$="{{!showDelete}}" class="button-delete" icon="delete" on-tap="_delete"></paper-fab>
+    <paper-fab hidden$="{{showDelete}}" class="button-add" icon="add" on-tap="_add"></paper-fab>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  Polymer({
+    is: 'socobo-element-buttons',
+    /** Event that is fired when the add button is clicked
+     * @event add-item
+     * */
+    /** Event that is fired when the delete button is clicked
+     * @event delete-items
+     * */
+    properties: {
+      /**
+       * Property whose state determines which button to show.
+       * @property show-delete
+       */
+      showDelete: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    _delete: function (e) {
+      this.fire("delete-items");
+    },
+
+    _add: function (e) {
+      this.fire("add-item");
+    }
+
+
+  });
+})();
+</script>

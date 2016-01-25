@@ -76,23 +76,10 @@ Custom property | Description | Default
         --paper-spinner-layer-4-color: var(--socobo-recipe-style-spinner-color-level4);
       }
 
-      paper-fab {
+      .action_btn {
         position: fixed;
         top: 36px;
         right: 80px;
-      }
-
-      .action_btn{
-        --paper-fab-background: var(--socobo-recipe-style-action-btn-color);
-        --paper-fab-keyboard-focus-background: var(--socobo-recipe-style-action-btn-color);
-      }
-
-      paper-fab.add {
-        display: block;
-      }
-
-      paper-fab.clear {
-        display: none;
       }
 
       /* NOTIFICATION */
@@ -166,19 +153,13 @@ Custom property | Description | Default
       </template>
     </div>
     <!-- Add -->
-    <paper-fab
-      id="add"
-      class="action_btn add"
-      icon="add"
-      on-tap="_addRecipe">
-    </paper-fab>
-    <!-- Clear -->
-    <paper-fab
-      id="clear"
-      class="action_btn clear"
-      icon="delete"
-      on-tap="_removeAllChecked">
-    </paper-fab>
+    <socobo-element-buttons
+      class="action_btn"
+      on-add-item="_addRecipe"
+      on-delete-items="_removeAllChecked"
+      show-delete="{{_showDelete}}">
+    </socobo-element-buttons>
+
     <!-- Notification -->
     <paper-toast id="errorNotification" class="error-note"></paper-toast>
     <paper-toast id="successNotification" class="success-note"></paper-toast>
@@ -261,11 +242,7 @@ Custom property | Description | Default
          * @private
          */
         _trackCheckedBoxes: function () {
-          if (this._checkedBoxes.number > 0) {
-            this._switchButton(this.$.clear, this.$.add);
-          } else {
-            this._switchButton(this.$.add, this.$.clear);
-          }
+          this._showDelete = this._checkedBoxes.number > 0;
         },
         /**
          * Handler for the click event fired by the item-element.
@@ -451,7 +428,10 @@ Custom property | Description | Default
                 this._updateAfterDeletion(recipe.item, this.recipes, "recipes");
                 this._updateAfterDeletion(recipe.item, this._checkedBoxes.refs, "_checkedBoxes.refs");
               }.bind(this));
+              // reset searchbar
               this.$.searchbar.resetQuery();
+              // reset buttons
+              this._showDelete = false;
               // notify user
               this._notifyOnSuccess("Elements successfully removed!");
             }.bind(this))
@@ -567,6 +547,12 @@ Custom property | Description | Default
             this._updateAfterDeletion(item, this._checkedBoxes.refs, "_checkedBoxes.refs");
           }
           return result;
+        },
+        /**
+         * init variable
+         */
+        ready: function() {
+          this._showDelete = false;
         }
       });
     })();
