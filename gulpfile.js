@@ -134,13 +134,21 @@ gulp.task("lint", ["ensureFiles"], function() {
   .pipe($.jshint.reporter("jshint-stylish"));
 });
 
+gulp.task("imagesAbout", function() {
+  return imageOptimizeTask("app/elements/socobo-about/images/*", dist("images"));
+});
+
 // Optimize images
-gulp.task("images", function() {
+gulp.task("images", ["imagesAbout"], function() {
   return imageOptimizeTask("app/images/**/*", dist("images"));
 });
 
+gulp.task("copyAbout", function() {
+  return gulp.src(["app/elements/socobo-about/data/*"]).pipe(gulp.dest(dist("elements/data")));
+});
+
 // Copy all files at the root level (app)
-gulp.task("copy", function() {
+gulp.task("copy", ["copyAbout"], function() {
   var app = gulp.src([
     "app/*",
     "!app/test",
