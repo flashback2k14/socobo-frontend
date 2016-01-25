@@ -90,11 +90,11 @@ Custom property | Description | Default
     <paper-material id="wrapper" class="short_info" elevation="0" >
       <span class="check"><paper-checkbox checked="{{isChecked}}" on-click="changeCheckBox"></paper-checkbox></span>
       <span class="desc" on-click="showElement">{{obj.desc}}</span><span class="info" on-click="showElement">{{obj.info}}</span>
-      <span class="edit"><paper-icon-button icon="create" on-click="editElement"></paper-icon-button></span>
-      <span class="delete"><paper-icon-button icon="delete" on-click="_showConfirmation"></paper-icon-button></span>
+      <span class="edit"><paper-icon-button icon="[[editIcon]]" on-click="editElement"></paper-icon-button></span>
+      <span class="delete"><paper-icon-button icon="[[deleteIcon]]" on-click="_showConfirmation"></paper-icon-button></span>
     </paper-material>
     <paper-dialog id="deletionConfirmation" class="deletionConfirmation" modal>
-      <p>Do you realy want to remove</p>
+      <p>[[dialogText]]</p>
       <h3 id="currentItem"></h3>
       <div class="buttons">
         <paper-button class="btnDeleteOk" dialog-dismiss autofocus>CANCEL</paper-button>
@@ -107,7 +107,7 @@ Custom property | Description | Default
 <script>
 (function() {
   Polymer({
-    is: 'socobo-element-list-item',
+    is: "socobo-element-list-item",
     behaviors: [
       Polymer.NeonAnimationRunnerBehavior
     ],
@@ -121,6 +121,18 @@ Custom property | Description | Default
       isChecked : {
         type : Boolean,
         value : false
+      },
+      editIcon: {
+        type : String,
+        value: "create"
+      },
+      deleteIcon: {
+        type : String,
+        value : "delete"
+      },
+      dialogText: {
+        type : String,
+        value :  "Do you really want to remove?"
       },
       animationConfig : {
         value : function(){

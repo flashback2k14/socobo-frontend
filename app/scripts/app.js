@@ -19,12 +19,15 @@
   var menuItemRecipe = null;
   var menuItemInventory = null;
   var menuItemProfile = null;
+  var menuItemAbout = null;
   // Socobo Elements
   var elAuth = null;
   var elRanking = null;
+  var elGroceryList = null;
   var elInventory = null;
   var elRecipe = null;
   var elProfile = null;
+  var elAbout = null;
   // Other
   var infoToast = null;
 
@@ -51,12 +54,15 @@
     menuItemRecipe = document.querySelector("#menuItemRecipe");
     menuItemInventory = document.querySelector("#menuItemInventory");
     menuItemProfile = document.querySelector("#menuItemProfile");
+    menuItemAbout = document.querySelector("#menuItemAbout");
     // Socobo Elements
     elAuth = document.querySelector("#elAuth");
     elRanking = document.querySelector("#elRanking");
+    elGroceryList = document.querySelector("#elGroceryList");
     elInventory = document.querySelector("#elInventory");
     elRecipe = document.querySelector("#elRecipe");
     elProfile = document.querySelector("#elProfile");
+    elAbout = document.querySelector("#elAbout");
     // Other
     infoToast = document.querySelector("#info-toast");
     // init UserInfo
@@ -69,8 +75,9 @@
     } else {
       // Show Menu Items
       Util.toggleMenuItems([menuItemLogin, menuItemHome, menuItemRecipe, menuItemInventory, menuItemProfile]);
-      // load Ranking, Recipes and Profile
+      // load Ranking, Grocery List, Recipes and Profile
       elRanking.loadData();
+      elGroceryList.loadData();
       elRecipe.loadData();
       elProfile.loadData();
       // navigate to home
@@ -97,7 +104,7 @@
    * AUTH
    */
   app.closeAuthElement = function() {
-    app.route = "home";
+    app.route = "about";
   };
   app.loginSuccessful = function(e) {
     // declare variable
@@ -112,32 +119,30 @@
     Util.toggleMenuItems([menuItemLogin, menuItemHome, menuItemRecipe, menuItemInventory, menuItemProfile]);
     // set UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
-    // load Ranking, Recipes and Profile
+    // load Ranking, Grocery List, Recipes and Profile
     elRanking.loadData();
+    elGroceryList.loadData();
     elRecipe.loadData();
     elProfile.loadData();
     // go to the home element
     app.route = "home";
   };
   app.loginFailed = function(e) {
-    // show toast to inform the user
+    // get error object
     var errorObj = e.detail.error;
-    infoToast.text = "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message;
-    infoToast.style.background = "#FF3333";
-    infoToast.style.color = "#EEEEEE";
-    infoToast.toggle();
+    // show toast to inform the user
+    Util.showToast(infoToast, "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message, "#FF3333", "#EEEEEE");
   };
   app.passwordsMisMatching = function() {
     // show toast to inform the user
-    infoToast.text = "Your Passwords does not match! Please retry!";
-    infoToast.toggle();
+    Util.showToast(infoToast, "Your Passwords does not match! Please retry!", "#FF3333", "#EEEEEE");
   };
   /**
    * RANKING
    */
   app.handleAddMissingItemsToGroceryList = function(e) {
     var missingItems = e.detail;
-    console.log("Missing Items for Grocery List:", missingItems);
+    elGroceryList.addToList(missingItems);
   };
   /**
    * PROFILE

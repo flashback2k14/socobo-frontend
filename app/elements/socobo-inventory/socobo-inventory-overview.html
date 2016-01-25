@@ -44,7 +44,7 @@ Custom property | Description | Default
   <script>
     (function () {
       Polymer({
-        is: 'socobo-inventory-overview',
+        is: "socobo-inventory-overview",
         /**
          * This event is fired if all items have been (un-)checked. at once<br/>
          * @event check-all
@@ -69,7 +69,7 @@ Custom property | Description | Default
         },
 
         _setHidden: function (item, query) {
-          return !(query === null || typeof query === 'undefined' || item.desc.indexOf(query) != -1 || item.info.indexOf(query) != -1);
+          return !(query === null || typeof query === "undefined" || item.desc.indexOf(query) != -1 || item.info.indexOf(query) != -1);
         },
 
         _searchQueryChanged: function(e) {

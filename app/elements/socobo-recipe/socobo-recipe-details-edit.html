@@ -238,7 +238,6 @@ Custom property | Description | Default
               <iron-image
                 id="edit_placeholder"
                 class="recipeImg_image"
-                src="placeholder.png"
                 sizing="cover"
                 preload="true"
                 fade
@@ -335,13 +334,13 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-recipe-details-edit',
+        is: "socobo-recipe-details-edit",
 
         /**
          * LISTENERS
          */
         listeners: {
-          'editfileChooser.change': 'encode'
+          "editfileChooser.change": "encode"
         },
 
         /**
@@ -448,7 +447,7 @@ Custom property | Description | Default
          */
         removeStep : function(e) {
           var model = e.model;
-          var itemIndex = model.get('index');
+          var itemIndex = model.get("index");
           this.cutElementOffArray(itemIndex, "recipe_inputs");
         },
 
@@ -457,8 +456,8 @@ Custom property | Description | Default
          */
         _removeIngr : function(e) {
           var model = e.model;
-          var itemIndex = model.get('index');
-          this.cutElementOffArray(itemIndex, 'ingredient_inputs');
+          var itemIndex = model.get("index");
+          this.cutElementOffArray(itemIndex, "ingredient_inputs");
         },
 
         /**
@@ -472,7 +471,7 @@ Custom property | Description | Default
          * CLEAR
          */
         clearInputFields : function() {
-          var inputFields = Polymer.dom(this.$.dialog).querySelectorAll('.inputs');
+          var inputFields = Polymer.dom(this.$.dialog).querySelectorAll(".inputs");
           var image = document.querySelector("#edit_image");
           var placeholder = document.querySelector("#edit_placeholder");
           var chooser = document.querySelector("#editfileChooser");
@@ -563,7 +562,7 @@ Custom property | Description | Default
           var checkContainer = function(obj, container){
             return obj.recipe[container].lenght > 0;
           };
-          var titleExists = check(this, 'desc');
+          var titleExists = check(this, "desc");
           var textExists = check(this, "text");
           var stepsExist = this.recipe.clone.steps.length > 0;
           var ingredientsExist = this.recipe.clone.ingredients.length > 0;

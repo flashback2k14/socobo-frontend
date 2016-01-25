@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>socobo about basic tests</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../../elements/elements.html">
+</head>
+<body>
+
+  <test-fixture id="SocoboAbout">
+    <template>
+      <socobo-about></socobo-about>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite("<socobo-about>", function() {
+      var socoboAbout;
+
+      setup(function() {
+        socoboAbout = fixture("SocoboAbout");
+      });
+
+
+    });
+  </script>
+</body>
+</html>

@@ -176,7 +176,7 @@ Custom property | Description | Default
   <script>
     (function () {
       Polymer({
-        is: 'socobo-recipe-overview',
+        is: "socobo-recipe-overview",
         /**
          *Public properties
          * - reicpes [Array]
@@ -269,6 +269,7 @@ Custom property | Description | Default
           RecipeDao.getInstance(this.userLogin)
             .getMeasurements()
             .then(function(data){
+              //Pass clone object and original object to the recipe dialog
               this.$.editDialog.recipe = {original: e.detail, clone: eClone};
               this.$.editDialog.measurements = data;
               this.$.editDialog.initIngredients();
@@ -279,10 +280,6 @@ Custom property | Description | Default
           catch(function(error){
             this._notifyOnError(error);
           }.bind(this));
-
-          //Pass clone object and original object to the recipe dialog
-
-
         },
         /**
          * Handle for the add event fired by the main action button.
@@ -295,13 +292,13 @@ Custom property | Description | Default
             .getMeasurements()
             .then(function(data){
               this.$.addDialog.measurements = data;
+              this.$.addDialog.state = "add";
+              this.$.addDialog.toggleDialog();
+              this.$.addDialog.clearInputFields();
             }.bind(this)).
-          catch(function(error){
-            this._notifyOnError(error);
-          }.bind(this));
-          this.$.addDialog.state = "add";
-          this.$.addDialog.toggleDialog();
-          this.$.addDialog.clearInputFields();
+            catch(function(error){
+              this._notifyOnError(error);
+            }.bind(this));
         },
         /**
          * Loads all recipes from the database and updates them
@@ -330,7 +327,7 @@ Custom property | Description | Default
             .remove(e.detail)
             .then(function (success) {
               this._notifyOnSuccess(success.value);
-              this._updateAfterDeletion(e.detail, this.recipes, 'recipes');
+              this._updateAfterDeletion(e.detail, this.recipes, "recipes");
             }.bind(this))
             .catch(function (error) {
               this._notifyOnError(error.value);
@@ -428,7 +425,7 @@ Custom property | Description | Default
               // iterate over successful removed recipes
               success.forEach(function (recipe) {
                 // cut recipe from bounded arrays
-                this._updateAfterDeletion(recipe.item, this.recipes, 'recipes');
+                this._updateAfterDeletion(recipe.item, this.recipes, "recipes");
                 this._updateAfterDeletion(recipe.item, this._checkedBoxes.refs, "_checkedBoxes.refs");
               }.bind(this));
               // reset searchbar
@@ -530,14 +527,15 @@ Custom property | Description | Default
          * @private
          */
         _setHidden: function (item, searchquery) {
+          var lowerCaseQuery = "";
           //check the title of the item
           if(searchquery !== null){
-            var lowerCaseQuery = searchquery.toLowerCase();
+            lowerCaseQuery = searchquery.toLowerCase();
           }else{
             lowerCaseQuery = searchquery;
           }
           var checkDesc = !(lowerCaseQuery === null
-          || typeof lowerCaseQuery === 'undefined'
+          || typeof lowerCaseQuery === "undefined"
           || (item.desc).toLowerCase().indexOf(lowerCaseQuery) != -1);
           var checkInfo = false;
           //if info is available it will be checked else not

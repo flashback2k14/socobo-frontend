@@ -79,7 +79,7 @@ var CloneModule = CloneModule || (function(){
    * @private
    */
   function _isArray(o) {
-    return Object.prototype.toString.call(o) === '[object Array]';
+    return Object.prototype.toString.call(o) === "[object Array]";
   }
 
   /**

@@ -18,7 +18,7 @@ Custom property | Description | Default
     <style>
       :host {
         display: block;
-        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
       }
       .container {
         width: 100%;
@@ -28,7 +28,7 @@ Custom property | Description | Default
         @apply(--socobo-auth-container-theme);
       }
       .background-image {
-        background-image: url('http://lorempixel.com/400/200/food/');
+        background-image: url("http://lorempixel.com/400/200/food/");
         background-size: cover;
         height: 100%;
         width: 100%;
@@ -139,7 +139,7 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-auth',
+        is: "socobo-auth",
         /**
          * This Event is fired if the close button is pressed. <br/>
          * @event handle-close-auth
@@ -176,7 +176,7 @@ Custom property | Description | Default
          * @method closeAuth
          */
         _closeAuth: function() {
-          this.fire('handle-close-auth');
+          this.fire("handle-close-auth");
         },
         /**
          * Method for firing custom event to handle successful login. <br/>
@@ -185,7 +185,7 @@ Custom property | Description | Default
          * @method handleLoginSuccessful
          */
         _handleLoginSuccessful: function(e) {
-          this.fire('handle-successful-login', {'user': e.detail});
+          this.fire("handle-successful-login", {"user": e.detail});
         },
         /**
          * Method for firing custom event to handle failed login. <br/>
@@ -194,7 +194,7 @@ Custom property | Description | Default
          * @method handleLoginFailed
          */
         _handleLoginFailed: function(e) {
-          this.fire('handle-failed-login', {'error': e.detail});
+          this.fire("handle-failed-login", {"error": e.detail});
         },
         /**
          * Method for firing custom event to handle mismatching passwords in Register Element. <br/>
@@ -202,7 +202,7 @@ Custom property | Description | Default
          * @method handlePasswordsNotMatching
          */
         _handlePasswordsNotMatching: function() {
-          this.fire('handle-passwords-not-mathing');
+          this.fire("handle-passwords-not-mathing");
         },
         /**
          * Method for showing Register Element. <br/>
