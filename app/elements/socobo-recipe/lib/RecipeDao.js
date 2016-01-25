@@ -1,4 +1,5 @@
-var RecipeDao = (function(){
+/* exported RecipeDao */
+var RecipeDao = (function() {
   /**
    * Instance stores a reference to the Singleton
    */
@@ -6,22 +7,34 @@ var RecipeDao = (function(){
 
   /**
    * Public API
-   * @param user
+   *
+   * @param {Object} user
    * @returns {{add: add, update: update, remove: remove, getAll: getAll}}
-     */
+   */
   function init(user) {
 
     /**
+     * Private Variables
+     *
+     * @type {String|String}
+     * @private
+     */
+    var _baseUrl = user.firebaseUrl;
+    var _id = user.userId;
+
+    /**
      * Get Global Recipes URL
+     *
      * @returns {string}
      * @private
      */
     var _getGlobalRecipesUrl = function() {
-      return _baseUrl + "recipes/"
+      return _baseUrl + "recipes/";
     };
 
     /**
      * Get User Recipes URL
+     *
      * @returns {string}
      * @private
      */
@@ -30,25 +43,28 @@ var RecipeDao = (function(){
     };
     /**
      * Get measurements url
+     *
      * @returns {string}
      * @private
      */
-    var _getGlobalMeasurementsUrl = function(){
+    var _getGlobalMeasurementsUrl = function() {
       return _baseUrl + "measurements/";
-    }
+    };
     /**
      * Private Variables
+     *
+     * @type {String|String|String}
+     * @private
      */
-    var _baseUrl = user.firebaseUrl;
-    var _id = user.userId;
     var _recipesUrl = _getGlobalRecipesUrl();
     var _measurementsUrl = _getGlobalMeasurementsUrl();
     var _userUrl = _getUserRecipesUrl();
 
     /**
      * Check Object contains Property
-     * @param obj
-     * @param propName
+     *
+     * @param {Object} obj
+     * @param {String} propName
      * @returns {boolean}
      * @private
      */
@@ -58,15 +74,16 @@ var RecipeDao = (function(){
 
     /**
      * Fill Array withh Properties
-     * @param source
-     * @param dest
-     * @param arrProp
+     *
+     * @param {Object} source
+     * @param {Object} dest
+     * @param {String} arrProp
      * @private
      */
     var _fillArrayProperty = function(source, dest, arrProp) {
-      if(_checkProperty(dest, arrProp)){
+      if (_checkProperty(dest, arrProp)) {
         for (var j in source[arrProp]) {
-          if(_checkProperty(source[arrProp], j)){
+          if (_checkProperty(source[arrProp], j)) {
             (dest[arrProp]).push(source[arrProp][j]);
           }
         }
@@ -75,7 +92,8 @@ var RecipeDao = (function(){
 
     /**
      * Add Recipe on DB
-     * @param obj
+     *
+     * @param {Object} obj
      * @returns {Promise}
      */
     var add = function(obj) {
@@ -84,7 +102,7 @@ var RecipeDao = (function(){
         obj.userId = _id;
         // #1 save recipe under /recipes
         var dataGlobalRef = new Firebase(_recipesUrl);
-        var recipeRef = dataGlobalRef.push(obj, function (error) {
+        var recipeRef = dataGlobalRef.push(obj, function(error) {
           if (error) {
             reject({value: "Sorry a technical error occured while creating your recipe :("});
           } else {
@@ -92,7 +110,7 @@ var RecipeDao = (function(){
             var recipeId = recipeRef.key();
             // #3 Save recipe ref id to /users/recipes
             var dataRef = new Firebase(_userUrl);
-            dataRef.push({id : recipeId}, function (error) {
+            dataRef.push({id: recipeId}, function(error) {
               if (error) {
                 reject({value: "Sorry a technical error occured while saving your recipe :("});
               } else {
@@ -106,7 +124,8 @@ var RecipeDao = (function(){
 
     /**
      * Update Recipe on DB
-     * @param obj
+     *
+     * @param {Object} obj
      * @returns {Promise}
      */
     var update = function(obj) {
@@ -116,7 +135,7 @@ var RecipeDao = (function(){
       var newObj = {};
       for (var e in obj) {
         if (e !== "ref" && e !== "info") {
-          if(_checkProperty(obj, e)){
+          if (_checkProperty(obj, e)) {
             newObj[e] = obj[e];
           }
         }
@@ -126,7 +145,7 @@ var RecipeDao = (function(){
       //
       return new Promise(function(resolve, reject) {
         var dataRef = new Firebase(reference);
-        dataRef.set(newObj, function (error) {
+        dataRef.set(newObj, function(error) {
           if (error) {
             reject({value: "Sorry a technical error occured while updating your recipe :("});
           } else {
@@ -138,7 +157,8 @@ var RecipeDao = (function(){
 
     /**
      * Remove Recipe on DB
-     * @param obj
+     *
+     * @param {Object} obj
      * @returns {Promise}
      */
     var remove = function(obj)  {
@@ -146,7 +166,7 @@ var RecipeDao = (function(){
         var dataRef = new Firebase(obj.ref.toString());
         var userRef = new Firebase(obj.refUser);
         var counter = 0;
-        var onComplete = function (error) {
+        var onComplete = function(error) {
           if (error) {
             reject({value: "Sorry a technical error occured while deleting your recipe :("});
           } else {
@@ -164,6 +184,7 @@ var RecipeDao = (function(){
 
     /**
      * Get Recipe Ids from /user/recipes
+     *
      * @returns {Promise}
      * @private
      */
@@ -178,42 +199,17 @@ var RecipeDao = (function(){
             ids.push(item.val().id);
           });
           resolve({keys: idKeys, value: ids});
-        }, function(err){
+        }, function(err) {
           reject({value: err.message});
         });
       });
     };
 
     /**
-     * Get all Recipes from /recipes with ids
-     * @param keys
-     * @param ids
-     * @returns {Promise}
-     * @private
-     */
-    var _getRecipes = function(keys, ids) {
-      return new Promise(function(resolve, reject) {
-        // Promise Holder
-        var recipePromise = [];
-        // iterate over all recipe ids and get the recipe
-        ids.forEach(function(id, index) {
-          recipePromise.push(_getRecipe(keys[index], id));
-        });
-        // bundle all promise values to one promise
-        Promise.all(recipePromise)
-          .then(function(recipes) {
-            resolve(recipes);
-          })
-          .catch(function(error) {
-            reject(error.message);
-          });
-      });
-    };
-
-    /**
      * Get specific Recipe from /recipes with id
-     * @param key
-     * @param id
+     *
+     * @param {String} key
+     * @param {String} id
      * @returns {Promise}
      * @private
      */
@@ -245,7 +241,35 @@ var RecipeDao = (function(){
     };
 
     /**
+     * Get all Recipes from /recipes with ids
+     *
+     * @param {Array} keys
+     * @param {Array} ids
+     * @returns {Promise}
+     * @private
+     */
+    var _getRecipes = function(keys, ids) {
+      return new Promise(function(resolve, reject) {
+        // Promise Holder
+        var recipePromise = [];
+        // iterate over all recipe ids and get the recipe
+        ids.forEach(function(id, index) {
+          recipePromise.push(_getRecipe(keys[index], id));
+        });
+        // bundle all promise values to one promise
+        Promise.all(recipePromise)
+          .then(function(recipes) {
+            resolve(recipes);
+          })
+          .catch(function(error) {
+            reject(error.message);
+          });
+      });
+    };
+
+    /**
      * Get All Recipes from DB
+     *
      * @returns {Promise}
      */
     var getAll = function() {
@@ -264,14 +288,15 @@ var RecipeDao = (function(){
     };
     /**
      * Gets all measurements from the database
+     *
      * @returns {Promise}
      */
-    var getMeasurements = function(){
-      return new Promise(function(resolve, reject){
+    var getMeasurements = function() {
+      return new Promise(function(resolve, reject) {
         var ref = new Firebase(_measurementsUrl);
-        ref.once("value",function(data){
+        ref.once("value",function(data) {
           resolve(data.val());
-        },function(error){
+        },function(error) {
           reject(error.message);
         });
       });
@@ -281,18 +306,19 @@ var RecipeDao = (function(){
      * Public Functions
      */
     return {
-      add    : add,
-      update : update,
-      remove : remove,
-      getMeasurements : getMeasurements,
-      getAll : getAll
+      add: add,
+      update: update,
+      remove: remove,
+      getMeasurements: getMeasurements,
+      getAll: getAll
     };
   }
 
   return {
     /**
      * Get the Singleton instance if one exist or create one if it doesn't
-     * @param user
+     *
+     * @param {Object} user
      * @returns {Object}
      */
     getInstance: function(user) {
