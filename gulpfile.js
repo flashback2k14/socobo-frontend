@@ -117,23 +117,22 @@ gulp.task("ensureFiles", function(cb) {
 // Lint JavaScript
 gulp.task("lint", ["ensureFiles"], function() {
   return gulp.src([
-      "app/scripts/**/*.js",
-      "app/elements/**/*.js",
-      "app/elements/**/*.html",
-      "gulpfile.js"
-    ])
-    .pipe(reload({
-      stream: true,
-      once: true
-    }))
-
+    "app/scripts/**/*.js",
+    "app/elements/**/*.js",
+    "app/elements/**/*.html",
+    "gulpfile.js"
+  ])
+  .pipe(reload({
+    stream: true,
+    once: true
+  }))
   // JSCS has not yet a extract option
   .pipe($.if("*.html", $.htmlExtract({strip: true})))
   .pipe($.jshint())
   .pipe($.jscs())
   .pipe($.jscsStylish.combineWithHintResults())
-  .pipe($.jshint.reporter("jshint-stylish"))
-  .pipe($.if(!browserSync.active, $.jshint.reporter("fail")));
+  .pipe($.jshint.reporter("jshint-stylish"));
+  //.pipe($.if(!browserSync.active, $.jshint.reporter("fail"))); --> this shows the error message
 });
 
 // Optimize images
@@ -235,8 +234,7 @@ gulp.task("clean", function() {
 });
 
 // Watch files for changes & reload
-//gulp.task("serve", ["lint", "styles", "elements"], function() {
-gulp.task("serve", ["clean", "ensureFiles", "styles", "elements"], function() {
+gulp.task("serve", ["ensureFiles", "styles", "elements"], function() {
   browserSync({
     port: 5000,
     notify: false,
@@ -296,7 +294,7 @@ gulp.task("default", ["clean"], function(cb) {
     ["copy", "styles"],
     "elements",
     ["lint", "images", "fonts", "html"],
-    "vulcanize", // "cache-config",
+    "vulcanize", "cache-config",
     cb);
 });
 

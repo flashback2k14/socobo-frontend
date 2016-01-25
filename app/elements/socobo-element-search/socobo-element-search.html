@@ -52,19 +52,25 @@ Custom property | Description | Default
         --paper-checkbox-label-color: var(--text-primary-color);
         @apply(--socobo-element-search-style-checkbox);
       }
-      .hide-search-input-container {
+      .hide-element {
         display: none;
+      }
+      .show-element-flex {
+        display: flex;
+      }
+      .show-element-block {
+        display: block;
       }
       .style-search-input-container {
         @apply(--layout-horizontal);
         width: 93%;
-        display: flex;
         @apply(--socobo-element-style-search-search-input-container);
       }
       .style-search-query {
         @apply(--layout-flex);
         margin-top: var(--socobo-element-search-style-search-query-margin-top, -5px);
         margin-left: var(--socobo-element-search-style-search-query-margin-left, 30px);
+        margin-right: var(--socobo-element-search-style-search-query-margin-right, 20px);
         --paper-input-container-color: var(--text-primary-color);
         --paper-input-container-focus-color: var(--text-primary-color);
         --paper-input-container-input-color: var(--text-primary-color);
@@ -77,10 +83,16 @@ Custom property | Description | Default
         right: 15px;
         @apply(--socobo-element-search-style-btn-position);
       }
+      .style-btn-2-position {
+        @apply(--layout-end-justified);
+        position: absolute !important;
+        top: 5px;
+        right: 50px;
+        @apply(--socobo-element-search-style-btn-position);
+      }
       .style-clear-search-query {
         margin-top: var(--socobo-element-search-style-clear-search-query-margin-top, 10px);
         margin-left: var(--socobo-element-search-style-clear-search-query-margin-left, 10px);
-        display: none;
         @apply(--socobo-element-search-style-clear-search-query);
       }
       .style-toggle-search-container {
@@ -93,7 +105,7 @@ Custom property | Description | Default
       }
     </style>
 
-    <paper-material class="style-paper-material" elevation="3">
+    <paper-material class="style-paper-material" elevation="[[elevationHeight]]">
       <paper-toolbar class="style-paper-toolbar">
         <div class="style-search-container">
           <paper-checkbox
@@ -101,28 +113,42 @@ Custom property | Description | Default
             class="style-checkbox"
             on-click="checkAllItems">
           </paper-checkbox>
-          <div id="searchInputContainer" class="hide-search-input-container">
+          <div id="searchInputContainer" class$="[[_computeVisibilitySearchInputContainer(hideSearchInput)]]">
             <paper-input
               id="txtSearchQuery"
               class="style-search-query"
-              label="Search"
+              label$="[[_computeSearchInputLabel(hideSearchInput)]]"
               type="text"
               value="{{searchStr}}"
-              on-keyup="searchQueryChanged">
+              on-keyup="_searchQueryChanged">
             </paper-input>
           </div>
           <paper-icon-button
             id="btnClear"
-            class="style-btn-position style-clear-search-query"
+            class="style-btn-position style-clear-search-query hide-element"
             icon="clear"
             on-tap="_clearSearchQuery">
           </paper-icon-button>
           <paper-icon-button
             id="btnSearch"
-            class="style-btn-position style-toggle-search-container"
+            class$="[[_computeVisibilitySearchButton(hideSearchButton)]]"
             icon="search"
             on-tap="_toggleSearchElements">
           </paper-icon-button>
+          <!-- BEGIN - Added for Grocery List -->
+          <paper-icon-button
+            id="btnAddToGrocery"
+            class$="[[_computeVisibilityAddButton(hideSearchButton)]]"
+            icon="add-circle-outline"
+            on-tap="_addToGroceryList">
+          </paper-icon-button>
+          <paper-icon-button
+            id="btnClearToGrocery"
+            class$="[[_computeVisibilityClearButton(hideSearchButton)]]"
+            icon="remove-circle-outline"
+            on-tap="_clearForGroceryList">
+          </paper-icon-button>
+          <!-- END - Added for Grocery List -->
         </div>
       </paper-toolbar>
     </paper-material>
@@ -146,6 +172,41 @@ Custom property | Description | Default
          * @event changed-search-query
          */
         /**
+         * This Event is fired if the user add an item to the grocery list. <br/>
+         * `Detail`: Object: { item: "ITEM" } <br/>
+         * @event add-to-grocery-list
+         */
+        /**
+         * Element Properties
+         */
+        properties: {
+          /**
+           * ElevationHeight
+           */
+          elevationHeight: {
+            type: Number,
+            value: 3
+          },
+          /**
+           * HideSearchInput
+           */
+          hideSearchInput: {
+            type: Boolean,
+            value: false
+          },
+          /**
+           * HideSearchButton
+           */
+          hideSearchButton: {
+            type: Boolean,
+            value: false
+          }
+        },
+
+        /**
+         * PUBLIC API
+         */
+        /**
          * Method for firing event to check / uncheck all items. </br>
          * @method checkAllItems
          */
@@ -156,21 +217,14 @@ Custom property | Description | Default
             this.fire("uncheck-all-items");
           }
         },
-        /**
-         * Method for listening for search query input and firing event. </br>
-         * @method searchQueryChanged
-         */
-        searchQueryChanged: function() {
-          this.fire("changed-search-query", { searchQuery: this.searchStr });
-        },
 
         /**
          * Method for resetting the search query </br>
          * @method resetQuery
          */
         resetQuery: function() {
-          this.searchStr = "";
-          this.searchQueryChanged();
+          this.searchStr = null;
+          this._searchQueryChanged();
           this.$.chbCheckAllItems.checked = false;
         },
 
@@ -185,6 +239,87 @@ Custom property | Description | Default
         },
 
         /**
+         * Add item for editing in input field
+         * @param item
+         * @method editItemForGroceryList
+         */
+        editItemForGroceryList: function(item) {
+          this.searchStr = item.desc;
+        },
+
+        /**
+         * PRIVATE API
+         */
+        /**
+         * STYLING
+         */
+        /**
+         * compute Visibility Search Input Container
+         * @param hideSearchInput
+         * @returns {String}
+         * @private
+         * @method _computeVisibilitySearchInputContainer
+         */
+        _computeVisibilitySearchInputContainer: function(hideSearchInput) {
+          return hideSearchInput ? "style-search-input-container show-element-flex" : "hide-element";
+        },
+
+        /**
+         * compute Search Input Label
+         * @param hideSearchInput
+         * @returns {String}
+         * @private
+         * @method _computeSearchInputLabel
+         */
+        _computeSearchInputLabel: function(hideSearchInput) {
+          return hideSearchInput ? "Add Item to Grocery List..." : "Search";
+        },
+
+        /**
+         * compute Visibility Search Button
+         * @param hideSearchButton
+         * @returns {String}
+         * @private
+         * @method _computeVisibilitySearchButton
+         */
+        _computeVisibilitySearchButton: function(hideSearchButton) {
+          return hideSearchButton ? "hide-element" : "style-btn-position style-toggle-search-container show-element-block";
+        },
+
+        /**
+         * compute Visibility Add Button
+         * @param hideSearchButton
+         * @returns {String}
+         * @private
+         * @method _computeVisibilityAddButton
+         */
+        _computeVisibilityAddButton: function(hideSearchButton) {
+          return hideSearchButton ? "style-btn-position style-toggle-search-container show-element-block" : "hide-element";
+        },
+
+        /**
+         * compute Visibility Clear Button
+         * @param hideSearchButton
+         * @returns {String}
+         * @private
+         * @method _computeVisibilityClearButton
+         */
+        _computeVisibilityClearButton: function(hideSearchButton) {
+          return hideSearchButton ? "style-btn-2-position style-toggle-search-container show-element-block" : "hide-element";
+        },
+
+        /**
+         * RECIPE / INVENTORY
+         */
+        /**
+         * Method for listening for search query input and firing event. </br>
+         * @method _searchQueryChanged
+         */
+        _searchQueryChanged: function() {
+          this.fire("changed-search-query", { searchQuery: this.searchStr });
+        },
+
+        /**
          * Method to clear the search query. </br>
          * @method _clearSearchQuery
          */
@@ -192,10 +327,11 @@ Custom property | Description | Default
           if (this.$.txtSearchQuery.value.length === 0) {
             this._toggleSearchElements();
           } else {
-            this.searchStr = "";
+            this.searchStr = null;
           }
-          this.searchQueryChanged();
+          this._searchQueryChanged();
         },
+
         /**
          * Method for show / hide search input container. </br>
          * @method _toggleSearchElements
@@ -205,16 +341,44 @@ Custom property | Description | Default
           var btnClear = this.$.btnClear;
           var btnSearch = this.$.btnSearch;
 
-          if (searchInputContainer.contains("hide-search-input-container")) {
-            searchInputContainer.remove("hide-search-input-container");
+          if (searchInputContainer.contains("hide-element")) {
+            searchInputContainer.remove("hide-element");
+            searchInputContainer.add("show-element-flex");
             searchInputContainer.add("style-search-input-container");
             btnClear.style.display = "block";
             btnSearch.style.display = "none";
           } else {
+            searchInputContainer.remove("show-element-flex");
             searchInputContainer.remove("style-search-input-container");
-            searchInputContainer.add("hide-search-input-container");
+            searchInputContainer.add("hide-element");
             btnClear.style.display = "none";
             btnSearch.style.display = "block";
+          }
+        },
+
+        /**
+         * GROCERY LIST
+         */
+        /**
+         * Add Item to Grocery List - fires event
+         * @private
+         * @method _addToGroceryList
+         */
+        _addToGroceryList: function() {
+          this.fire("add-to-grocery-list", {desc: this.searchStr});
+          this.searchStr = null;
+          this._searchQueryChanged();
+        },
+
+        /**
+         * Clear input field in Grocery List mode
+         * @private
+         * @method _clearForGroceryList
+         */
+        _clearForGroceryList: function() {
+          if (this.searchStr.length > 0) {
+            this.searchStr = null;
+            this._searchQueryChanged();
           }
         }
       });

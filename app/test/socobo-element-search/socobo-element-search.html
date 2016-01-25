@@ -50,7 +50,7 @@
 
       test("calling reset fires an changed-search-query event", function(done) {
         socoboElementSearch.addEventListener("changed-search-query", function(e) {
-          expect(e.detail.searchQuery).to.be.eql("");
+          expect(e.detail.searchQuery).to.be.eql(null);
           done();
         });
 
@@ -58,10 +58,10 @@
       });
 
       test("calling reset on hidden search bar does not toggle the search bar", function(done) {
-        expect(socoboElementSearch.$.searchInputContainer.classList.contains("hide-search-input-container")).to.be.eql(true);
+        expect(socoboElementSearch.$.searchInputContainer.classList.contains("hide-element")).to.be.eql(true);
         socoboElementSearch.resetQuery();
 
-        expect(socoboElementSearch.$.searchInputContainer.classList.contains("hide-search-input-container")).to.be.eql(true);
+        expect(socoboElementSearch.$.searchInputContainer.classList.contains("hide-element")).to.be.eql(true);
         done();
 
       });
@@ -69,8 +69,8 @@
       test("tapping search buttons shows the search input", function (done) {
         MockInteractions.tap(socoboElementSearch.$.btnSearch);
 
-        expect(socoboElementSearch.$.searchInputContainer.classList.contains("hide-search-input-container"))
-          .to.be.eql(false, "hide-search-input-container");
+        expect(socoboElementSearch.$.searchInputContainer.classList.contains("hide-element"))
+          .to.be.eql(false, "hide-element");
 
         expect(socoboElementSearch.$.searchInputContainer.classList.contains("style-search-input-container"))
           .to.be.eql(true, "style-search-input-container");

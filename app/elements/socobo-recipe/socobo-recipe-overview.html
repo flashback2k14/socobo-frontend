@@ -292,6 +292,7 @@ Custom property | Description | Default
           RecipeDao.getInstance(this.userLogin)
             .getMeasurements()
             .then(function(data){
+              //Pass clone object and original object to the recipe dialog
               this.$.editDialog.recipe = {original: e.detail, clone: eClone};
               this.$.editDialog.measurements = data;
               this.$.editDialog.initIngredients();
@@ -302,10 +303,6 @@ Custom property | Description | Default
           catch(function(error){
             this._notifyOnError(error);
           }.bind(this));
-
-          //Pass clone object and original object to the recipe dialog
-
-
         },
         /**
          * Handle for the add event fired by the main action button.
@@ -318,13 +315,13 @@ Custom property | Description | Default
             .getMeasurements()
             .then(function(data){
               this.$.addDialog.measurements = data;
+              this.$.addDialog.state = "add";
+              this.$.addDialog.toggleDialog();
+              this.$.addDialog.clearInputFields();
             }.bind(this)).
-          catch(function(error){
-            this._notifyOnError(error);
-          }.bind(this));
-          this.$.addDialog.state = "add";
-          this.$.addDialog.toggleDialog();
-          this.$.addDialog.clearInputFields();
+            catch(function(error){
+              this._notifyOnError(error);
+            }.bind(this));
         },
         /**
          * Loads all recipes from the database and updates them
@@ -550,9 +547,10 @@ Custom property | Description | Default
          * @private
          */
         _setHidden: function (item, searchquery) {
+          var lowerCaseQuery = "";
           //check the title of the item
           if(searchquery !== null){
-            var lowerCaseQuery = searchquery.toLowerCase();
+            lowerCaseQuery = searchquery.toLowerCase();
           }else{
             lowerCaseQuery = searchquery;
           }
