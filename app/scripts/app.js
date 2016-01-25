@@ -137,7 +137,12 @@
     // get error object
     var errorObj = e.detail.error;
     // show toast to inform the user
-    Util.showToast(infoToast, "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message, "#FF3333", "#EEEEEE");
+    Util.showToast(
+      infoToast,
+      "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message,
+      "#FF3333",
+      "#EEEEEE"
+    );
   };
   app.passwordsMisMatching = function() {
     // show toast to inform the user

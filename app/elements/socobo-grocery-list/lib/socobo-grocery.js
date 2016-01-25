@@ -5,6 +5,7 @@ var SocoboGrocery = (function() {
   var instance;
   /**
    * Init Functions
+   *
    * @param context
    * @param userLogin
    * @returns {{}}
