@@ -175,22 +175,30 @@ Custom property | Description | Default
           ];
         },
 
-        /*Display the dialog
-        @param {Object} userLogin
-        @param {Object} itemToEdit
-        */
+        /**
+         * Displays the dialog <br>
+         *
+         * @function
+         */
         show: function() {
           this.$.dialog.toggle();
           this._resetItem();
         },
 
-        /* Hide the dialog
+        /** Hides the dialog
+         *
+         * @function
         */
         hide: function() {
           this.$.dialog.toggle();
         },
 
-        _resetItem: function(item) {
+        /**
+         * Resets the item and all dropdowns back to initial values
+         *
+         * @private
+         */
+        _resetItem: function() {
           // resetting the item
           this.item = {};
           this.$.bestBeforeInput.value = "";
@@ -198,19 +206,32 @@ Custom property | Description | Default
           this.$.measurementDropdownMenu.select(-1);
         },
 
+        /**
+         * Validate item and fire item creation event
+         *
+         * @private
+           */
         _createItem: function() {
           var item = this._populateItem(this.item);
 
-          if (!this._validate(this.item)) {
+          if (!this._validate(item)) {
             alert("Some information is missing");
           } else {
-            this.fire("create-item", this.item);
+            this.fire("create-item", item);
           }
         },
 
+        /**
+         * Populate the item with data from the dropdowns that cannot
+         * be handled with Polymer data binding
+         *
+         * @param {Object} item
+         * @returns {Object}
+         * @private
+         */
         _populateItem: function(item) {
           item.measurement = this.measurements[this.$.measurementDropdownMenu.selected];
-          if (this.$.categoryDropdownMenu.selected != -1) {
+          if (this.$.categoryDropdownMenu.selected !== -1) {
             this.item.category = this.categories[this.$.categoryDropdownMenu.selected];
           }
 
@@ -220,10 +241,24 @@ Custom property | Description | Default
           return item;
         },
 
+        /**
+         * Validate the item
+         * TODO: Build error object
+         *
+         * @param {Object} item
+         * @returns {boolean}
+         * @private
+         */
         _validate: function(item) {
-          if(!item.name || item.name.length < 5) return false;
-          if(!item.measurement || !item.measurement.value || item.measurement.value.length === 0) return false;
-          if(!item.count) return false;
+          if (!item.name || item.name.length < 5) {
+            return false;
+          }
+          if (!item.measurement || !item.measurement.value || item.measurement.value.length === 0) {
+            return false;
+          }
+          if (!item.count) {
+            return false;
+          }
           return true;
         }
       });
