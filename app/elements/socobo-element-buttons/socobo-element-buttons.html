@@ -36,7 +36,7 @@ Custom property | Description | Default
 <script>
 (function() {
   Polymer({
-    is: 'socobo-element-buttons',
+    is: "socobo-element-buttons",
     /** Event that is fired when the add button is clicked
      * @event add-item
      * */
@@ -54,15 +54,13 @@ Custom property | Description | Default
       }
     },
 
-    _delete: function (e) {
+    _delete: function() {
       this.fire("delete-items");
     },
 
-    _add: function (e) {
+    _add: function() {
       this.fire("add-item");
     }
-
-
   });
 })();
 </script>
