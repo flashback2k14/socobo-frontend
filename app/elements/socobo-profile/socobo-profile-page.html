@@ -152,9 +152,10 @@ Custom property | Description | Default
          */
         /**
          * Show Toast if the Profile Image is changed. <br/>
+         *
          * @param {Object} e Message
          * @private
-         * @method _handleInnerProfileImageChanged
+         * @function
          */
         _handleInnerProfileImageChanged: function(e) {
           if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
@@ -181,9 +182,10 @@ Custom property | Description | Default
          */
         /**
          * Handle save user information custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleSaveInfoStandard
+         * @function
          */
         _handleSaveInfoStandard: function(e) {
           if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
@@ -207,9 +209,10 @@ Custom property | Description | Default
          */
         /**
          * Handle save biography information custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleSaveInfoBiography
+         * @function
          */
         _handleSaveInfoBiography: function(e) {
           if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
@@ -232,11 +235,12 @@ Custom property | Description | Default
          */
         /**
          * Handle change email address custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleChangeEmailAddress
+         * @function
          */
-        _handleChangeEmailAddress: function(e){
+        _handleChangeEmailAddress: function(e) {
           // check if user still logged in
           if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
             this.fire("login-expired", {value: "The Login is expired!"});
@@ -273,9 +277,10 @@ Custom property | Description | Default
         },
         /**
          * Handle change password custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleChangePassword
+         * @function
          */
         _handleChangePassword: function(e) {
           if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
@@ -294,9 +299,10 @@ Custom property | Description | Default
         },
         /**
          * Handle reset password custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleResetPassword
+         * @function
          */
         _handleResetPassword: function(e) {
           if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
@@ -315,9 +321,10 @@ Custom property | Description | Default
         },
         /**
          * Handle delete account custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleDeleteAccount
+         * @function
          */
         _handleDeleteAccount: function(e) {
           if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
@@ -329,8 +336,9 @@ Custom property | Description | Default
         },
         /**
          * Delete Account if the User press the OK Button from the Confirm Dialog. </br>
+         *
          * @private
-         * @method _deleteAccount
+         * @function
          */
         _deleteAccount: function() {
           // collect successful messages
@@ -346,7 +354,7 @@ Custom property | Description | Default
               SocoboProfile
                 .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
                 .removeUserAccount(this._tmpDeleteAccountData)
-                .then(function(success){
+                .then(function(success) {
                   // add success message from remove all user data
                   successMessage += success.value;
                   // show info notification, hide dialog and reset temp delete account data
@@ -354,7 +362,7 @@ Custom property | Description | Default
                   // fire custom event
                   this.fire("user-account-deleted");
                 }.bind(this))
-                .catch(function(error){
+                .catch(function(error) {
                   // show info notification, hide dialog and reset temp delete account data
                   this._deleteAccountNotificationHelper(error.value);
                 }.bind(this));
@@ -366,9 +374,10 @@ Custom property | Description | Default
         },
         /**
          * Show Toast if the Passwords not matching. <br/>
+         *
          * @param {Object} e Message
          * @private
-         * @method _handlePasswordsNotMatching
+         * @function
          */
         _handlePasswordsNotMatching: function(e) {
           ProfileUtil.getInstance().showToast(this.$.infoToast, e.detail.value, "#FF3333", "#EEEEEE");
@@ -376,9 +385,10 @@ Custom property | Description | Default
 
         /**
          * Delete Account Notification Helper
-         * @param text Notification Message
+         *
+         * @param {String} text
          * @private
-         * @method _deleteAccountNotificationHelper
+         * @function
          */
         _deleteAccountNotificationHelper: function(text) {
           // show info notification
