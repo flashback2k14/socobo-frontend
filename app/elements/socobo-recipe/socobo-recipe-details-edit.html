@@ -347,25 +347,25 @@ Custom property | Description | Default
          * PROPERTIES
          */
         properties: {
-          recipe : {
-            type : Object,
-            value : {}
+          recipe: {
+            type: Object,
+            value: {}
           },
-          image : {
-            type : Object
+          image: {
+            type: Object
           },
-          recipe_inputs : {
-            type : Array,
-            value : []
+          recipe_inputs: {
+            type: Array,
+            value: []
           },
-          ingredient_inputs : {
-            type : Array,
-            value : []
+          ingredient_inputs: {
+            type: Array,
+            value: []
           },
           /**
            * Used to switch between input fields and text
            */
-          state : {
+          state: {
             type: String,
             value: "show"
           },
@@ -374,7 +374,7 @@ Custom property | Description | Default
            * which are usable for the ingredients
            */
           measurements: {
-            type : Array,
+            type: Array,
             value: []
           }
         },
@@ -382,22 +382,22 @@ Custom property | Description | Default
         /**
          * SHOW / HIDE
          */
-        toggleDialog : function() {
+        toggleDialog: function() {
           this.$.dialog.toggle();
         },
 
         /**
          * EXIT
          */
-        exit : function () {
+        exit: function() {
           this.fire("exit_request");
         },
 
         /**
          * INIT
          */
-        initSteps : function() {
-          for(var step in this.recipe.clone.steps){
+        initSteps: function() {
+          for (var step in this.recipe.clone.steps) {
             this.push("recipe_inputs", this.recipe.clone.steps[step]);
           }
         },
@@ -405,8 +405,8 @@ Custom property | Description | Default
         /**
          * INIT
          */
-        initIngredients : function() {
-          for(var ingr in this.recipe.clone.ingredients){
+        initIngredients: function() {
+          for (var ingr in this.recipe.clone.ingredients) {
             this.push("ingredient_inputs", this.recipe.clone.ingredients[ingr]);
           }
         },
@@ -414,17 +414,17 @@ Custom property | Description | Default
         /**
          * INIT
          */
-        initImage : function() {
+        initImage: function() {
           this.image = this.recipe.clone.image;
         },
 
         /**
          * ADD
          */
-        addStep : function () {
+        addStep: function() {
           var step = {
-            desc : "",
-            number : 0
+            desc: "",
+            number: 0
           };
           this.push("recipe_inputs", step);
         },
@@ -432,11 +432,11 @@ Custom property | Description | Default
         /**
          * ADD
          */
-        addIngr : function () {
+        addIngr: function() {
           var ingr = {
-            desc : "",
-            amount : "",
-            unit : ""
+            desc: "",
+            amount: "",
+            unit: ""
           };
           this.push("ingredient_inputs", ingr);
           this.numberOfIngr++;
@@ -445,7 +445,7 @@ Custom property | Description | Default
         /**
          * REMOVE
          */
-        removeStep : function(e) {
+        removeStep: function(e) {
           var model = e.model;
           var itemIndex = model.get("index");
           this.cutElementOffArray(itemIndex, "recipe_inputs");
@@ -454,7 +454,7 @@ Custom property | Description | Default
         /**
          * REMOVE
          */
-        _removeIngr : function(e) {
+        _removeIngr: function(e) {
           var model = e.model;
           var itemIndex = model.get("index");
           this.cutElementOffArray(itemIndex, "ingredient_inputs");
@@ -463,23 +463,23 @@ Custom property | Description | Default
         /**
          * REMOVE
          */
-        cutElementOffArray : function (index, arr) {
+        cutElementOffArray: function(index, arr) {
           this.splice(arr, index ,1);
         },
 
         /**
          * CLEAR
          */
-        clearInputFields : function() {
+        clearInputFields: function() {
           var inputFields = Polymer.dom(this.$.dialog).querySelectorAll(".inputs");
           var image = document.querySelector("#edit_image");
           var placeholder = document.querySelector("#edit_placeholder");
           var chooser = document.querySelector("#editfileChooser");
 
-          for (var field in inputFields){
+          for (var field in inputFields) {
             inputFields[field].value = "";
           }
-          if (image !== null ) {
+          if (image !== null) {
             image.src = this.recipe.clone.image;
           }
           if (placeholder !== null) {
@@ -496,7 +496,7 @@ Custom property | Description | Default
         /**
          * CLEAR
          */
-        revokeEdit : function() {
+        revokeEdit: function() {
           //Reset the temporary arrays
           this.recipe_inputs = [];
           this.ingredient_inputs = [];
@@ -504,16 +504,17 @@ Custom property | Description | Default
 
         /**
          * FILE CHOOSER
+         *
          * @private
          */
-        _openFileChooser : function () {
+        _openFileChooser: function() {
           this.$.editfileChooser.click();
         },
 
         /**
          * FILE CHOOSER
          */
-        encode : function() {
+        encode: function() {
           this.image = new ImageService("#editfileChooser");
           this.image.encode(document.querySelector("#edit_image"));
           this.image.encode(document.querySelector("#edit_placeholder"));
@@ -522,13 +523,13 @@ Custom property | Description | Default
         /**
          * NEW
          */
-        createNewRecipe : function (){
+        createNewRecipe: function() {
           this.recipe.original.desc = this.recipe.clone.desc;
           this.recipe.original.text = this.recipe.clone.text;
           this.recipe.original.ingredients = this.ingredient_inputs;
           var arr = [];
           for (var i = 0; i < this.recipe_inputs.length; i++) {
-            arr[i]=this.recipe_inputs[i];
+            arr[i] = this.recipe_inputs[i];
           }
           this.recipe.original.steps = arr;
           var counter = 1;
@@ -537,7 +538,7 @@ Custom property | Description | Default
             counter++;
           }
           var v = this.validateRecipe();
-          if (v.length <= 0){
+          if (v.length <= 0) {
             if (this.image === undefined || this.image === null || this.image === "") {
               this.recipe.original.image = "";
             }
@@ -555,49 +556,46 @@ Custom property | Description | Default
         /**
          * VALIDATE
          */
-        validateRecipe : function(){
-          var check = function(obj, value){
-            return obj.recipe.clone[value] != "" && obj.recipe.clone[value] != undefined;
-          };
-          var checkContainer = function(obj, container){
-            return obj.recipe[container].lenght > 0;
+        validateRecipe: function() {
+          var check = function(obj, value) {
+            return obj.recipe.clone[value] !== "" && obj.recipe.clone[value] !== undefined;
           };
           var titleExists = check(this, "desc");
           var textExists = check(this, "text");
           var stepsExist = this.recipe.clone.steps.length > 0;
           var ingredientsExist = this.recipe.clone.ingredients.length > 0;
           var message = "";
-          if(!titleExists){
+          if (!titleExists) {
             message += "Title\n";
           }
-          if(!stepsExist && !textExists){
+          if (!stepsExist && !textExists) {
             message += "Description or Steps\n";
           }
           var stepsComplete = true;
-          if(stepsExist){
-            for(var step in this.recipe.clone.steps){
-              if(this.recipe.clone.steps[step].desc == ""){
+          if (stepsExist) {
+            for (var step in this.recipe.clone.steps) {
+              if (this.recipe.clone.steps[step].desc === "") {
                 stepsComplete = false;
               }
             }
-            if(!stepsComplete){
+            if (!stepsComplete) {
               message += "Steps need a description\n";
             }
           }
           var ingredientsComplete = true;
-          if(!ingredientsExist){
+          if (!ingredientsExist) {
             message += "Ingredients\n";
-          }else{
-            for(var ingr in this.recipe.clone.ingredients){
-              if(this.recipe.clone.ingredients[ingr].desc == ""){
+          }else {
+            for (var ingr in this.recipe.clone.ingredients) {
+              if (this.recipe.clone.ingredients[ingr].desc === "") {
                 ingredientsComplete = false;
               }
             }
-            if(!ingredientsComplete){
+            if (!ingredientsComplete) {
               message += "Ingredients need a description\n";
             }
           }
-          if(message != ""){
+          if (message !== "") {
             message = "Missing:\n" + message;
           }
           return message;
