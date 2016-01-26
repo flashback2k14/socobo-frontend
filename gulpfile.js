@@ -131,7 +131,8 @@ gulp.task("lint", ["ensureFiles"], function() {
   .pipe($.jshint())
   .pipe($.jscs())
   .pipe($.jscsStylish.combineWithHintResults())
-  .pipe($.jshint.reporter("jshint-stylish"));
+  .pipe($.jshint.reporter("jshint-stylish"))
+  .pipe($.jshint.reporter("fail"));
 });
 
 gulp.task("imagesAbout", function() {
