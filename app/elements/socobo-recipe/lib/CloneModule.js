@@ -1,4 +1,5 @@
 /* exported CloneModule */
+/* jshint -W003 */ // Disable jshint warning about '_cloneObject' was used before it was defined
 /**
  * Module to deeply clone objects and arrays
  *
@@ -63,7 +64,6 @@ var CloneModule = CloneModule || (function() {
     });
     return tmp;
   }
-
   /**
    * Method to recursively clone objects.
    * The method calls _cloneArray(arr) to handle
