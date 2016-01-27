@@ -125,7 +125,7 @@ Custom property | Description | Default
       <!---->
       <paper-icon-button
         icon="delete"
-        on-click="removeStep">
+        on-click="_removeStep">
       </paper-icon-button>
     </div>
     <!---->
@@ -138,38 +138,50 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-recipe-details-step",
-        properties : {
-          step : {
-            type : Object,
-            value : {}
+        properties: {
+          step: {
+            type: Object,
+            value: {}
           },
-          state : {
-            type : String,
-            value : "show"
+          state: {
+            type: String,
+            value: "show"
           }
         },
-        _chooseState : function(){
-          if(this.state === "add"){
+
+        ready: function() {
+          this._chooseState();
+        },
+
+        /**
+         * Remove a step
+         *
+         * @private
+         * @function
+         */
+        _removeStep: function() {
+          this.fire("rem_step", this.step);
+        },
+
+        /**
+         * Toggle state of steps input
+         *
+         * @private
+         * @function
+         */
+        _chooseState: function() {
+          if (this.state === "add") {
             this.$.steps_default.style.display = "none";
             this.$.sep.style.display = "none";
             this.$.steps_input.style.display = "block";
           }
-          if(this.state === "show"){
+          if (this.state === "show") {
             this.$.steps_default.style.display = "block";
             this.$.sep.style.display = "block";
             this.$.steps_input.style.display = "none";
           }
-        },
-        removeStep : function (){
-          this.fire("rem_step", this.step);
-        },
-        ready : function (){
-          this._chooseState();
         }
       });
     })();
   </script>
-
 </dom-module>
-
-
