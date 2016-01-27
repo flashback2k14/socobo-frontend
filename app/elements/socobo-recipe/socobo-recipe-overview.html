@@ -174,12 +174,12 @@ Custom property | Description | Default
   </template>
 
   <script>
-    (function () {
+    (function() {
       Polymer({
         is: "socobo-recipe-overview",
         /**
          *Public properties
-         * - reicpes [Array]
+         * - recipes [Array]
          * - userLogin {Object}
          *Private properties
          * - _valueOfCheckBox {Object}
@@ -204,6 +204,12 @@ Custom property | Description | Default
             type: Object,
             value: {}
           },
+
+          /**
+           * Keeps track of the items where boxes where checked
+           *
+           * @private
+           */
           _checkedBoxes: {
             type: Object,
             value: {
@@ -211,6 +217,12 @@ Custom property | Description | Default
               refs: []
             }
           },
+
+          /**
+           * Keeps track of the state of the check box
+           *
+           * @private
+           */
           _valueOfCheckBox: {
             type: Boolean,
             value: false
@@ -218,20 +230,24 @@ Custom property | Description | Default
         },
         /**
          * Handles the number of checked boxes if one box is checked
+         *
+         * @param {Event} e
          * @private
-         * @param e
+         * @function
          */
-        _handleCheck: function (e) {
+        _handleCheck: function(e) {
           this._checkedBoxes.number++;
           this._checkedBoxes.refs.push(e.detail);
           this._trackCheckedBoxes();
         },
         /**
          * Handles the number of checked boxes if one box is unchecked
+         *
+         * @param {Event} e
          * @private
-         * @param e
+         * @function
          */
-        _handleUncheck: function (e) {
+        _handleUncheck: function(e) {
           this._checkedBoxes.number--;
           this._updateAfterDeletion(e.detail, this._checkedBoxes.refs, "_checkedBoxes.refs");
           this._trackCheckedBoxes();
@@ -239,10 +255,12 @@ Custom property | Description | Default
         /**
          * Keeps track of the number of checked checkboxes and
          * handles the kind of the main action button appropriately
+         *
          * @private
+         * @function
          */
-        _trackCheckedBoxes: function () {
-          if(this._checkedBoxes.number === 0){
+        _trackCheckedBoxes: function() {
+          if (this._checkedBoxes.number === 0) {
             this.$.searchbar.resetCheckbox();
           }
           this._showDelete = this._checkedBoxes.number > 0;
@@ -250,10 +268,12 @@ Custom property | Description | Default
         /**
          * Handler for the click event fired by the item-element.
          * Opens the show dialog for the recipe given in the event.
+         *
+         * @param {Event} e
          * @private
-         * @param e
+         * @function
          */
-        _clicked: function (e) {
+        _clicked: function(e) {
           this.$.showDialog.state = "show";
           this.$.showDialog.toggleDialog();
           this.$.showDialog.recipe = e.detail;
@@ -261,17 +281,19 @@ Custom property | Description | Default
         /**
          * Handler for the edit event fired by the item-element.
          * Opens the edit dialog for the recipe given in the event.
+         *
+         * @param {Event} e
          * @private
-         * @param e
+         * @function
          */
-        _edit: function (e) {
+        _edit: function(e) {
           //Create clone of the e.detail object
           var eClone = CloneModule.clone(e.detail);
-          //Alternative: var eClone = (JSON.parse(JSON.stringify(e.detail)));
           //get measurements and add these to the add dialog
+
           RecipeDao.getInstance(this.userLogin)
             .getMeasurements()
-            .then(function(data){
+            .then(function(data) {
               //Pass clone object and original object to the recipe dialog
               this.$.editDialog.recipe = {original: e.detail, clone: eClone};
               this.$.editDialog.measurements = data;
@@ -280,87 +302,94 @@ Custom property | Description | Default
               this.$.editDialog.initImage();
               this.$.editDialog.toggleDialog();
             }.bind(this)).
-          catch(function(error){
+          catch(function(error) {
             this._notifyOnError(error);
           }.bind(this));
         },
         /**
          * Handle for the add event fired by the main action button.
          * Opens en empty add dialog to create a recipe.
+         *
          * @private
+         * @function
          */
-        _addRecipe: function () {
+        _addRecipe: function() {
           //get measurements and add these to the add dialog
           RecipeDao.getInstance(this.userLogin)
             .getMeasurements()
-            .then(function(data){
+            .then(function(data) {
               this.$.addDialog.measurements = data;
               this.$.addDialog.state = "add";
               this.$.addDialog.toggleDialog();
               this.$.addDialog.clearInputFields();
             }.bind(this)).
-            catch(function(error){
+            catch(function(error) {
               this._notifyOnError(error);
             }.bind(this));
         },
         /**
          * Loads all recipes from the database and updates them
          * automatically.
+         *
+         * @private
+         * @function
          */
-        getRecipes: function () {
+        getRecipes: function() {
           RecipeDao.getInstance(this.userLogin)
             .getAll()
-            .then(function (recipes) {
+            .then(function(recipes) {
               this.set("recipes", recipes.value);
               this.$.initialLoadingSpinner.active = false;
             }.bind(this))
-            .catch(function (error) {
+            .catch(function(error) {
               this._notifyOnError(error.value);
             }.bind(this));
         },
         /**
-         * Handler for the add event fired by the item-element.
+         * Handler for the remove event fired by the item-element.
          * Triggers the removal of this item.
+         *
+         * @param {Event} e
          * @private
-         * @param e
          */
-        _removeRecipe: function (e) {
+        _removeRecipe: function(e) {
           this._notifyOnLoading("Deleting recipe");
           RecipeDao.getInstance(this.userLogin)
             .remove(e.detail)
-            .then(function (success) {
+            .then(function(success) {
               this._notifyOnSuccess(success.value);
               this._updateAfterDeletion(e.detail, this.recipes, "recipes");
             }.bind(this))
-            .catch(function (error) {
+            .catch(function(error) {
               this._notifyOnError(error.value);
             }.bind(this));
         },
         /**
-         * Hanlder for the add event fired by the add dialog.
+         * Handler for the add event fired by the add dialog.
          * Triggers the addition of the created recipe.
+         *
+         * @param {Event} e
          * @private
-         * @param e
          */
-        _addNewRecipe: function (e) {
+        _addNewRecipe: function(e) {
           this._notifyOnLoading("Adding recipe");
           RecipeDao.getInstance(this.userLogin)
             .add(e.detail)
-            .then(function (success) {
+            .then(function(success) {
               this._notifyOnSuccess(success.value);
 
               RecipeDao.getInstance(this.userLogin)
                 .getAll()
-                .then(function (recipes) {
+                .then(function(recipes) {
                   this.set("recipes", []);
                   this.set("recipes", recipes.value);
                 }.bind(this))
-                .catch(function (error) {
+                .catch(function(error) {
                   this._notifyOnError(error.value);
                 }.bind(this));
 
             }.bind(this))
-            .catch(function (error) {
+            .catch(function(error) {
               this._notifyOnError(error.value);
             }.bind(this));
         },
@@ -368,28 +397,29 @@ Custom property | Description | Default
          * Handler for the edit event fired by the edit dialog.
          * Triggers the update of the related recipe in the database with
          * the newly created one.
+         *
+         * @param {Array} e
          * @private
-         * @param e
          */
-        _editRecipe: function (e) {
+        _editRecipe: function(e) {
           this._notifyOnLoading("Updating recipe");
           RecipeDao.getInstance(this.userLogin)
             .update(e.detail)
-            .then(function (success) {
+            .then(function(success) {
               this._notifyOnSuccess(success.value);
 
               RecipeDao.getInstance(this.userLogin)
                 .getAll()
-                .then(function (recipes) {
+                .then(function(recipes) {
                   this.set("recipes", []);
                   this.set("recipes", recipes.value);
                 }.bind(this))
-                .catch(function (error) {
+                .catch(function(error) {
                   this._notifyOnError(error.value);
                 }.bind(this));
 
             }.bind(this))
-            .catch(function (error) {
+            .catch(function(error) {
               this._notifyOnError(error.value);
             }.bind(this));
         },
@@ -397,36 +427,39 @@ Custom property | Description | Default
          * Updates a given given property (array) with another given
          * array of values for the assigned element where the reference of
          * one element of the given array is equal to the reference of the element.
-         * @param el
-         * @param arr
-         * @param pathToProperty
+         *
+         * @param {Object} el
+         * @param {Array} arr
+         * @param {String} pathToProperty
          * @private
          */
-        _updateAfterDeletion: function (el, arr, pathToProperty) {
+        _updateAfterDeletion: function(el, arr, pathToProperty) {
           for (var i = 0; i < arr.length; i++) {
-            if (arr[i].ref == el.ref) {
+            if (arr[i].ref === el.ref) {
               this.splice(pathToProperty, i, 1);
             }
           }
         },
         /**
          * Removes all checked items from the database
+         *
          * @private
+         * @function
          */
-        _removeAllChecked: function () {
+        _removeAllChecked: function() {
           // array to collect the remove promises
           var removePromises = [];
           // iterate over the checked recipes references
-          this._checkedBoxes.refs.forEach(function (item) {
+          this._checkedBoxes.refs.forEach(function(item) {
             // push remove promise to array
             removePromises.push(RecipeDao.getInstance(this.userLogin).remove(item));
           }.bind(this));
 
           // collect all promises and perform data binding functions
           Promise.all(removePromises)
-            .then(function (success) {
+            .then(function(success) {
               // iterate over successful removed recipes
-              success.forEach(function (recipe) {
+              success.forEach(function(recipe) {
                 // cut recipe from bounded arrays
                 this._updateAfterDeletion(recipe.item, this.recipes, "recipes");
                 this._updateAfterDeletion(recipe.item, this._checkedBoxes.refs, "_checkedBoxes.refs");
@@ -438,52 +471,51 @@ Custom property | Description | Default
               // notify user
               this._notifyOnSuccess("Elements successfully removed!");
             }.bind(this))
-            .catch(function (error) {
+            .catch(function(error) {
               this._notifyOnError(error.message);
             }.bind(this));
         },
-        /**
-         * Toggles the main action button
-         * @param enableButton
-         * @param disableButton
-         * @private
-         */
-        _switchButton: function (enableButton, disableButton) {
-          disableButton.style.display = "none";
-          enableButton.style.display = "block";
-        },
+
         /**
          * Shows a given error message as paper-toast element
-         * @param msg
+         *
+         * @param {String} msg
          * @private
+         * @function
          */
-        _notifyOnError: function (msg) {
+        _notifyOnError: function(msg) {
           this.$.errorNotification.text = msg;
           this.$.errorNotification.show();
         },
         /**
          * Shows a given success message as paper-toast element
-         * @param msg
+         *
+         * @param {String} msg
          * @private
+         * @function
          */
-        _notifyOnSuccess: function (msg) {
+        _notifyOnSuccess: function(msg) {
           this.$.successNotification.text = msg;
           this.$.successNotification.show();
         },
         /**
          * Shows a given loading message as paper-toast element
-         * @param msg
+         *
+         * @param {String} msg
          * @private
+         * @function
          */
-        _notifyOnLoading: function (msg) {
+        _notifyOnLoading: function(msg) {
           this.$.loadtext.innerHTML = msg;
           this.$.loadNotification.opened = true;
         },
         /**
          * Enables all checkboxes on checking the main checkbox of the search bar
+         *
          * @private
+         * @function
          */
-        _checkItems: function () {
+        _checkItems: function() {
           var el = Polymer.dom(this.root).querySelectorAll(".singleItem");
           for (var e in el) {
             var listItem = el[e];
@@ -497,9 +529,11 @@ Custom property | Description | Default
         },
         /**
          * Disables all checkboxes on checking the main checkbox of the search bar
+         *
          * @private
+         * @function
          */
-        _uncheckItems: function () {
+        _uncheckItems: function() {
           var el = Polymer.dom(this.root).querySelectorAll(".singleItem");
           for (var e in el) {
             var listItem = el[e];
@@ -515,39 +549,45 @@ Custom property | Description | Default
         /**
          * Handler for the changed search query event of the search-element.
          * Sets the query value to a local variable.
-         * @param e
+         *
+         * @param {Event} e
          * @private
+         * @function
          */
         _searchQueryChanged: function(e) {
           this.query = e.detail.searchQuery;
         },
         /**
-         * Sets the related item invisible or visible related on
+         * Sets the related item invisible or visible depending on
          * the match of the given query with the desc or info attributes
          * of the item
-         * @param item
-         * @param searchquery
+         *
+         * @param {Object} item
+         * @param {String} searchquery
          * @returns {boolean}
          * @private
+         * @function
          */
-        _setHidden: function (item, searchquery) {
+        _setHidden: function(item, searchquery) {
           var lowerCaseQuery = "";
           //check the title of the item
-          if(searchquery !== null){
+          if (searchquery !== null) {
             lowerCaseQuery = searchquery.toLowerCase();
-          }else{
+          } else {
             lowerCaseQuery = searchquery;
           }
-          var checkDesc = !(lowerCaseQuery === null
-          || typeof lowerCaseQuery === "undefined"
-          || (item.desc).toLowerCase().indexOf(lowerCaseQuery) != -1);
+          var checkDesc =
+            !(lowerCaseQuery === null ||
+            typeof lowerCaseQuery === "undefined" ||
+            (item.desc).toLowerCase().indexOf(lowerCaseQuery) !== -1);
+
           var checkInfo = false;
           //if info is available it will be checked else not
-          if(item.info !== undefined){
-            checkInfo = !((item.info).toLowerCase().indexOf(lowerCaseQuery) != -1);
+          if (item.info !== undefined) {
+            checkInfo = item.info.toLowerCase().indexOf(lowerCaseQuery) === -1;
           }
           var result = checkDesc || checkInfo;
-          if(result){
+          if (result) {
             this._updateAfterDeletion(item, this._checkedBoxes.refs, "_checkedBoxes.refs");
           }
           return result;
@@ -561,6 +601,5 @@ Custom property | Description | Default
       });
     })();
   </script>
-
 </dom-module>
 
