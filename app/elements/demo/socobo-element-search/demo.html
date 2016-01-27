@@ -56,7 +56,13 @@
       demo.handleCheckAllItems = function() {
         var listView = this.$.list;
         for (var i = 0; i < listView._instances.length; i++) {
-          listView._instances[i]._children[0].nextElementSibling.children[0].children[0].children[0].checked = true;
+          listView
+            ._instances[i]
+            ._children[0]
+            .nextElementSibling
+            .children[0]
+            .children[0]
+            .children[0].checked = true;
         }
       };
 
@@ -66,13 +72,20 @@
       demo.handleUncheckAllItems = function() {
         var listView = this.$.list;
         for (var i = 0; i < listView._instances.length; i++) {
-          listView._instances[i]._children[0].nextElementSibling.children[0].children[0].children[0].checked = false;
+          listView
+            ._instances[i]
+            ._children[0]
+            .nextElementSibling
+            .children[0]
+            .children[0]
+            .children[0].checked = false;
         }
       };
 
       /**
        * Get Search Query
-       * @param e
+       *
+       * @param {Array} e
        */
       demo.handleChangedSearchQuery = function(e) {
         this.searchQuery = e.detail.searchQuery;
@@ -80,20 +93,23 @@
 
       /**
        * Search in all items
-       * @param item
-       * @param searchQuery
+       *
+       * @param {Object} item
+       * @param {String} searchQuery
        */
       demo._searchForItems = function(item, searchQuery) {
-        if (searchQuery === null ||typeof searchQuery === "undefined") {
+        if (searchQuery === null || typeof searchQuery === "undefined") {
           return item;
         } else {
-          return item.desc.toUpperCase().match(searchQuery.toUpperCase()) || item.info.toUpperCase().match(searchQuery.toUpperCase());
+          return item.desc.toUpperCase().match(searchQuery.toUpperCase()) ||
+            item.info.toUpperCase().match(searchQuery.toUpperCase());
         }
       };
 
       /**
        * Check single Item
-       * @param e
+       *
+       * @param {Array} e
        */
       demo.handleCheck = function(e) {
         var dataObj = e.detail;
@@ -102,7 +118,8 @@
 
       /**
        * Uncheck single Item
-       * @param e
+       *
+       * @param {Array} e
        */
       demo.handleUncheck = function(e) {
         var dataObj = e.detail;

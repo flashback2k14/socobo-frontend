@@ -33,10 +33,10 @@
 
     <script type="text/javascript">
       window.addEventListener("WebComponentsReady", function() {
-        document.addEventListener("add-item", function(e) {
+        document.addEventListener("add-item", function() {
           document.querySelector("#message").textContent = "Add Button clicked!";
         });
-        document.addEventListener("delete-items", function(e) {
+        document.addEventListener("delete-items", function() {
           document.querySelector("#message").textContent = "Delete Button clicked!";
         });
       });
