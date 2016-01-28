@@ -507,9 +507,6 @@ Custom property | Description | Default
           var check = function(obj, value){
             return obj.recipe[value] != "" && obj.recipe[value] != undefined;
           };
-          var checkContainer = function(obj, container){
-            return obj.recipe[container].lenght > 0;
-          };
           var titleExists = check(this, "desc");
           var textExists = check(this, "text");
           var stepsExist = this.recipe.steps.length > 0;
@@ -524,7 +521,7 @@ Custom property | Description | Default
           var stepsComplete = true;
           if (stepsExist) {
             for(var step in this.recipe.steps){
-              if(this.recipe.steps[step].desc == ""){
+              if(this.recipe.steps[step].desc === ""){
                 stepsComplete = false;
               }
             }
@@ -537,12 +534,15 @@ Custom property | Description | Default
             message.push("ingredients");
           } else {
             for(var ingr in this.recipe.ingredients){
-              if(this.recipe.ingredients[ingr].desc == ""){
+              if(this.recipe.ingredients[ingr].desc === ""){
+                ingredientsComplete = false;
+              }
+              if(this.recipe.ingredients[ingr].amount === "0" || this.recipe.ingredients[ingr].amount === ""){
                 ingredientsComplete = false;
               }
             }
             if(!ingredientsComplete){
-              message.push("descriptions for the ingredients");
+              message.push("descriptions or amounts for the ingredients");
             }
           }
           var msg = "";
