@@ -78,6 +78,7 @@ Custom property | Description | Default
         },
         /**
          * User Profile Object
+         *
          * @type Object
          * @private
          */
@@ -87,30 +88,32 @@ Custom property | Description | Default
          */
         /**
          * Handle changed user image and fire an event.
-         * @param e CustomEvent
+         *
+         * @param {CustomEvent} e
          * @private
-         * @method _handleProfileDataChanged
+         * @function
          */
         _handleProfileUserImageChanged: function(e) {
           this.fire("profile-image-changed", {profileImage: e.detail});
         },
         /**
          * handle changed user information and fire an event.
-         * @param e CustomEvent
+         *
+         * @param {CustomEvent} e
          * @private
-         * @method _handleProfileUserInfoChanged
+         * @function
          */
         _handleProfileUserInfoChanged: function(e) {
           var userInfo = e.detail;
           this.fire("profile-info-changed", userInfo);
         },
         /**
-         * handle deleted user account and fire an event.
-         * @param e CustomEvent
+         * Handle deleted user account and fire an event.
+         *
          * @private
-         * @method _handleAccountDeleted
+         * @function
          */
-        _handleUserAccountDeleted: function(e) {
+        _handleUserAccountDeleted: function() {
           this.fire("account-deleted");
         },
         /**
@@ -118,17 +121,18 @@ Custom property | Description | Default
          */
         /**
          * Load User Profile Data from Firebase
-         * @method loadProfileData
+         *
+         * @function
          */
         loadData: function() {
           SocoboProfile
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .loadProfileData()
-            .then(function(data){
+            .then(function(data) {
               this._profileObject = data;
               this.fire("profile-data-changed", {name: data.name, email: data.email, profileImage: data.profileImage});
             }.bind(this))
-            .catch(function(err){
+            .catch(function(err) {
               console.dir(err);
             });
         }

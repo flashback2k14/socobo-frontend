@@ -137,7 +137,7 @@ Custom property | Description | Default
             value: {}
           },
           /**
-           * data binding array
+           * Array of ranked recipes
            */
           recipeRanking: {
             type: Array,
@@ -147,7 +147,7 @@ Custom property | Description | Default
         },
 
         /**
-         * register listeners for changed items
+         * Register listeners for changed items
          */
         listeners: {
           "ranking_inventory_item_changed": "_onInventoryItemChanged",
@@ -157,7 +157,8 @@ Custom property | Description | Default
 
         /**
          * Load Data for Ranking.</br>
-         * @method loadData
+         *
+         * @function
          */
         loadData: function() {
           // set loading flag
@@ -181,9 +182,10 @@ Custom property | Description | Default
 
         /**
          * Calculate Ranking
-         * @param data
+         *
+         * @param {Array} data
          * @private
-         * @method _calcRanking
+         * @function
          */
         _calcRanking: function(data) {
           // check Data
@@ -215,7 +217,6 @@ Custom property | Description | Default
                 if (ingredient.desc === item.name) {
                   // check measurements and amount
                   if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement.value)) {
-                  //if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement)) {
                     // count matching items
                     recipe.matchingItemCount++;
                     // add matching items
@@ -248,43 +249,44 @@ Custom property | Description | Default
         },
 
         /**
-         * check measurements and calculate if enough item count is available for the recipe
-         * @param ingredientAmount
-         * @param ingredientUnit
-         * @param itemCount
-         * @param itemMeasurements
+         * Check measurements and calculate if enough item count is available for the recipe
+         *
+         * @param {Number} ingredientAmount
+         * @param {String} ingredientUnit
+         * @param {Number} itemCount
+         * @param {String} itemUnit
          * @returns {Boolean}
          * @private
-         * @method _checkMeasurements
+         * @function
          */
-        _checkMeasurements: function(ingredientAmount, ingredientUnit, itemCount, itemMeasurements) {
+        _checkMeasurements: function(ingredientAmount, ingredientUnit, itemCount, itemUnit) {
           // Enums
           var WEIGHTS = {
-            G       : "g",
-            KG      : "kg",
-            ML      : "ml",
-            L       : "l",
-            PCS     : "pcs",
-            TBSP    : "tbsp",
-            TSP     : "tsp",
-            CUP     : "cup",
-            OUNCES  : "ounces"
+            G: "g",
+            KG: "kg",
+            ML: "ml",
+            L: "l",
+            PCS: "pcs",
+            TBSP: "tbsp",
+            TSP: "tsp",
+            CUP: "cup",
+            OUNCES: "ounces"
           };
           // Convert Values
           var CONVERT = {
-            kgToG     : 1000,
-            lToMl     : 1000,
-            ozToG     : 28.3495,
-            gToOz     : 0.03527,
-            cupToG    : 236.588,
-            gToCup    : 0.00423,
-            tbspToG   : 15,
-            gToTbsp   : 0.06667,
-            tspToG    : 4.92892,
-            gToTsp    : 0.20288
+            kgToG: 1000,
+            lToMl: 1000,
+            ozToG: 28.3495,
+            gToOz: 0.03527,
+            cupToG: 236.588,
+            gToCup: 0.00423,
+            tbspToG: 15,
+            gToTbsp: 0.06667,
+            tspToG: 4.92892,
+            gToTsp: 0.20288
           };
           // Checks
-          switch (itemMeasurements) {
+          switch (itemUnit) {
             // inventory item measurement
             case WEIGHTS.KG:
               // ingredient unit
@@ -367,11 +369,12 @@ Custom property | Description | Default
 
         /**
          * Find missing inventory items
-         * @param ingredients
-         * @param items
+         *
+         * @param {Array} ingredients
+         * @param {Array} items
          * @returns {Array}
          * @private
-         * @method _findMissing
+         * @function
          */
         _findMissing: function(ingredients, items) {
           // init variables
@@ -392,10 +395,11 @@ Custom property | Description | Default
         },
 
         /**
-         * Sort List
-         * @param useDesc
+         * Sort recipes; either ascending or descending
+         *
+         * @param {Boolean} useDesc true if list is to be sorted descending
          * @private
-         * @method _sortList
+         * @function
          */
         _sortList: function(useDesc) {
           // getting recipes
@@ -411,18 +415,20 @@ Custom property | Description | Default
         },
 
         /**
-         * Sort List ASC
+         * Sort Recipes ASC
+         *
          * @private
-         * @method _sortAsc
+         * @function
          */
         _sortAsc: function() {
           this._sortList(false);
         },
 
         /**
-         * Sort List DESC
+         * Sort recipes DESC
+         *
          * @private
-         * @method _sortDesc
+         * @function
          */
         _sortDesc: function() {
           this._sortList(true);
@@ -430,8 +436,9 @@ Custom property | Description | Default
 
         /**
          * Reload List
+         *
          * @private
-         * @method _reload
+         * @function
          */
         _reload: function() {
           // notify user
@@ -444,11 +451,12 @@ Custom property | Description | Default
 
         /**
          * Sorting Recipes (ASC)
-         * @param a
-         * @param b
+         *
+         * @param {Object} a
+         * @param {Object} b
          * @private
          * @return {number}
-         * @method _compareRecipeMatchingAsc
+         * @function
          */
         _compareRecipeMatchingAsc: function(a, b) {
           return (a.ingredients.length * a.matchingItemCount) - (b.ingredients.length * b.matchingItemCount);
@@ -456,11 +464,12 @@ Custom property | Description | Default
 
         /**
          * Sorting Recipes (DESC)
-         * @param a
-         * @param b
+         *
+         * @param {Object} a
+         * @param {Object} b
          * @private
          * @return {number}
-         * @method _compareRecipeMatchingDesc
+         * @function
          */
         _compareRecipeMatchingDesc: function(a, b) {
           return (b.ingredients.length * b.matchingItemCount) - (a.ingredients.length * a.matchingItemCount);
@@ -468,9 +477,10 @@ Custom property | Description | Default
 
         /**
          * Open Ranking Detail Dialog
-         * @param e
+         *
+         * @param {Event} e
          * @private
-         * @method _openRankingItem
+         * @function
          */
         _openRankingItem: function(e) {
           var clickedItem = e.model.recipe;
@@ -480,9 +490,10 @@ Custom property | Description | Default
 
         /**
          * Handle Event - go to Recipe - open Recipe dialog
-         * @param e
+         *
+         * @param {Event} e
          * @private
-         * @method _handleGoToRecipe
+         * @function
          */
         _handleGoToRecipe: function(e) {
           this.$.recipeShow.toggleDialog();
@@ -490,10 +501,11 @@ Custom property | Description | Default
         },
 
         /**
-         * Handle Event - add to grocery list - fire Event
-         * @param e
+         * Event handler to add items to grocery list
+         *
+         * @param {Event} e
          * @private
-         * @method _handleAddToGroceryList
+         * @function
          */
         _handleAddToGroceryList: function(e) {
           this.fire("add-missing-items-to-grocery-list", e.detail.items);
@@ -501,9 +513,10 @@ Custom property | Description | Default
 
         /**
          * Show Toast with specific message
-         * @param msg
+         *
+         * @param {String} msg
          * @private
-         * @method _notify
+         * @function
          */
         _notify: function(msg) {
           this.$.infoRanking.text = msg;
@@ -514,8 +527,9 @@ Custom property | Description | Default
 
         /**
          * tracking changes in inventory items
+         *
          * @private
-         * @method _onInventoryItemChanged
+         * @function
          */
         _onInventoryItemChanged: function() {
           if (!this.isLoading) {
@@ -525,8 +539,9 @@ Custom property | Description | Default
 
         /**
          * tracking changes in recipes
+         *
          * @private
-         * @method _onRecipesItemChanged
+         * @function
          */
         _onRecipesItemChanged: function() {
           if (!this.isLoading) {
@@ -536,9 +551,10 @@ Custom property | Description | Default
 
         /**
          * tracking error from changes in recipes or inventory
-         * @param e
+         *
+         * @param {Event} e
          * @private
-         * @method _onChangedError
+         * @function
          */
         _onChangedError: function(e) {
           this._notify("Ranking - Reloading Error: " + e.detail.message);

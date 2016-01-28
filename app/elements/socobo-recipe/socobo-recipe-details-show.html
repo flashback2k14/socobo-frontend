@@ -221,35 +221,47 @@ Custom property | Description | Default
       Polymer({
         is: "socobo-recipe-details-show",
         properties: {
-          recipe : {
-            type : Object,
-            value : {}
+          recipe: {
+            type: Object,
+            value: {}
           },
-          recipe_inputs : {
-            type : Array,
-            value : [
+          recipe_inputs: {
+            type: Array,
+            value: [
               "step0"
             ]
           },
-          ingredient_inputs : {
-            type : Array,
-            value : [
+          ingredient_inputs: {
+            type: Array,
+            value: [
               "ingr0"
             ]
           },
-          numberOfSteps : {
-            type : Number,
-            value : 1
+          numberOfSteps: {
+            type: Number,
+            value: 1
           },
-          numberOfIngr : {
-            type : Number,
-            value : 1
+          numberOfIngr: {
+            type: Number,
+            value: 1
           }
         },
-        exit : function () {
+
+        /**
+         * Exits the dialog and notifies observers
+         *
+         * @function
+         */
+        exit: function() {
           this.fire("exit_request");
         },
-        toggleDialog : function(){
+
+        /**
+         * Toggles the dialog
+         *
+         * @function
+         */
+        toggleDialog: function() {
           this.$.dialog.toggle();
         }
       });

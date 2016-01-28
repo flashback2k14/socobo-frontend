@@ -313,7 +313,7 @@ Custom property | Description | Default
       Polymer({
         is: "socobo-profile-info",
         /**
-         * This Event is fired if the save User Infos button is pressed. <br/>
+         * This Event is fired if the save User Infos button is pressed.
          * `Detail`: changed User Infos {Object} <br/>
          * @event save-info-standard
          */
@@ -370,12 +370,14 @@ Custom property | Description | Default
 
         /**
          * Helper variable to manage Admin Section State.
+         *
          * @type String
          * @private
          */
         _adminSection: "",
         /**
          * Helper Object to hold changed Input Field Values.
+         *
          * @type Object
          * @private
          */
@@ -383,31 +385,36 @@ Custom property | Description | Default
 
         /**
          * Handle changed Email Address from Administration
-         * @param event Event
-         * @param context Event Data
+         *
+         * @param {Event} event
+         * @param {Event} context
          * @private
-         * @method _handleEmailAddressUpdated
+         * @function
          */
         _handleEmailAddressUpdated: function(event, context) {
           this.$.txtEmailAddress.value = context.value;
         },
 
         /**
-         * Function for Show / Hide Edit Information Section
-         * @param {Object} e FAB
+         * Function to Show / Hide Edit Information Section
+         *
+         * @param {Object} e
          * @private
-         * @method _toggleEditInformationSection
+         * @function
          */
         _toggleEditInformationSection: function(e) {
-          ProfileUtil
-            .getInstance(this)
-            .toggleInformationArea(this.$.showInfoStandard, this.$.editInfoStandard, this.$.showInfoBio, this.$.editInfoBio, e);
+          ProfileUtil.getInstance()
+            .toggleInformationArea(
+              this.$.showInfoStandard, this.$.editInfoStandard,
+              this.$.showInfoBio, this.$.editInfoBio, e
+            );
         },
 
         /**
          * Function for Fire Event to Save Information changes.
+         *
          * @private
-         * @method _saveInfoStandard
+         * @function
          */
         _saveInfoStandard: function() {
           var obj = {
@@ -418,8 +425,9 @@ Custom property | Description | Default
         },
         /**
          * Function for Fire Event to Save Biography changes.
+         *
          * @private
-         * @method _saveInfoBiography
+         * @function
          */
         _saveInfoBiography: function() {
           this.fire("save-info-biography", {biography: this.$.txtBiography.value});
@@ -427,9 +435,10 @@ Custom property | Description | Default
 
         /**
          * Function for show Admin section only if the user is logged in with emailaddress.
+         *
          * @param {Object} obj User Object
          * @private
-         * @method _checkUserLoginProvider
+         * @function
          */
         _checkUserLoginProvider: function(obj) {
           if (typeof obj !== "undefined") {
@@ -439,46 +448,51 @@ Custom property | Description | Default
 
         /**
          * Toggle Change Email Address Section
+         *
          * @param {Object} e Button
          * @private
-         * @member _changeEmailAddress
+         * @function
          */
         _changeEmailAddress: function(e) {
-          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+          this._adminSection = ProfileUtil.getInstance().toggleRightAdminContainerElements(e);
         },
         /**
          * Toggle Change Password
+         *
          * @param {Object} e Button
          * @private
-         * @method _changePassword
+         * @function
          */
         _changePassword: function(e) {
-          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+          this._adminSection = ProfileUtil.getInstance().toggleRightAdminContainerElements(e);
         },
         /**
          * Toggle Reset Password Section
+         *
          * @param {Object} e Button
          * @private
-         * @method _resetPassword
+         * @function
          */
         _resetPassword: function(e) {
-          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+          this._adminSection = ProfileUtil.getInstance().toggleRightAdminContainerElements(e);
         },
         /**
          * Toggle Delete Account Section
+         *
          * @param {Object} e Button
          * @private
-         * @method _deleteAccount
+         * @function
          */
         _deleteAccount: function(e) {
-          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+          this._adminSection = ProfileUtil.getInstance().toggleRightAdminContainerElements(e);
         },
 
         /**
          * Function to submit changes
+         *
          * @param {Object} e Button
          * @private
-         * @method _submitAdminChanges
+         * @function
          */
         _submitAdminChanges: function(e) {
           var txtOldEmailAddress = document.querySelector("#txtOldEmailAddress");
@@ -531,12 +545,13 @@ Custom property | Description | Default
             default:
               alert("no valid operation chosen!");
           }
-          this._adminSection = ProfileUtil.getInstance(this).toggleRightAdminContainerElements(e);
+          this._adminSection = ProfileUtil.getInstance().toggleRightAdminContainerElements(e);
         },
         /**
          * Clear Input Fields
+         *
          * @private
-         * @method _clearAdminChanges
+         * @function
          */
         _clearAdminChanges: function() {
           document.querySelector("#txtOldEmailAddress").value = "";

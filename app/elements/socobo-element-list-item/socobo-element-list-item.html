@@ -112,58 +112,58 @@ Custom property | Description | Default
       Polymer.NeonAnimationRunnerBehavior
     ],
     properties: {
-      obj : {
-        type : Object,
-        value : {
+      obj: {
+        type: Object,
+        value: {
           desc: "test"
         }
       },
-      isChecked : {
-        type : Boolean,
-        value : false
+      isChecked: {
+        type: Boolean,
+        value: false
       },
       editIcon: {
-        type : String,
+        type: String,
         value: "create"
       },
       deleteIcon: {
-        type : String,
-        value : "delete"
+        type: String,
+        value: "delete"
       },
       dialogText: {
-        type : String,
-        value :  "Do you really want to remove?"
+        type: String,
+        value:  "Do you really want to remove?"
       },
-      animationConfig : {
-        value : function(){
+      animationConfig: {
+        value: function() {
           return {
-            name : "fade-in-animation",
+            name: "fade-in-animation",
             node: this.$.wrapper
-          }
+          };
         }
       }
     },
-    changeCheckBox : function(){
-      if(this.isChecked == true){
+    changeCheckBox: function() {
+      if (this.isChecked) {
         this.fire("check", this.obj);
-      }else{
+      } else {
         this.fire("uncheck", this.obj);
       }
     },
-    showElement: function () {
+    showElement: function() {
       this.fire("show_request", this.obj);
     },
-    editElement : function(){
+    editElement: function() {
       this.fire("edit_request", this.obj);
     },
-    deleteElement : function () {
+    deleteElement: function() {
       this.fire("delete_request", this.obj);
     },
-    _showConfirmation : function () {
+    _showConfirmation: function() {
       this.$.currentItem.innerHTML = this.obj.desc;
       this.$.deletionConfirmation.open();
     },
-    ready : function(){
+    ready: function() {
       this.playAnimation();
     }
   });

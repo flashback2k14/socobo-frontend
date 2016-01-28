@@ -159,7 +159,8 @@ Custom property | Description | Default
       Polymer({
         is: "socobo-inventory-edit",
         properties: {
-          /* Array of measurement objects. {value: value}.
+          /**
+           *  Array of measurement objects. [{value: value}].
           */
           measurements: {
             type: Array,
@@ -176,54 +177,75 @@ Custom property | Description | Default
           ];
         },
 
-        /*Display the dialog
-        @param {Object} userLogin
-        @param {Object} itemToEdit
+        /**Displays the dialog
+         *
+         * @param {Object} userLogin
+         * @param {Object} itemToEdit
+         *
+         * @function
         */
         show: function(itemToEdit) {
           this.$.dialog.toggle();
           this._resetItem(itemToEdit);
         },
 
-        /* Hide the dialog
-        */
+        /**
+         * Hides the dialog
+         *
+         * @function
+         */
         hide: function() {
           this.$.dialog.toggle();
         },
 
+        /**
+         * Sets the item and the inputs to the values in item
+         *
+         * @param {Object} item
+         * @private
+         * @function
+           */
         _resetItem: function(item) {
-          if (item != undefined) {
+          if (item !== undefined) {
             this.item = item;
             this.$.bestBeforeInput.value = item.bestBefore;
             this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
-            this.measurements.forEach(function (m, i, arr) {
-              if(item.measurement.value === m.value)
+            this.measurements.forEach(function(m, i) {
+              if (item.measurement.value === m.value) {
                 this.$.measurementDropdownMenu.select(i);
+              }
             }.bind(this));
-          } else {
-            // resetting the item
-            this.item = {};
-            this.$.bestBeforeInput.value = "";
-            this.$.categoryDropdownMenu.select(-1);
-            this.$.measurementDropdownMenu.select(-1);
           }
         },
 
-        _editItem: function(e,detail) {
+        /**
+         * Validate the item and fire the edit item event
+         *
+         * @private
+         */
+        _editItem: function() {
           var item = this._populateItem(this.item);
-          if(this._validate(item)) {
+          if (this._validate(item)) {
             this.fire("edit-item", item);
           } else {
             alert("Some information is missing");
           }
         },
 
+        /**
+         * Populate the item with the values from the dropdowns and set item.desc and item.info
+         *
+         * @param {Object} item
+         * @returns {Object}
+         * @private
+         * @function
+         */
         _populateItem: function(item) {
           item.measurement = this.measurements[this.$.measurementDropdownMenu.selected];
-          if (this.$.categoryDropdownMenu.selected != -1) {
+          if (this.$.categoryDropdownMenu.selected !== -1) {
             this.item.category = this.categories[this.$.categoryDropdownMenu.selected];
           } else {
-            delete this.item.category
+            delete this.item.category;
           }
 
           item.desc = item.name;
@@ -232,10 +254,24 @@ Custom property | Description | Default
           return item;
         },
 
+        /**
+         * Validates the item
+         *
+         * @param {Object} item
+         * @returns {boolean}
+         * @private
+         * @function
+         */
         _validate: function(item) {
-          if(!item.name || item.name.length < 5) return false;
-          if(!item.measurement || item.measurement.value.length === 0) return false;
-          if(!item.count) return false;
+          if (!item.name || item.name.length < 5) {
+            return false;
+          }
+          if (!item.measurement || item.measurement.value.length === 0) {
+            return false;
+          }
+          if (!item.count) {
+            return false;
+          }
           return true;
         }
       });

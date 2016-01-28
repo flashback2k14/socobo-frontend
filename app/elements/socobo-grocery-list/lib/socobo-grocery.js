@@ -1,3 +1,4 @@
+/* exported SocoboGrocery */
 var SocoboGrocery = (function() {
   /**
    * Singleton Instance
@@ -5,8 +6,9 @@ var SocoboGrocery = (function() {
   var instance;
   /**
    * Init Functions
-   * @param context
-   * @param userLogin
+   *
+   * @param {Object} context
+   * @param {Object} userLogin
    * @returns {{}}
    * @private
    */
@@ -18,13 +20,13 @@ var SocoboGrocery = (function() {
     var _userId = userLogin.userId;
     /**
      * Create Grocery Firebase Path
-     * @param section
-     * @returns {string}
+     *
+     * @param {String} section
+     * @returns {String}
      * @private
-     * @method _getGroceryItemPath
      */
-    var _getGroceryItemPath = function (section) {
-      return _baseUrl + "grocery/" + _userId + section
+    var _getGroceryItemPath = function(section) {
+      return _baseUrl + "grocery/" + _userId + section;
     };
     // specify routes
     var _activeItemsRoute = _getGroceryItemPath("/active");
@@ -35,9 +37,9 @@ var SocoboGrocery = (function() {
 
     /**
      * Handle Errors for changed items
-     * @param error
+     *
+     * @param {Object} err
      * @private
-     * @method _onErrorActive
      */
     var _onError = function(err) {
       if (err) {
@@ -46,17 +48,9 @@ var SocoboGrocery = (function() {
     };
 
     /**
-     * Register Changed Listener for active and archive Items
-     * @method registerGroceryItemListeners
-     */
-    var registerGroceryItemListeners = function() {
-      _registerGroceryActiveListeners();
-      _registerGroceryArchiveListeners();
-    };
-    /**
      * Register Changed Listener for active Items
+     *
      * @private
-     * @method _registerGroceryActiveListeners
      */
     var _registerGroceryActiveListeners = function() {
       _refActive.on("child_added", function(snapshot) {
@@ -68,26 +62,34 @@ var SocoboGrocery = (function() {
     };
     /**
      * Register Changed Listener for archive Items
+     *
      * @private
-     * @method _registerGroceryArchiveListeners
      */
     var _registerGroceryArchiveListeners = function() {
       _refArchive.on("child_added", function(snapshot) {
         _ctx.fire("grocery-archive-item-added", {key: snapshot.key(), desc: snapshot.val().desc});
       }, _onError);
     };
+
+    /**
+     * Register Changed Listener for active and archive Items
+     */
+    var registerGroceryItemListeners = function() {
+      _registerGroceryActiveListeners();
+      _registerGroceryArchiveListeners();
+    };
     /**
      * Add Item to active List
-     * @param item
-     * @method addItemToActiveList
+     *
+     * @param {Object} item
      */
     var addItemToActiveList = function(item) {
       _refActive.push(item, _onError);
     };
     /**
      * Remove Item from active List
-     * @param item
-     * @method removeItemFromActiveList
+     *
+     * @param {Object} item
      */
     var removeItemFromActiveList = function(item) {
       var removePath = new Firebase(_activeItemsRoute + "/" + item.key);
@@ -95,16 +97,16 @@ var SocoboGrocery = (function() {
     };
     /**
      * Add Item to archive List
-     * @param item
-     * @method addItemToArchiveList
+     *
+     * @param {Object} item
      */
     var addItemToArchiveList = function(item) {
       _refArchive.push(item, _onError);
     };
     /**
      * Remove Item from archive List
-     * @param item
-     * @method removeItemFromArchiveList
+     *
+     * @param {Object} item
      */
     var removeItemFromArchiveList = function(item) {
       var removePath = new Firebase(_archiveItemsRoute + "/" + item.key);
@@ -115,19 +117,20 @@ var SocoboGrocery = (function() {
      * Public API
      */
     return {
-      registerGroceryItemListeners  : registerGroceryItemListeners,
-      addItemToActiveList           : addItemToActiveList,
-      removeItemFromActiveList      : removeItemFromActiveList,
-      addItemToArchiveList          : addItemToArchiveList,
-      removeItemFromArchiveList     : removeItemFromArchiveList
-    }
+      registerGroceryItemListeners: registerGroceryItemListeners,
+      addItemToActiveList: addItemToActiveList,
+      removeItemFromActiveList: removeItemFromActiveList,
+      addItemToArchiveList: addItemToArchiveList,
+      removeItemFromArchiveList: removeItemFromArchiveList
+    };
   };
 
   return {
     /**
      * Get Singleton Instance
-     * @param context
-     * @param userLogin
+     *
+     * @param {Object} context
+     * @param {Object} userLogin
      * @returns {Object}
      */
     getInstance: function(context, userLogin) {
@@ -136,5 +139,5 @@ var SocoboGrocery = (function() {
       }
       return instance;
     }
-  }
+  };
 })();

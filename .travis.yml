@@ -18,4 +18,4 @@ addons:
     packages:
       - google-chrome-stable
 script:
-  - xvfb-run wct
+  - xvfb-run npm test

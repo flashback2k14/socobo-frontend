@@ -342,7 +342,8 @@ Custom property | Description | Default
             type: String
           },
           /**
-           * Configuration for the Animation. <br/>
+           * Configuration for the Animation.
+           *
            * `Entry`: scale-up-animation <br/>
            * `Exit`: fade-out-animation
            */
@@ -359,7 +360,7 @@ Custom property | Description | Default
                   name: "fade-out-animation",
                   node: this
                 }
-              }
+              };
             }
           }
         },
@@ -370,9 +371,10 @@ Custom property | Description | Default
           "neon-animation-finish": "_onAnimationFinish"
         },
         /**
-         * Method for handle finished Animation. <br/>
+         * Method for handle finished Animation.
+         *
          * @private
-         * @method _onAnimationFinish
+         * @function
          */
         _onAnimationFinish: function() {
           if (!this.opened) {
@@ -380,8 +382,9 @@ Custom property | Description | Default
           }
         },
         /**
-         * Method for showing the Element. <br/>
-         * @method show
+         * Method for showing the Element.
+         *
+         * @function
          */
         show: function() {
           this.opened = true;
@@ -390,8 +393,9 @@ Custom property | Description | Default
           this.playAnimation("entry");
         },
         /**
-         * Method for hiding the Element. <br/>
-         * @method hide
+         * Method for hiding the Element.
+         *
+         * @function
          */
         hide: function() {
           this.opened = false;
@@ -399,21 +403,11 @@ Custom property | Description | Default
           this.playAnimation("exit");
         },
         /**
-         * toggle all buttons
-         * @private
-         * @methode _toggleRegisterButtons
-         */
-        _toggleRegisterButtons: function() {
-          this._toggleButton(this.$.btnRegGooglePlus);
-          this._toggleButton(this.$.btnRegTwitter);
-          this._toggleButton(this.$.btnRegFacebook);
-          this._toggleButton(this.$.btnRegEmail);
-        },
-        /**
          * toggle button to enable / disable Button
-         * @param {HTMLElement} el
+         *
+         * @param {Object} el
          * @private
-         * @method _toggleButton
+         * @function
          */
         _toggleButton: function(el) {
           if (el.get("disabled")) {
@@ -423,50 +417,68 @@ Custom property | Description | Default
           }
         },
         /**
-         * Method for register with Google+ Account. <br/>
+         * toggle all buttons
+         *
          * @private
-         * @method _registerWithGooglePlus
+         * @function
+         */
+        _toggleRegisterButtons: function() {
+          this._toggleButton(this.$.btnRegGooglePlus);
+          this._toggleButton(this.$.btnRegTwitter);
+          this._toggleButton(this.$.btnRegFacebook);
+          this._toggleButton(this.$.btnRegEmail);
+        },
+        /**
+         * Method for register with Google+ Account.
+         *
+         * @private
+         * @function
          */
         _registerWithGooglePlus: function() {
           this._handleRegister("google");
         },
         /**
-         * Method for register with Twitter Account. <br/>
+         * Method for register with Twitter Account.
+         *
          * @private
-         * @method _registerWithTwitter
+         * @function
          */
         _registerWithTwitter: function() {
           this._handleRegister("twitter");
         },
         /**
-         * Method for register with Facebook Account. <br/>
+         * Method for register with Facebook Account.
+         *
          * @private
-         * @method _registerWithFacebook
+         * @function
          */
         _registerWithFacebook: function() {
           this._handleRegister("facebook");
         },
         /**
-         * Method for register with Emailaddress Account. <br/>
+         * Method for register with Emailaddress Account.
+         *
          * @private
-         * @method _registerWithEmail
+         * @function
          */
         _registerWithEmail: function() {
           this._handleRegister("email");
         },
         /**
-         * Method for go to Login Element. <br/>
+         * Method for go to Login Element.
+         *
          * @private
-         * @method _goToLogin
+         * @function
          */
         _goToLogin: function() {
           this.fire("go-to-login");
         },
         /**
-         * Method for clearing all input fields. <br/>
+         * Method for clearing all input fields.
+         *
          * @param {Boolean} clearAll
          * @private
-         * @method _clearInputFields
+         * @function
          */
         _clearInputFields: function(clearAll) {
           if (clearAll) {
@@ -477,17 +489,19 @@ Custom property | Description | Default
         },
         /**
          * Helper Function
+         *
          * @private
-         * @method _checkDbName
+         * @function
          */
         _checkDbName: function() {
           return this.firebasebaseurl.toLowerCase().indexOf("dev") !== -1;
         },
         /**
-         * Method for handle user registration. <br/>
+         * Method for handle user registration.
+         *
          * @param {String} provider Social Provider
          * @private
-         * @method _handleRegister
+         * @function
          */
         _handleRegister: function(provider) {
           var fbBaseURL = this.firebasebaseurl;
