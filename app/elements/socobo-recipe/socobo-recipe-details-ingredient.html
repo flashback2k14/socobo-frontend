@@ -105,14 +105,14 @@ Custom property | Description | Default
         <span>
           <paper-input label="Amount"
                        class="amount_input"
-                       type="number"
                        value="{{ingredient.amount}}"
-                       pattern="[\d,.]+"
+                       required="true"
                        auto-validate
-                       error-message="Invalid characters">
+                       pattern="[\d]+"
+                       error-message="Invalid value">
           </paper-input>
         </span>
-          <!---->
+        <!---->
         <span>
           <div class="horizontal-section">
           <paper-dropdown-menu
@@ -151,6 +151,7 @@ Custom property | Description | Default
           ingredient: {
             type: Object,
             value: {
+              amount : 0
             }
           },
           /**
