@@ -324,6 +324,7 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-recipe-details-add",
+        behaviors: [RecipeBehaviors.ValidateBehavior],
         /**
          * LISTENERS
          */
@@ -476,6 +477,7 @@ Custom property | Description | Default
             this.recipe.steps[k].number = counter;
             counter++;
           }
+          this.validate();
           var v = this.validateRecipe();
           var recipeContainer = {};
           if(v.length <= 0){
