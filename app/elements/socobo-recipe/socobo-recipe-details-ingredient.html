@@ -109,7 +109,8 @@ Custom property | Description | Default
                        required="true"
                        auto-validate
                        pattern="[\d]+"
-                       error-message="Invalid value">
+                       error-message="Invalid value"
+                       on-change="_convertToInt">
           </paper-input>
         </span>
         <!---->
@@ -170,6 +171,13 @@ Custom property | Description | Default
           state : {
             type : String,
             value : "show"
+          }
+        },
+        _convertToInt: function () {
+          alert("convert");
+          var toChange =  this.ingredient.amount;
+          if(typeof toChange !== "number"){
+            this.ingredient.amount = Number(toChange);
           }
         },
         /**
