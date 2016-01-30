@@ -6,10 +6,6 @@ var ValidateModule = ValidateModule || (function () {
       return obj[property] !== "" && obj[property] !== undefined && obj[property] !== null;
     }
 
-    function _verifyArrayNotEmpty(arr) {
-      return arr.length > 0;
-    }
-
     function _verifyAllPropertyValuesNotEmpty(obj, propertiesArray) {
       var invalidProperties = [], prop, valid;
       for (prop in propertiesArray) {
@@ -35,6 +31,10 @@ var ValidateModule = ValidateModule || (function () {
         tmp.forEach(elementInList);
       }
       return invalidProperties;
+    }
+
+    function _verifyArrayNotEmpty(arr) {
+      return arr.length > 0;
     }
 
     return {

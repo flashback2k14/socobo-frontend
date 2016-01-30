@@ -33,7 +33,7 @@
               prop1: "TEST",
               prop2: 123,
               prop3: undefined,
-              prop4: null,
+              prop4: null
             },
             {
               prop1: "OTHER TEST",
@@ -44,110 +44,76 @@
           ]
         });
 
-        //test simple array cloning
-
         test('single property is empty', function () {
-          expect(new ValidateModule().verifySingleProperty(testObj, "propEmptyString")).to.equal(false);
+          expect(ValidateModule.verifySingleProperty(testObj, "propEmptyString")).to.equal(false);
         });
 
         test('single property is not empty', function () {
-          expect(new ValidateModule().verifySingleProperty(testObj, "propString")).to.equal(true);
+          expect(ValidateModule.verifySingleProperty(testObj, "propString")).to.equal(true);
         });
 
         test('single property is undefined', function () {
-          expect(new ValidateModule().verifySingleProperty(testObj, "propUndefined")).to.equal(false);
+          expect(ValidateModule.verifySingleProperty(testObj, "propUndefined")).to.equal(false);
         });
 
         test('single property is not undefined', function () {
-          expect(new ValidateModule().verifySingleProperty(testObj, "propNotUndefined")).to.equal(true);
+          expect(ValidateModule.verifySingleProperty(testObj, "propNotUndefined")).to.equal(true);
         });
 
         test('single property is null', function () {
-          expect(new ValidateModule().verifySingleProperty(testObj, "propNull")).to.equal(false);
+          expect(ValidateModule.verifySingleProperty(testObj, "propNull")).to.equal(false);
         });
 
         test('single property is not null', function () {
-          expect(new ValidateModule().verifySingleProperty(testObj, "propNotNull")).to.equal(true);
-        });
-
-        test('array is empty', function () {
-          expect(new ValidateModule().verifyArrayNotEmpty([])).to.equal(false);
-        });
-
-        test('array is not empty', function () {
-          expect(new ValidateModule().verifyArrayNotEmpty(["one", "two"])).to.equal(true);
+          expect(ValidateModule.verifySingleProperty(testObj, "propNotNull")).to.equal(true);
         });
 
         test('all properties of an obj are valid', function () {
           var validProperties = ["propString", "propNotUndefined", "propNotNull"];
-          expect(new ValidateModule().verifyMultipleProperties(testObj, validProperties)).to.eql([]);
+          expect(ValidateModule.verifyMultipleProperties(testObj, validProperties)).to.eql([]);
         });
 
         test('all properties of an obj are invalid', function () {
           var inValidProperties = ["propEmptyString", "propUndefined", "propNull"];
-          expect(new ValidateModule().verifyMultipleProperties(testObj, inValidProperties))
+          expect(ValidateModule.verifyMultipleProperties(testObj, inValidProperties))
             .to.eql(["propEmptyString", "propUndefined", "propNull"]);
         });
 
         test('some properties of an obj are invalid', function () {
           var inValidProperties = ["propEmptyString", "propString", "propUndefined", "propNotUndefined", "propNull"];
-          expect(new ValidateModule().verifyMultipleProperties(testObj, inValidProperties))
+          expect(ValidateModule.verifyMultipleProperties(testObj, inValidProperties))
             .to.eql(["propEmptyString", "propUndefined", "propNull"]);
         });
 
         test('all properties of all objs are invalid', function () {
           var validProperties = ["prop3", "prop4"];
-          expect(new ValidateModule().verifyAll(testArr, validProperties))
+          expect(ValidateModule.verifyAll(testArr, validProperties))
             .to.eql(["prop3", "prop4"]);
         });
 
         test('all properties of all objs are valid', function () {
           var validProperties = ["prop1", "prop2"];
-          expect(new ValidateModule().verifyAll(testArr, validProperties))
+          expect(ValidateModule.verifyAll(testArr, validProperties))
             .to.eql([]);
         });
 
         test('some properties of all objs are valid', function () {
           var validProperties = ["prop1", "prop2", "prop4"];
-          expect(new ValidateModule().verifyAll(testArr, validProperties))
+          expect(ValidateModule.verifyAll(testArr, validProperties))
             .to.eql(["prop4"]);
         });
 
-        test('add simple message', function () {
-          var validator = new ValidateModule();
-          validator.addMsgPart("TEST MESSAGE");
-          expect(validator.buildMsg())
-            .to.eql("TEST MESSAGE");
+        test('array not empty', function () {
+          var validProperties = ["prop1", "prop2", "prop4"];
+          expect(ValidateModule.verifyArrayNotEmpty(validProperties))
+            .to.eql(true);
         });
 
-        test('add two simple message', function () {
-          var validator = new ValidateModule();
-          validator.addMsgPart("TEST MESSAGE");
-          validator.addMsgPart("2nd TEST MESSAGE");
-          expect(validator.buildMsg())
-            .to.eql("TEST MESSAGE, 2nd TEST MESSAGE");
+        test('array is empty', function () {
+          var validProperties = [];
+          expect(ValidateModule.verifyArrayNotEmpty(validProperties))
+            .to.eql(false);
         });
-
-        test('add two simple message and a array of messages', function () {
-          var validator = new ValidateModule();
-          validator.addMsgPart("TEST MESSAGE");
-          validator.addMsgPart("2nd TEST MESSAGE");
-          validator.addMsgParts("Ingredients", ["Description", "Amount"]);
-          expect(validator.buildMsg())
-            .to.eql("TEST MESSAGE, 2nd TEST MESSAGE, Ingredients(Description, Amount)");
-        });
-
-        test('add two simple message and a array of messages and a prefix', function () {
-          var validator = new ValidateModule();
-          validator.addMsgPart("TEST MESSAGE");
-          validator.addMsgPart("2nd TEST MESSAGE");
-          validator.addMsgParts("Ingredients", ["Description", "Amount"]);
-          validator.setPrefix("Please add the missing elements: ");
-          expect(validator.buildMsg())
-            .to.eql("Please add the missing elements:" +
-            " TEST MESSAGE, 2nd TEST MESSAGE, Ingredients(Description, Amount)");
-        });
-
       });
 
     </script>
