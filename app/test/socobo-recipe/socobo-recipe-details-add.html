@@ -194,8 +194,8 @@
           socoboRecipeDetailsAdd.addEventListener("add_request", function(){
             done();
           });
-          sinon.stub(socoboRecipeDetailsAdd, "validateRecipe", function(){
-            return "";
+          sinon.stub(socoboRecipeDetailsAdd, "validate", function(){
+            return {isValid: true, message: "Test"};
           });
           flush(function () {
             socoboRecipeDetailsAdd.createNewRecipe();
@@ -207,8 +207,8 @@
           socoboRecipeDetailsAdd.addEventListener("add_request", function(){
             throw new Error("Should not catch an event");
           });
-          sinon.stub(socoboRecipeDetailsAdd, "validateRecipe", function(){
-            return "not empty";
+          sinon.stub(socoboRecipeDetailsAdd, "validate", function(){
+            return {isValid: false, message: "Test"};
           });
           flush(function () {
             socoboRecipeDetailsAdd.createNewRecipe();
@@ -218,26 +218,24 @@
         });
 
         test('createNewRecipe creates a recipe correctly', function (done) {
+          mock_add.expects("clearInputFields").once();
           var steps = [{number: 0, desc: "testStep"}];
           var ingredients = [{desc : "test_ingr", amount: 12, unit: "kg"}];
           var title = "test_title";
           var text = "test_text";
+          socoboRecipeDetailsAdd.image = new ImageService();
           sinon.stub(socoboRecipeDetailsAdd.image, "getImageAsString", function(){
             return "test_image";
           });
-
-
-          mock_add.expects("_notify").once();
           socoboRecipeDetailsAdd.addEventListener("add_request", function(){
-            throw new Error("Should not catch an event");
+            done();
           });
-          sinon.stub(socoboRecipeDetailsAdd, "validateRecipe", function(){
-            return "not empty";
+          sinon.stub(socoboRecipeDetailsAdd, "validate", function(){
+            return {isValid: true, message: "Test"};
           });
           flush(function () {
             socoboRecipeDetailsAdd.createNewRecipe();
             mock_add.verify();
-            done();
           });
         });
 
