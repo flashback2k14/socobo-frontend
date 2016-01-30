@@ -1,3 +1,4 @@
+/* exported SocoboRanking */
 var SocoboRanking = (function() {
   /**
    * Singleton Instance
@@ -5,14 +6,19 @@ var SocoboRanking = (function() {
   var instance;
   /**
    * Singleton Public Functions
-   * @param userLogin
-   * @returns {{getData: getData}}
+   *
+   * @param {Object} userLogin
+   * @returns {{
+   *  getData: getData,
+   *  registerChangedListener: registerChangedListener
+   * }}
    * @private
    */
   var _init = function(userLogin) {
     /**
      * Private Variables
-     * @type {string|string|string|string}
+     *
+     * @type {String|String|String|String|Object|Object}
      * @private
      */
     var _baseUrl = userLogin.firebaseUrl;
@@ -22,6 +28,46 @@ var SocoboRanking = (function() {
     // global refs for register
     var _refInventory = new Firebase(_inventoryRoute);
     var _refRecipes = new Firebase(_recipeRoute);
+    /**
+     * Get Data from Inventory
+     *
+     * @returns {Promise}
+     * @private
+     */
+    var _getDataFromInventory = function() {
+      return new Promise(function(resolve, reject) {
+        var inventoryItems = [];
+        _refInventory.once("value", function(snapshot) {
+          snapshot.forEach(function(item) {
+            inventoryItems.push(item.val());
+          });
+          resolve(inventoryItems);
+        }, function(err) {
+          reject(err);
+        });
+      });
+    };
+    /**
+     * Get Data from Recipes (only for specific user)
+     *
+     * @returns {Promise}
+     * @private
+     */
+    var _getDataFromRecipe = function() {
+      return new Promise(function(resolve, reject) {
+        var recipeItems = [];
+        _refRecipes.orderByChild("userId").startAt(_userId).once("value", function(snapshot) {
+          snapshot.forEach(function(item) {
+            var recItem = item.val();
+            recItem.id = item.key();
+            recipeItems.push(recItem);
+          });
+          resolve(recipeItems);
+        }, function(err) {
+          reject(err);
+        });
+      });
+    };
     /**
      * Public Get Data Function
      */
@@ -42,46 +88,36 @@ var SocoboRanking = (function() {
       });
     };
     /**
-     * Get Data from Inventory
-     * @returns {Promise}
+     * Fire Event if inventory item changed
+     * this is context from registerChangedListener
+     *
      * @private
      */
-    var _getDataFromInventory = function() {
-      return new Promise(function(resolve, reject) {
-        var inventoryItems = [];
-        _refInventory.once("value", function(snapshot) {
-          snapshot.forEach(function(item) {
-            inventoryItems.push(item.val());
-          });
-          resolve(inventoryItems);
-        }, function(err) {
-          reject(err);
-        });
-      });
+    var _onCompleteInventory = function() {
+      this.fire("ranking_inventory_item_changed");
     };
     /**
-     * Get Data from Recipes (only for specific user)
-     * @returns {Promise}
+     * Fire Event if recipe item changed
+     * this is context from registerChangedListener
+     *
      * @private
      */
-    var _getDataFromRecipe = function() {
-      return new Promise(function(resolve, reject) {
-        var recipeItems = [];
-        _refRecipes.orderByChild("userId").startAt(_userId).once("value", function(snapshot) {
-          snapshot.forEach(function(item) {
-            var recItem = item.val();
-            recItem.id = item.key();
-            recipeItems.push(recItem);
-          });
-          resolve(recipeItems);
-        }, function(err) {
-          reject(err);
-        });
-      });
+    var _onCompleteRecipe = function() {
+      this.fire("ranking_recipes_item_changed");
+    };
+    /**
+     * Fire Event if inventory or recipe throws an error
+     * this is context from registerChangedListener
+     *
+     * @private
+     */
+    var _onError = function(err) {
+      this.fire("ranking_changed_error", err);
     };
     /**
      * tracking changes in inventory items and recipes
-     * @param context
+     *
+     * @param {Object} context
      */
     var registerChangedListener = function(context) {
       // inventory
@@ -94,36 +130,12 @@ var SocoboRanking = (function() {
       _refRecipes.on("child_removed", _onCompleteRecipe, _onError, context);
     };
     /**
-     * Fire Event if inventory item changed
-     * this is context from registerChangedListener
-     * @private
-     */
-    var _onCompleteInventory = function() {
-      this.fire("ranking_inventory_item_changed");
-    };
-    /**
-     * Fire Event if recipe item changed
-     * this is context from registerChangedListener
-     * @private
-     */
-    var _onCompleteRecipe = function() {
-      this.fire("ranking_recipes_item_changed");
-    };
-    /**
-     * Fire Event if inventory or recipe throws an error
-     * this is context from registerChangedListener
-     * @private
-     */
-    var _onError = function(err) {
-      this.fire("ranking_changed_error", err);
-    };
-    /**
      * Public API
      */
     return {
-      getData : getData,
-      registerChangedListener : registerChangedListener
-    }
+      getData: getData,
+      registerChangedListener: registerChangedListener
+    };
   };
   /**
    * Get Singleton Instance
@@ -131,7 +143,8 @@ var SocoboRanking = (function() {
   return {
     /**
      * Get Singleton Instance
-     * @param userLogin
+     *
+     * @param {Object} userLogin
      * @returns {Object}
      */
     getInstance: function(userLogin) {
@@ -140,5 +153,5 @@ var SocoboRanking = (function() {
       }
       return instance;
     }
-  }
+  };
 })();

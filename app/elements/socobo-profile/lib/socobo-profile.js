@@ -1,3 +1,4 @@
+/* exported SocoboProfile */
 var SocoboProfile = (function() {
   /**
    * Instance stores a reference to the Singleton
@@ -5,9 +6,14 @@ var SocoboProfile = (function() {
   var instance;
   /**
    * Socobo Profile DAO
-   * @param bUrl
-   * @param uId
-   * @returns {{loadProfileData: loadProfileData, updateProfileData: updateProfileData, changeUserEmailAddress: changeUserEmailAddress, changeUserPassword: changeUserPassword, resetUserPassword: resetUserPassword, removeUserAccount: removeUserAccount}}
+   *
+   * @param {String} bUrl
+   * @param {String} uId
+   * @returns {{
+   *  loadProfileData: loadProfileData, updateProfileData: updateProfileData,
+   *  changeUserEmailAddress: changeUserEmailAddress, changeUserPassword: changeUserPassword,
+   *  resetUserPassword: resetUserPassword, removeUserAccount: removeUserAccount
+   * }}
    */
   function init(bUrl, uId) {
     /**
@@ -20,23 +26,25 @@ var SocoboProfile = (function() {
     var userId = uId;
     /**
      * Load Data from Firebase
+     *
      * @returns {Promise}
      */
     function loadProfileData() {
       return new Promise(function(resolve, reject) {
         var ref = new Firebase(baseUrl + "profiles/" + userId);
-        ref.on("value", function(snapshot){
+        ref.on("value", function(snapshot) {
           if (snapshot) {
             resolve(snapshot.val());
           } else {
             reject({err: "No Profile Data available!"});
           }
-        })
+        });
       });
     }
     /**
      * Update Profile Data
-     * @param obj Changed Data
+     *
+     * @param {Object} obj Changed Data
      * @returns {Promise}
      */
     function updateProfileData(obj) {
@@ -54,7 +62,8 @@ var SocoboProfile = (function() {
     }
     /**
      * Change User Email Address
-     * @param obj Changed Data
+     *
+     * @param {Object} obj Changed Data
      * @returns {Promise}
      */
     function changeUserEmailAddress(obj) {
@@ -81,7 +90,8 @@ var SocoboProfile = (function() {
     }
     /**
      * Change User Password
-     * @param obj Changed Data
+     *
+     * @param {Object} obj Changed Data
      * @returns {Promise}
      */
     function changeUserPassword(obj) {
@@ -103,12 +113,14 @@ var SocoboProfile = (function() {
             resolve({value: "User password changed successfully!"});
           }
         };
-        ref.changePassword({email: obj.oldMail, oldPassword: obj.oldPwd, newPassword: obj.newPwd}, onComplete);
+        var changeObj = {email: obj.oldMail, oldPassword: obj.oldPwd, newPassword: obj.newPwd};
+        ref.changePassword(changeObj, onComplete);
       });
     }
     /**
      * Reset User Password
-     * @param obj Email Adress
+     *
+     * @param {Object} obj Email Address
      * @returns {Promise}
      */
     function resetUserPassword(obj) {
@@ -132,6 +144,7 @@ var SocoboProfile = (function() {
     }
     /**
      * Remove all User Data from Firebase
+     *
      * @returns {Promise}
      */
     function removeAllUserData() {
@@ -157,7 +170,8 @@ var SocoboProfile = (function() {
     }
     /**
      * Remove User Account from Firebase
-     * @param obj User Login
+     *
+     * @param {Object} obj User Login
      * @returns {Promise}
      */
     function removeUserAccount(obj) {
@@ -187,21 +201,22 @@ var SocoboProfile = (function() {
      * PUBLIC FUNCTIONS
      */
     return {
-      loadProfileData         : loadProfileData,
-      updateProfileData       : updateProfileData,
-      changeUserEmailAddress  : changeUserEmailAddress,
-      changeUserPassword      : changeUserPassword,
-      resetUserPassword       : resetUserPassword,
-      removeAllUserData       : removeAllUserData,
-      removeUserAccount       : removeUserAccount
+      loadProfileData: loadProfileData,
+      updateProfileData: updateProfileData,
+      changeUserEmailAddress: changeUserEmailAddress,
+      changeUserPassword: changeUserPassword,
+      resetUserPassword: resetUserPassword,
+      removeAllUserData: removeAllUserData,
+      removeUserAccount: removeUserAccount
     };
   }
 
   return {
     /**
      * Get the Singleton instance if one exists or create one if it doesn't
-     * @param bUrl
-     * @param uId
+     *
+     * @param {String} bUrl
+     * @param {String} uId
      * @returns {Object}
      */
     getInstance: function(bUrl, uId) {

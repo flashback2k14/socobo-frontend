@@ -65,30 +65,33 @@ Custom property | Description | Default
   </template>
 
   <script>
-    (function () {
+    (function() {
       Polymer({
         is: "socobo-inventory",
 
         properties: {
-
-          /*Object containing the user information. Must have following
-          properties:
-          - userId,
-          - firebaseUrl,
-          - expires
+          /**
+           * Object containing the user information. { userId: , firebaseUrl: , expires:}
+           *
           */
           userLogin: {
             type: Object
           },
 
-          /*Specifies the location of the Firebase database
-          */
+          /**
+           * Specifies the location of the Firebase database
+           *
+           */
           location: {
             computed: "_handleLogin(userLogin)",
             type: String,
             value: "https://socobo.firebaseio.com/"
           },
 
+          /**
+           * Specifies the path to the measurements
+           *
+           */
           measurementLocation: {
             computed: "_handleMeasurement(userLogin)",
             type: String,
@@ -96,31 +99,52 @@ Custom property | Description | Default
           }
         },
 
-        ready: function () {
+        /**
+         * Ready handler; initializes the checked items counter
+         */
+        ready: function() {
           this._checkedItems = 0;
           this._itemsChecked = false;
         },
 
-        _handleMeasurement: function(login){
+        /**
+         * Computes the measurement location property
+         *
+         * @param {String} login
+         * @returns {String}
+         * @private
+         * @function
+         */
+        _handleMeasurement: function(login) {
           return login ? login.firebaseUrl + "measurements/" : this.measurementLocation;
         },
 
-        /*Construct firebase url for user's inventory from userLogin object</br>
-         @param {Object} login
-         @method _handleLogin
+        /**
+         * Construct firebase url for user's inventory from userLogin object
+         *
+         * @param {Object} login
+         * @private
+         * @function
          */
         _handleLogin: function(login) {
           var url = "";
           if (login) {
             url = login.firebaseUrl + "inventory/";
-            url = login.userId ? url + login.userId + "/" : url
+            url = login.userId ? url + login.userId + "/" : url;
           } else {
             url = this.location;
           }
           return url;
         },
 
-        _handleCheckAll: function (e) {
+        /**
+         * Listener to handle the check all events
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
+        _handleCheckAll: function(e) {
           this._checkedItems = 0;
           this._itemsChecked = e.detail.state;
 
@@ -129,22 +153,46 @@ Custom property | Description | Default
           }
         },
 
-        _handleCheck: function (e) {
+        /**
+         * Listener to handle the check item events
+         *
+         * @private
+         * @function
+         */
+        _handleCheck: function() {
           this._checkedItems++;
           this._itemsChecked = this._checkedItems !== 0;
         },
 
-        _handleUncheck: function (e) {
+        /**
+         * Listener to handle the uncheck item events
+         *
+         * @private
+         * @function
+         */
+        _handleUncheck: function() {
           this._checkedItems--;
-          this._itemsChecked = this._checkedItems !== 0
+          this._itemsChecked = this._checkedItems !== 0;
         },
 
-        /*Display dialog to create new inventory items
+        /**
+         * Display dialog to create new inventory items
+         *
+         * @private
+         * @function
         */
-        _createItem: function () {
+        _createItem: function() {
           this.$.inventoryCreateDialog.show();
         },
 
+        /**
+         * Listener to handle the create item events. Takes care creating the item and
+         * updating Firebase.
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
         _onCreateItem: function(e) {
           var item = e.detail;
           item.created = Firebase.ServerValue.TIMESTAMP;
@@ -152,27 +200,44 @@ Custom property | Description | Default
           this.$.inventoryCollection.add(item);
           this.$.inventoryCreateDialog.hide();
         },
+
         /**
-         * Handler for the delete_request event fired by the corresponding
-         * socobo-element-list-item. Deletes this item from the database.
+         * Handler for the delete_request event fired by the corresponding socobo-element-list-item.
+         * Deletes this item from the database.
+         *
          * @param {Event} e
+         * @private
+         * @function
          */
         _confirmDelete: function(e) {
           this.$.inventoryCollection.remove(e.detail);
         },
 
-        /* Display dialog to edit inventory items
-        */
+        /**
+         *  Display dialog to edit inventory items
+         *
+         *  @param {Event} e
+
+         *  @private
+         *  @function
+         */
         _editItem: function(e) {
           this.$.inventoryEditDialog.show(e.detail);
         },
 
-        _deleteAllItems: function (e) {
+        /**
+         * Listener to handle the delete all items events.
+         * Finds all checked items and delete those from Firebase
+         *
+         * @private
+         * @function
+         */
+        _deleteAllItems: function() {
           var itemList = this.querySelectorAll(".inventory-list-item");
           for (var i in itemList) {
             var element = itemList[i];
             if (!element.hidden && element.isChecked) {
-              this.$.inventoryCollection.removeByKey(element.obj.__firebaseKey__)
+              this.$.inventoryCollection.removeByKey(element.obj.__firebaseKey__);
             }
           }
           this._checkedItems = 0;
@@ -180,8 +245,14 @@ Custom property | Description | Default
           this.$.inventoryOverview.resetSearch();
         },
 
-        /* Save changes made to inventory items
-        */
+        /**
+         *  Save changes made to inventory items
+         *
+         *  @param {Object} e
+
+         *  @private
+         *  @function
+         */
         _saveItem: function(e) {
           var item = e.detail;
           var self = this;

@@ -74,8 +74,11 @@
       app.route = "login";
     } else {
       // Show Menu Items
-      Util.toggleMenuItems([menuItemLogin, menuItemHome, menuItemRecipe, menuItemInventory, menuItemProfile]);
-      // load Ranking, Grocery List, Recipes and Profile
+      Util.toggleMenuItems([
+        menuItemLogin, menuItemHome, menuItemRecipe,
+        menuItemInventory, menuItemProfile
+      ]);
+      // load Ranking, Recipes and Profile
       elRanking.loadData();
       elGroceryList.loadData();
       elRecipe.loadData();
@@ -116,7 +119,10 @@
     UserInfo.set(UserInfo.USERID, userObj.uid);
     UserInfo.set(UserInfo.EXPIREDATE, userObj.expires);
     // Show Menu Items
-    Util.toggleMenuItems([menuItemLogin, menuItemHome, menuItemRecipe, menuItemInventory, menuItemProfile]);
+    Util.toggleMenuItems([
+      menuItemLogin, menuItemHome, menuItemRecipe,
+      menuItemInventory, menuItemProfile
+    ]);
     // set UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
     // load Ranking, Grocery List, Recipes and Profile
@@ -131,7 +137,12 @@
     // get error object
     var errorObj = e.detail.error;
     // show toast to inform the user
-    Util.showToast(infoToast, "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message, "#FF3333", "#EEEEEE");
+    Util.showToast(
+      infoToast,
+      "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message,
+      "#FF3333",
+      "#EEEEEE"
+    );
   };
   app.passwordsMisMatching = function() {
     // show toast to inform the user
@@ -184,8 +195,11 @@
    */
   app.logoutUser = function(text) {
     var infoText = "";
-    if (typeof text === "string") infoText = text;
-    else infoText = "Logging out...";
+    if (typeof text === "string") {
+      infoText = text;
+    } else {
+      infoText = "Logging out...";
+    }
     // show toast to inform the user
     Util.showToast(infoToast, infoText, "#333333", "#EEEEEE");
     // log user out from firebase
@@ -196,7 +210,10 @@
     tbUserEmailAddress.innerHTML = "Placeholder Email";
     imgUserProfilePicture.src = "../images/touch/icon-128x128.png";
     // Hide Menu Items
-    Util.toggleMenuItems([menuItemLogin, menuItemHome, menuItemRecipe, menuItemInventory, menuItemProfile]);
+    Util.toggleMenuItems([
+      menuItemLogin, menuItemHome, menuItemRecipe,
+      menuItemInventory, menuItemProfile
+    ]);
     // delete all data in local storage
     UserInfo.deleteAllItems();
     // reset UserId and ExpireDate for Subelements

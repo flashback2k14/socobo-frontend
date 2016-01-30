@@ -7,8 +7,7 @@
 
   <template>
 
-    <style>
-      :host {
+    <style>:host {
         display: block;
       }
     </style>
@@ -23,19 +22,19 @@
     (function() {
       Polymer({
         is: "socobo-recipe",
-        properties : {
+        properties: {
           /*Object containing the user information. Must have following
            properties:
            - userId,
            - firebaseUrl,
            - expires
            */
-          userLogin : {
-            type : Object,
-            value : {}
+          userLogin: {
+            type: Object,
+            value: {}
           }
         },
-        loadData : function(){
+        loadData: function() {
           this.$.elRecipeOverview.getRecipes();
         }
       });

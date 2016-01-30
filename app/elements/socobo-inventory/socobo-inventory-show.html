@@ -131,13 +131,17 @@ Custom property | Description | Default
         properties: {
         },
 
-        /*Display the dialog
-        @param {Object} itemToEdit
-        */
-        show: function(itemToEdit) {
-          this.item = itemToEdit;
+        /**
+         * Shows the dialog
+         *
+         * @param {Object} item
+         * @function
+         */
+        show: function(item) {
+          this.item = item;
           this.$.showInventoryDialog.toggle();
         }
-    })})();
+      });
+    })();
   </script>
 </dom-module>

@@ -160,19 +160,23 @@ Custom property | Description | Default
         is: "socobo-element-search",
         /**
          * This Event is fired if the paper checkbox is checked. <br/>
+         *
          * @event check-all-items
          */
         /**
          * This Event is fired if the the paper checkbox is unchecked. <br/>
+         *
          * @event uncheck-all-items
          */
         /**
          * This Event is fired if the user typing in a search query. <br/>
+         *
          * `Detail`: Object: { searchQuery: "QUERY" } <br/>
          * @event changed-search-query
          */
         /**
          * This Event is fired if the user add an item to the grocery list. <br/>
+         *
          * `Detail`: Object: { item: "ITEM" } <br/>
          * @event add-to-grocery-list
          */
@@ -208,7 +212,8 @@ Custom property | Description | Default
          */
         /**
          * Method for firing event to check / uncheck all items. </br>
-         * @method checkAllItems
+         *
+         * @function
          */
         checkAllItems: function() {
           if (this.$.chbCheckAllItems.checked) {
@@ -220,7 +225,8 @@ Custom property | Description | Default
 
         /**
          * Method for resetting the search query </br>
-         * @method resetQuery
+         *
+         * @function
          */
         resetQuery: function() {
           this.searchStr = null;
@@ -230,7 +236,8 @@ Custom property | Description | Default
 
         /**
          * Method to reset checkbox
-         * @method resetCheckbox
+         *
+         * @function
          */
         resetCheckbox: function() {
           if (this.$.chbCheckAllItems.checked) {
@@ -240,8 +247,9 @@ Custom property | Description | Default
 
         /**
          * Add item for editing in input field
-         * @param item
-         * @method editItemForGroceryList
+         *
+         * @param {Object} item
+         * @function
          */
         editItemForGroceryList: function(item) {
           this.searchStr = item.desc;
@@ -255,10 +263,11 @@ Custom property | Description | Default
          */
         /**
          * compute Visibility Search Input Container
-         * @param hideSearchInput
+         *
+         * @param {Boolean} hideSearchInput
          * @returns {String}
          * @private
-         * @method _computeVisibilitySearchInputContainer
+         * @function
          */
         _computeVisibilitySearchInputContainer: function(hideSearchInput) {
           return hideSearchInput ? "style-search-input-container show-element-flex" : "hide-element";
@@ -266,10 +275,11 @@ Custom property | Description | Default
 
         /**
          * compute Search Input Label
-         * @param hideSearchInput
+         *
+         * @param {Boolean} hideSearchInput
          * @returns {String}
          * @private
-         * @method _computeSearchInputLabel
+         * @function
          */
         _computeSearchInputLabel: function(hideSearchInput) {
           return hideSearchInput ? "Add Item to Grocery List..." : "Search";
@@ -277,21 +287,25 @@ Custom property | Description | Default
 
         /**
          * compute Visibility Search Button
-         * @param hideSearchButton
+         *
+         * @param {Boolean} hideSearchButton
          * @returns {String}
          * @private
-         * @method _computeVisibilitySearchButton
+         * @function
          */
         _computeVisibilitySearchButton: function(hideSearchButton) {
-          return hideSearchButton ? "hide-element" : "style-btn-position style-toggle-search-container show-element-block";
+          return hideSearchButton ?
+              "hide-element"
+            : "style-btn-position style-toggle-search-container show-element-block";
         },
 
         /**
          * compute Visibility Add Button
-         * @param hideSearchButton
+         *
+         * @param {Boolean} hideSearchButton
          * @returns {String}
          * @private
-         * @method _computeVisibilityAddButton
+         * @function
          */
         _computeVisibilityAddButton: function(hideSearchButton) {
           return hideSearchButton ? "style-btn-position style-toggle-search-container show-element-block" : "hide-element";
@@ -299,13 +313,16 @@ Custom property | Description | Default
 
         /**
          * compute Visibility Clear Button
-         * @param hideSearchButton
+         *
+         * @param {Boolean} hideSearchButton
          * @returns {String}
          * @private
-         * @method _computeVisibilityClearButton
+         * @function
          */
         _computeVisibilityClearButton: function(hideSearchButton) {
-          return hideSearchButton ? "style-btn-2-position style-toggle-search-container show-element-block" : "hide-element";
+          return hideSearchButton ?
+              "style-btn-2-position style-toggle-search-container show-element-block"
+            : "hide-element";
         },
 
         /**
@@ -313,15 +330,17 @@ Custom property | Description | Default
          */
         /**
          * Method for listening for search query input and firing event. </br>
-         * @method _searchQueryChanged
+         *
+         * @function
          */
         _searchQueryChanged: function() {
-          this.fire("changed-search-query", { searchQuery: this.searchStr });
+          this.fire("changed-search-query", {searchQuery: this.searchStr});
         },
 
         /**
          * Method to clear the search query. </br>
-         * @method _clearSearchQuery
+         *
+         * @function
          */
         _clearSearchQuery: function() {
           if (this.$.txtSearchQuery.value.length === 0) {
@@ -334,7 +353,8 @@ Custom property | Description | Default
 
         /**
          * Method for show / hide search input container. </br>
-         * @method _toggleSearchElements
+         *
+         * @function
          */
         _toggleSearchElements: function() {
           var searchInputContainer = this.$.searchInputContainer.classList;
@@ -361,8 +381,9 @@ Custom property | Description | Default
          */
         /**
          * Add Item to Grocery List - fires event
+         *
          * @private
-         * @method _addToGroceryList
+         * @function
          */
         _addToGroceryList: function() {
           this.fire("add-to-grocery-list", {desc: this.searchStr});
@@ -372,8 +393,9 @@ Custom property | Description | Default
 
         /**
          * Clear input field in Grocery List mode
+         *
          * @private
-         * @method _clearForGroceryList
+         * @function
          */
         _clearForGroceryList: function() {
           if (this.searchStr.length > 0) {

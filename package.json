@@ -32,6 +32,7 @@
     "web-component-tester": "^4.0.0"
   },
   "scripts": {
+    "pretest": "gulp lint",
     "test": "gulp test:local",
     "start": "gulp serve",
     "lint": "gulp lint"

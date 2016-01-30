@@ -42,11 +42,13 @@ Custom property | Description | Default
     </div>
   </template>
   <script>
-    (function () {
+    (function() {
       Polymer({
         is: "socobo-inventory-overview",
         /**
          * This event is fired if all items have been (un-)checked. at once<br/>
+         *
+         * `Detail`: Object {number: number of items, state: checked/unchecked}
          * @event check-all
          */
         properties: {
@@ -60,34 +62,75 @@ Custom property | Description | Default
           this.query = null;
         },
 
-        /** Resets the state of the contained search box. This includes the checkbox as well as the actual query
-        * @method resetSearch
+        /** Resets the state of the contained search box.
+         * This includes the checkbox as well as the actual query
+         *
+         * @function
          */
-        resetSearch: function () {
+        resetSearch: function() {
           this.$.searchHeader.resetCheckbox();
           this.$.searchHeader.resetQuery();
         },
 
-        _setHidden: function (item, query) {
-          return !(query === null || typeof query === "undefined" || item.desc.indexOf(query) != -1 || item.info.indexOf(query) != -1);
+        /**
+         * Determines whether the query matches the item.
+         *
+         * @param {Object} item
+         * @param {String} query
+         * @returns {boolean}
+         * @private
+         * @function
+         */
+        _setHidden: function(item, query) {
+          return !(query === null ||
+            typeof query === "undefined" ||
+            item.desc.indexOf(query) !== -1 ||
+            item.info.indexOf(query) !== -1);
         },
 
+        /**
+         * Listener to handle search query changed events
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
         _searchQueryChanged: function(e) {
           this.query = e.detail.searchQuery;
         },
 
-        _handleCheckAll: function () {
+        /**
+         * Listener to handle the check all events
+         *
+         * @private
+         * @function
+         */
+        _handleCheckAll: function() {
           this._checkOrUncheck(true);
         },
 
-        _handleUncheckAll: function () {
+        /**
+         * Listener to handle the uncheck all events
+         *
+         * @private
+         * @function
+         */
+        _handleUncheckAll: function() {
           this._checkOrUncheck(false);
         },
 
+        /**
+         * Set the items in the list to checked/not checked depending on
+         * state
+         *
+         * @param {boolean} state
+         * @private
+         * @function
+         */
         _checkOrUncheck: function(state) {
           var itemList = this.querySelectorAll(".inventory-list-item");
           var counter = 0;
-          for (var i=0; i < itemList.length; i++) {
+          for (var i = 0; i < itemList.length; i++) {
             var element = itemList[i];
             if (!element.hidden) {
               counter++;
@@ -98,7 +141,14 @@ Custom property | Description | Default
           this.fire("checked-all", {number: counter, state: state});
         },
 
-        _showItem: function (e) {
+        /**
+         * Listener for the show events that toggles the item details dialog
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
+        _showItem: function(e) {
           this.$.showDialog.show(e.detail);
         }
       });

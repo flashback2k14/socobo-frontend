@@ -182,10 +182,10 @@ Custom property | Description | Default
          * register listeners for changed items
          */
         listeners: {
-          "grocery-active-item-added"     : "_groceryActiveItemAdded",
-          "grocery-active-item-removed"   : "_groceryActiveItemRemoved",
-          "grocery-archive-item-added"    : "_groceryArchiveItemAdded",
-          "grocery-changed-error"         : "_groceryChangedError"
+          "grocery-active-item-added": "_groceryActiveItemAdded",
+          "grocery-active-item-removed": "_groceryActiveItemRemoved",
+          "grocery-archive-item-added": "_groceryArchiveItemAdded",
+          "grocery-changed-error": "_groceryChangedError"
         },
 
         /**
@@ -193,19 +193,22 @@ Custom property | Description | Default
          */
         /**
          * Load Data
-         * @method loadData
+         *
+         * @function
          */
         loadData: function() {
           SocoboGrocery.getInstance(this, this.userLogin).registerGroceryItemListeners();
         },
         /**
          * add items to List from ranking
-         * @param items
-         * @method addToList
+         *
+         * @param {Array} items
+         * @function
          */
         addToList: function(items) {
           items.forEach(function(item) {
-            SocoboGrocery.getInstance(this, this.userLogin).addItemToActiveList({ desc : item.desc + " - " + item.amount + " " + item.unit });
+            SocoboGrocery.getInstance(this, this.userLogin)
+              .addItemToActiveList({desc: item.desc + " - " + item.amount + " " + item.unit});
           }.bind(this));
         },
 
@@ -214,9 +217,10 @@ Custom property | Description | Default
          */
         /**
          * Handle Changed Search Query
-         * @param e
+         *
+         * @param {Object} e
          * @private
-         * @method _handleChangedSearchQuery
+         * @function
          */
         _handleChangedSearchQuery: function(e) {
           this.searchQuery = e.detail.searchQuery;
@@ -227,9 +231,10 @@ Custom property | Description | Default
         },
         /**
          * Handle Add To Grocery List
-         * @param e
+         *
+         * @param {Object} e
          * @private
-         * @method _handleAddToGroceryList
+         * @function
          */
         _handleAddToGroceryList: function(e) {
           if (this.setItemToFallback) {
@@ -243,8 +248,9 @@ Custom property | Description | Default
          */
         /**
          * Handle Check All Items
+         *
          * @private
-         * @method _handleCheckAllItems
+         * @function
          */
         _handleCheckAllItems: function() {
           this.checkItems = [];
@@ -254,8 +260,9 @@ Custom property | Description | Default
         },
         /**
          * Handle Uncheck All Items
+         *
          * @private
-         * @method _handleUncheckAllItems
+         * @function
          */
         _handleUncheckAllItems: function() {
           this.toggleAttribute("disabled", true, this.$.btnDelete);
@@ -263,9 +270,10 @@ Custom property | Description | Default
         },
         /**
          * handle check state
-         * @param state
+         *
+         * @param {Object} state
          * @private
-         * @method _checkOrUncheck
+         * @function
          */
         _checkOrUncheck: function(state) {
           // init variable
@@ -282,9 +290,9 @@ Custom property | Description | Default
             if (!element.hidden) {
               element.isChecked = state;
               if (state) {
-                this._handleCheck({detail : element.obj});
+                this._handleCheck({detail: element.obj});
               } else {
-                this._handleUncheck({detail : element.obj});
+                this._handleUncheck({detail: element.obj});
               }
             }
           }
@@ -295,9 +303,10 @@ Custom property | Description | Default
          */
         /**
          * Handle Check
-         * @param e
+         *
+         * @param {Object} e
          * @private
-         * @method _handleCheck
+         * @function
          */
         _handleCheck: function(e) {
           if (this.selected === 0) {
@@ -312,9 +321,10 @@ Custom property | Description | Default
         },
         /**
          * Handle Uncheck
-         * @param e
+         *
+         * @param {Object} e
          * @private
-         * @method _handleUncheck
+         * @function
          */
         _handleUncheck: function(e) {
           if (this.selected === 0) {
@@ -325,10 +335,11 @@ Custom property | Description | Default
         },
         /**
          * Uncheck given Item, if exists
-         * @param items
-         * @param item
+         *
+         * @param {Array} items
+         * @param {Object} item
          * @private
-         * @method _uncheck
+         * @function
          */
         _uncheck: function(items, item) {
           // get index from checkItems
@@ -345,8 +356,9 @@ Custom property | Description | Default
          */
         /**
          * delete all checked Items
+         *
          * @private
-         * @method _deleteAllItems
+         * @function
          */
         _deleteAllItems: function() {
           if (this.selected === 0) {
@@ -357,9 +369,10 @@ Custom property | Description | Default
         },
         /**
          * delete all given Items
-         * @param items
+         *
+         * @param {Array} items
          * @private
-         * @method _deleteAll
+         * @function
          */
         _deleteAll: function(items) {
           // clone array, because reference errors
@@ -375,16 +388,17 @@ Custom property | Description | Default
         },
         /**
          * Handle Delete Request
-         * @param e
+         *
+         * @param {Object} e
          * @private
-         * @method _handleDeleteRequest
+         * @function
          */
         _handleDeleteRequest: function(e) {
           /* Check the selected Tab */
           switch (this.selected) {
             /* Active */
             case 0:
-              /**
+              /*
                * if length is 0, then the delete button from the list item
                * is pressed, otherwise the request comes from deleteAll
                */
@@ -396,7 +410,7 @@ Custom property | Description | Default
               break;
             /* Archive */
             case 1:
-              /**
+              /*
                * if length is 0, then the delete button from the list item
                * is pressed, otherwise the request comes from deleteAll
                */
@@ -413,12 +427,13 @@ Custom property | Description | Default
         },
         /**
          * Delete given Item, if exists - handle delete All request
-         * @param items
-         * @param item
-         * @param pushToPath
-         * @param spliceFromPath
+         *
+         * @param {Array} items
+         * @param {Object} item
+         * @param {String} pushToPath
+         * @param {String} spliceFromPath
          * @private
-         * @method _delete
+         * @function
          */
         _delete: function(items, item, pushToPath, spliceFromPath) {
           // get index from checkItems
@@ -453,11 +468,12 @@ Custom property | Description | Default
         },
         /**
          * Delete given item, if exists - handle delete request from list item
-         * @param moveToArchive
-         * @param item
-         * @param spliceFromPath
+         *
+         * @param {Boolean} moveToArchive
+         * @param {Object} item
+         * @param {String} spliceFromPath
          * @private
-         * @method _deleteSingle
+         * @function
          */
         _deleteSingle: function(moveToArchive, item, spliceFromPath) {
           // add item to archive
@@ -483,9 +499,10 @@ Custom property | Description | Default
 
         /**
          * Handle Edit Request (Active)
-         * @param e
+         *
+         * @param {Object} e
          * @private
-         * @method _handleEditRequest
+         * @function
          */
         _handleEditRequest: function(e) {
           // get index from groceryItems
@@ -505,9 +522,10 @@ Custom property | Description | Default
         },
         /**
          * Handle Show Request (Archive)
-         * @param e
+         *
+         * @param {Object} e
          * @private
-         * @method _handleMoveRequest
+         * @function
          */
         _handleMoveRequest: function(e) {
           // get index from groceryArchiveItems
@@ -516,9 +534,13 @@ Custom property | Description | Default
             // Remove item from data binding
             this.splice("groceryArchiveItems", moveItemIndex, 1);
             // Remove item from DB
-            SocoboGrocery.getInstance(this, this.userLogin).removeItemFromArchiveList(e.detail);
+            SocoboGrocery
+              .getInstance(this, this.userLogin)
+              .removeItemFromArchiveList(e.detail);
             // Add item to data binding
-            SocoboGrocery.getInstance(this, this.userLogin).addItemToActiveList({desc: e.detail.desc});
+            SocoboGrocery
+              .getInstance(this, this.userLogin)
+              .addItemToActiveList({desc: e.detail.desc});
           } else {
             // notify user
             this._notify("The Item is not available");
@@ -530,13 +552,16 @@ Custom property | Description | Default
          */
         /**
          * set Item to hidden or not
-         * @param item
-         * @param searchQuery
+         *
+         * @param {Object} item
+         * @param {String} searchQuery
          * @private
-         * @method _setHidden
+         * @function
          */
-        _setHidden: function (item, searchQuery) {
-          return !(searchQuery === null || typeof searchQuery === 'undefined' || item.desc.toUpperCase().match(searchQuery.toUpperCase()));
+        _setHidden: function(item, searchQuery) {
+          return !(searchQuery === null ||
+          typeof searchQuery === "undefined" ||
+          item.desc.toUpperCase().match(searchQuery.toUpperCase()));
         },
 
         /**
@@ -544,11 +569,12 @@ Custom property | Description | Default
          */
         /**
          * Get Index from selected item in Items
-         * @param items
-         * @param selectedItem
+         *
+         * @param {Array} items
+         * @param {Object} selectedItem
          * @returns {Number}
          * @private
-         * @method _getIndex
+         * @function
          */
         _getIndex: function(items, selectedItem) {
           // set index for not found item
@@ -564,9 +590,10 @@ Custom property | Description | Default
         },
         /**
          * Show Toast with specific message
-         * @param msg
+         *
+         * @param {String} msg
          * @private
-         * @method _notify
+         * @function
          */
         _notify: function(msg) {
           this.$.infoGroceryList.text = msg;
@@ -580,51 +607,55 @@ Custom property | Description | Default
          */
         /**
          * Handle item added to active list
-         * @param item
+         *
+         * @param {Object} item
          * @private
-         * @method _groceryActiveItemAdded
+         * @function
          */
         _groceryActiveItemAdded: function(item) {
           var activeItem = {
-            key   : item.detail.key,
-            desc  : item.detail.desc
+            key: item.detail.key,
+            desc: item.detail.desc
           };
           this.push("groceryItems", activeItem);
         },
         /**
          * Handle item deleted from active list
-         * @param item
+         *
+         * @param {Object} item
          * @private
-         * @method _groceryActiveItemRemoved
+         * @function
          */
         _groceryActiveItemRemoved: function(item) {
           if (this.setItemToFallback) {
             this.fallbackItems = [];
             var fallbackItem = {
-              key   : item.detail.key,
-              desc  : item.detail.desc
+              key: item.detail.key,
+              desc: item.detail.desc
             };
             this.fallbackItems.push(fallbackItem);
           }
         },
         /**
          * Handle item added to archive list
-         * @param item
+         *
+         * @param {Object} item
          * @private
-         * @method _groceryArchiveItemAdded
+         * @function
          */
         _groceryArchiveItemAdded: function(item) {
           var archiveItem = {
-            key   : item.detail.key,
-            desc  : item.detail.desc
+            key: item.detail.key,
+            desc: item.detail.desc
           };
           this.push("groceryArchiveItems", archiveItem);
         },
         /**
          * Handle errors from changed data
-         * @param error
+         *
+         * @param {Object} error
          * @private
-         * @method _groceryChangedError
+         * @function
          */
         _groceryChangedError: function(error) {
           this._notify(error.code + " - " + error.message);

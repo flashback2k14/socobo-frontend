@@ -25,8 +25,7 @@ Custom property | Description | Default
 
   <template>
 
-    <style>
-      :host {
+    <style>:host {
         display: block;
       }
 
@@ -336,22 +335,22 @@ Custom property | Description | Default
          * PROPERTIES
          */
         properties: {
-          recipe : {
-            type : Object,
-            value : {}
+          recipe: {
+            type: Object,
+            value: {}
           },
-          image : {
-            type : Object
+          image: {
+            type: Object
           },
-          recipe_inputs : {
-            type : Array,
-            value : []
+          recipe_inputs: {
+            type: Array,
+            value: []
           },
-          ingredient_inputs : {
-            type : Array,
-            value : []
+          ingredient_inputs: {
+            type: Array,
+            value: []
           },
-          state : {
+          state: {
             type: String,
             value: "show"
           },
@@ -360,78 +359,98 @@ Custom property | Description | Default
            * which are usable for the ingredients
            */
           measurements: {
-            type : Array,
-            value : []
+            type: Array,
+            value: []
           }
         },
 
         /**
          * SHOW / HIDE
          */
-        toggleDialog : function() {
+        toggleDialog: function() {
           this.$.dialog.toggle();
         },
 
         /**
          * EXIT
          */
-        exit : function() {
+        exit: function() {
           this.fire("exit_request");
         },
 
         /**
-         * ADD
+         *  Add a preparation step to the recipe
+
+         *  @private
+         *  @function
          */
-        addStep : function () {
+        addStep: function() {
           var step = {
-            desc : "",
-            number : 0
+            desc: "",
+            number: 0
           };
           this.push("recipe_inputs", step);
         },
 
         /**
-         * ADD
+         * Add an ingredient to the recipe
+         *
+         * @private
+         * @function
          */
-        addIngr : function () {
+        addIngr: function() {
           var ingr = {
-            desc : "",
-            amount : "",
-            unit : ""
+            desc: "",
+            amount: "",
+            unit: ""
           };
           this.push("ingredient_inputs", ingr);
           this.numberOfIngr++;
         },
 
         /**
-         * REMOVE
+         * Remove a preparation step
+         *
+         * @private
+         * @function
          */
-        removeStep : function(e){
+        removeStep: function(e) {
           var model = e.model;
           var itemIndex = model.get("index");
           this.cutElementOffArray(itemIndex, "recipe_inputs");
         },
 
         /**
-         * REMOVE
+         * Remove ingredient
+         *
+         * @private
+         * @function
          */
-        _removeIngr : function(e){
+        _removeIngr: function(e) {
           var model = e.model;
           var itemIndex = model.get("index");
           this.cutElementOffArray(itemIndex, "ingredient_inputs");
         },
 
         /**
-         * REMOVE
+         * Remove an element from the array
+         *
+         * @param {Number} index The index of the element to be removed
+         * @param {Array} arr The array
+         * @private
+         * @function
          */
-        cutElementOffArray : function(index, arr) {
+        cutElementOffArray: function(index, arr) {
           this.splice(arr, index ,1);
         },
 
         /**
-         * CLEAR
+         * Clear the input fields
+         *
+         * @private
+         * @function
          */
-        clearInputFields : function() {
+        clearInputFields: function() {
           // clear title and description
           var inputFields = Polymer.dom(this.$.dialog).querySelectorAll(".inputs");
           inputFields.forEach(function(field) {
@@ -446,34 +465,41 @@ Custom property | Description | Default
         },
 
         /**
-         * FILE CHOOSER
+         * Open the file chooser
+         *
          * @private
+         * @function
          */
-        _openFileChooser : function() {
+        _openFileChooser: function() {
           this.$.fileChooser.click();
         },
 
         /**
-         * FILE CHOOSER
+         * Encode the image
+         *
          * @private
+         * @function
          */
-        encode : function() {
+        encode: function() {
           this.image = new ImageService("#fileChooser");
           this.image.encode(document.querySelector("#add_image"));
         },
 
         /**
-         * NEW
+         * Create a new recipe
+         *
+         * @private
+         * @function
          */
-        createNewRecipe : function() {
+        createNewRecipe: function() {
           this.recipe.ingredients = this.ingredient_inputs;
           var arr = [];
-          for(var i = 0; i < this.recipe_inputs.length; i++){
-            arr[i]=this.recipe_inputs[i];
+          for (var i = 0; i < this.recipe_inputs.length; i++) {
+            arr[i] = this.recipe_inputs[i];
           }
           this.recipe.steps = arr;
           var counter = 1;
-          for(var k in this.recipe.steps){
+          for (var k in this.recipe.steps) {
             this.recipe.steps[k].number = counter;
             counter++;
           }
@@ -494,10 +520,12 @@ Custom property | Description | Default
         },
         /**
          * Shows a given message as paper-toast element
-         * @param msg
+         *
+         * @param {String} msg
          * @private
+         * @function
          */
-        _notify: function (msg) {
+        _notify: function(msg) {
           this.$.errorNotification.text = msg;
           this.$.errorNotification.show();
         }

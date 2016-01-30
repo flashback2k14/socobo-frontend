@@ -1,7 +1,9 @@
+/* exported Util */
 var Util = (function() {
   /**
    * helper for saving object in localStorage
-   * @param value
+   *
+   * @param {Object} value
    * @return {String}
    */
   var objectToString = function(value) {
@@ -9,7 +11,8 @@ var Util = (function() {
   };
   /**
    * helper to parse localStorage string to object
-   * @param value
+   *
+   * @param {String} value
    * @return {Object}
    */
   var stringToObject = function(value) {
@@ -17,6 +20,7 @@ var Util = (function() {
   };
   /**
    * get current timestamp
+   *
    * @return {number}
    * @private
    */
@@ -25,29 +29,32 @@ var Util = (function() {
   };
   /**
    * check if user login is expired
-   * @param expireDate
+   *
+   * @param {Number} expireDate
    * @return {boolean}
    */
   var isUserLoginExpired = function(expireDate) {
-	  return expireDate === null || _getCurrentTimestamp() >= expireDate;
+    return expireDate === null || _getCurrentTimestamp() >= expireDate;
   };
   /**
    * toggle single Menu Item
-   * @param mItem
+   *
+   * @param {HTMLElement} mItem
    * @private
    */
   var _toggleMI = function(mItem) {
-    if (mItem.classList.contains('show-menu-item')) {
-      mItem.classList.remove('show-menu-item');
-      mItem.classList.add('hide-menu-item');
+    if (mItem.classList.contains("show-menu-item")) {
+      mItem.classList.remove("show-menu-item");
+      mItem.classList.add("hide-menu-item");
     } else {
-      mItem.classList.remove('hide-menu-item');
-      mItem.classList.add('show-menu-item');
+      mItem.classList.remove("hide-menu-item");
+      mItem.classList.add("show-menu-item");
     }
   };
   /**
    * toggle all Menu Items
-   * @param menuItems
+   *
+   * @param {Array} menuItems
    */
   var toggleMenuItems = function(menuItems) {
     menuItems.forEach(function(menuItem) {
@@ -56,10 +63,11 @@ var Util = (function() {
   };
   /**
    * show info toast
-   * @param toast
-   * @param text
-   * @param bgColor
-   * @param color
+   *
+   * @param {HTMLElement} toast
+   * @param {String} text
+   * @param {String} bgColor
+   * @param {String} color
    */
   var showToast = function(toast, text, bgColor, color) {
     toast.text = text;
@@ -72,10 +80,10 @@ var Util = (function() {
    * make functions public
    */
   return {
-    objectToString      : objectToString,
-    stringToObject      : stringToObject,
-    isUserLoginExpired  : isUserLoginExpired,
-    toggleMenuItems     : toggleMenuItems,
-    showToast           : showToast
+    objectToString: objectToString,
+    stringToObject: stringToObject,
+    isUserLoginExpired: isUserLoginExpired,
+    toggleMenuItems: toggleMenuItems,
+    showToast: showToast
   };
 })();
