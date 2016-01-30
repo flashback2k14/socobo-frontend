@@ -2,7 +2,7 @@ var MessageModule = (function (utils) {
 
   'use strict';
 
-  var msgPrefix, errorMessages;
+  var msgPrefix, errorMessages, wordMap;
 
   function MessageModule() {
     msgPrefix = "";
@@ -11,6 +11,22 @@ var MessageModule = (function (utils) {
 
   function _setMessagePrefix(prefix){
     msgPrefix = prefix;
+  }
+
+  function _setMappings(mappings) {
+    wordMap = mappings;
+  }
+
+  function _applyWordMap(messageString) {
+    var word, tmpMsg = messageString, regex;
+    console.log("Map", wordMap);
+    if (wordMap) {
+      for (word in wordMap) {
+        regex = new RegExp(word, "g");
+        tmpMsg = tmpMsg.replace(regex, wordMap[word]);
+      }
+    }
+    return tmpMsg;
   }
 
   function _addSingleEntryToErrorMsg(snippet){
@@ -46,14 +62,14 @@ var MessageModule = (function (utils) {
       });
       msg = msg.slice(0, msg.length - 2);
     }
-    return msg;
+    return _applyWordMap(msg);
   }
 
   MessageModule.prototype.addMsgPart = _addSingleEntryToErrorMsg;
   MessageModule.prototype.addMsgParts = _addMultipleEntriesToErrorMsg;
   MessageModule.prototype.buildMsg = _buildErrorMessage;
   MessageModule.prototype.setPrefix = _setMessagePrefix;
-  MessageModule.prototype.errorMessages = errorMessages;
+  MessageModule.prototype.setMappings = _setMappings;
 
   return MessageModule;
 

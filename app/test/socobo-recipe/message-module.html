@@ -53,6 +53,22 @@
             " TEST MESSAGE, 2nd TEST MESSAGE, Ingredients(Description, Amount)");
         });
 
+        test('final message contains only mapped words', function () {
+          var wordMap = {
+            desc: "Title",
+            text: "Description",
+            amt: "Amount"
+          };
+          messageModule.setMappings(wordMap);
+          messageModule.addMsgPart("desc");
+          messageModule.addMsgPart("text");
+          messageModule.addMsgParts("Ingredients", ["desc", "amt"]);
+          messageModule.setPrefix("Please add the missing elements: ");
+          expect(messageModule.buildMsg())
+            .to.eql("Please add the missing elements:" +
+            " Title, Description, Ingredients(Title, Amount)");
+        });
+
       });
 
     </script>
