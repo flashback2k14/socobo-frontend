@@ -1,8 +1,10 @@
-MessageModule = (function(){
+var MessageModule = (function (utils) {
+
+  'use strict';
 
   var msgPrefix, errorMessages;
 
-  function MessageModule(){
+  function MessageModule() {
     msgPrefix = "";
     errorMessages = [];
   }
@@ -23,14 +25,14 @@ MessageModule = (function(){
     });
   }
 
-  function _buildErrorMessage(){
-    var msg;
-    if (_verifyArrayNotEmpty(errorMessages)) {
+  function _buildErrorMessage() {
+    var msg = "";
+    if (utils.arrayNotEmpty(errorMessages)) {
       msg = msgPrefix;
       errorMessages.forEach(function(messagePart){
-        if(_isObject(messagePart)){
+        if (utils.isObject(messagePart)){
           msg += messagePart.context + "(";
-          if(_verifyArrayNotEmpty(messagePart.snippets)){
+          if (utils.arrayNotEmpty(messagePart.snippets)){
             var subMsg = "";
             messagePart.snippets.forEach(function(snippet){
               subMsg += snippet + ", "
@@ -38,13 +40,31 @@ MessageModule = (function(){
             subMsg = subMsg.slice(0, subMsg.length - 2);
             msg += subMsg + "), "
           }
-        }else{
+        } else {
           msg += messagePart + ", ";
         }
       });
       msg = msg.slice(0, msg.length - 2);
     }
     return msg;
+  }
+
+  MessageModule.prototype.addMsgPart = _addSingleEntryToErrorMsg;
+  MessageModule.prototype.addMsgParts = _addMultipleEntriesToErrorMsg;
+  MessageModule.prototype.buildMsg = _buildErrorMessage;
+  MessageModule.prototype.setPrefix = _setMessagePrefix;
+  MessageModule.prototype.errorMessages = errorMessages;
+
+  return MessageModule;
+
+}(UtilsModule));
+
+var UtilsModule = UtilsModule || (function () {
+
+  'use strict';
+
+  function _verifyArrayNotEmpty(arr) {
+    return arr.length > 0;
   }
 
   /**
@@ -58,17 +78,20 @@ MessageModule = (function(){
     return o !== null && typeof o === "object";
   }
 
-  function _verifyArrayNotEmpty(arr){
-    return arr.length > 0;
+  /**
+   * Checks if a given parameter is an array
+   * @param o
+   * @returns {boolean}
+   * @private
+   */
+  function _isArray(o) {
+    return Object.prototype.toString.call(o) === "[object Array]";
   }
 
-  MessageModule.prototype.addMsgPart = _addSingleEntryToErrorMsg;
-  MessageModule.prototype.addMsgParts = _addMultipleEntriesToErrorMsg;
-  MessageModule.prototype.buildMsg = _buildErrorMessage;
-  MessageModule.prototype.setPrefix = _setMessagePrefix;
-
-  return MessageModule;
-
-})();
-
+  return {
+    arrayNotEmpty: _verifyArrayNotEmpty,
+    isObject: _isObject,
+    isArray: _isArray
+  };
+}());
 
