@@ -25,7 +25,10 @@
             propUndefined: undefined,
             propNotUndefined: 123,
             propNull: null,
-            propNotNull: "Not null"
+            propNotNull: "Not null",
+            propNaN: NaN,
+            propZero: 0,
+            propObj: {test: "TEST"}
           };
 
           testArr = [
@@ -45,66 +48,114 @@
         });
 
         test('single property is empty', function () {
-          expect(ValidateModule.verifySingleProperty(testObj, "propEmptyString")).to.equal(false);
+          expect(ValidateModule.verifySinglePropertyNotEmpty(testObj, "propEmptyString")).to.equal(false);
         });
 
         test('single property is not empty', function () {
-          expect(ValidateModule.verifySingleProperty(testObj, "propString")).to.equal(true);
+          expect(ValidateModule.verifySinglePropertyNotEmpty(testObj, "propString")).to.equal(true);
         });
 
         test('single property is undefined', function () {
-          expect(ValidateModule.verifySingleProperty(testObj, "propUndefined")).to.equal(false);
+          expect(ValidateModule.verifySinglePropertyNotEmpty(testObj, "propUndefined")).to.equal(false);
         });
 
         test('single property is not undefined', function () {
-          expect(ValidateModule.verifySingleProperty(testObj, "propNotUndefined")).to.equal(true);
+          expect(ValidateModule.verifySinglePropertyNotEmpty(testObj, "propNotUndefined")).to.equal(true);
         });
 
         test('single property is null', function () {
-          expect(ValidateModule.verifySingleProperty(testObj, "propNull")).to.equal(false);
+          expect(ValidateModule.verifySinglePropertyNotEmpty(testObj, "propNull")).to.equal(false);
         });
 
         test('single property is not null', function () {
-          expect(ValidateModule.verifySingleProperty(testObj, "propNotNull")).to.equal(true);
+          expect(ValidateModule.verifySinglePropertyNotEmpty(testObj, "propNotNull")).to.equal(true);
+        });
+
+        test('single property is NaN', function () {
+          expect(ValidateModule.verifySinglePropertyNotEmpty(testObj, "propNaN")).to.equal(false);
+        });
+
+        test('single property is zero', function () {
+          expect(ValidateModule.verifySinglePropertyNotEmpty(testObj, "propZero")).to.equal(false);
+        });
+
+        test('single property is valid and of type number', function () {
+          expect(ValidateModule.verifySingleProperty(testObj, "propNotUndefined", "number")).to.equal(true);
+        });
+
+        test('single property is invalid and of type number', function () {
+          expect(ValidateModule.verifySingleProperty(testObj, "propZero", "number")).to.equal(false);
+        });
+
+        test('single property is valid and of type string', function () {
+          expect(ValidateModule.verifySingleProperty(testObj, "propString", "string")).to.equal(true);
+        });
+
+        test('single property is invalid and of type string', function () {
+          expect(ValidateModule.verifySingleProperty(testObj, "propEmptyString", "string")).to.equal(false);
+        });
+
+        test('single property is valid and of type object', function () {
+          expect(ValidateModule.verifySingleProperty(testObj, "propObj", "object")).to.equal(true);
+        });
+
+        test('single property is invalid and of type object', function () {
+          expect(ValidateModule.verifySingleProperty(testObj, "porpNull", "object")).to.equal(false);
         });
 
         test('all properties of an obj are valid', function () {
-          var validProperties = ["propString", "propNotUndefined", "propNotNull"];
+          var validProperties = [{value: "propString"}, {value: "propNotUndefined"}, {value: "propNotNull"}];
           expect(ValidateModule.verifyMultipleProperties(testObj, validProperties)).to.eql([]);
         });
 
         test('all properties of an obj are invalid', function () {
-          var inValidProperties = ["propEmptyString", "propUndefined", "propNull"];
+          var inValidProperties = [{value:"propEmptyString"}, {value:"propUndefined"}, {value:"propNull"}];
           expect(ValidateModule.verifyMultipleProperties(testObj, inValidProperties))
             .to.eql(["propEmptyString", "propUndefined", "propNull"]);
         });
 
         test('some properties of an obj are invalid', function () {
-          var inValidProperties = ["propEmptyString", "propString", "propUndefined", "propNotUndefined", "propNull"];
+          var inValidProperties = [{value: "propString"}, {value: "propNotUndefined"}, {value: "propNotNull"},
+                                {value:"propEmptyString"}, {value:"propUndefined"}, {value:"propNull"}];
           expect(ValidateModule.verifyMultipleProperties(testObj, inValidProperties))
             .to.eql(["propEmptyString", "propUndefined", "propNull"]);
         });
 
+        test('some properties of an obj are invalid including type check', function () {
+          var inValidProperties = [{value: "propString", type: "string"}, {value: "propNotUndefined", type: "number"},
+            {value: "propNotNull", type: "object"}, {value:"propEmptyString", type: "string"},
+            {value:"propUndefined", type: "undefined"}, {value:"propNull", type: "object"}];
+          expect(ValidateModule.verifyMultipleProperties(testObj, inValidProperties))
+            .to.eql(["propNotNull", "propEmptyString", "propUndefined", "propNull"]);
+        });
+
         test('all properties of all objs are invalid', function () {
-          var validProperties = ["prop3", "prop4"];
+          var validProperties = [{value: "prop3"}, {value: "prop4"}];
           expect(ValidateModule.verifyAll(testArr, validProperties))
             .to.eql(["prop3", "prop4"]);
         });
 
         test('all properties of all objs are valid', function () {
-          var validProperties = ["prop1", "prop2"];
+          var validProperties = [{value: "prop1"}, {value: "prop2"}];
           expect(ValidateModule.verifyAll(testArr, validProperties))
             .to.eql([]);
         });
 
         test('some properties of all objs are valid', function () {
-          var validProperties = ["prop1", "prop2", "prop4"];
+          var validProperties = [{value: "prop1"}, {value: "prop2"}, {value: "prop4"}];
           expect(ValidateModule.verifyAll(testArr, validProperties))
             .to.eql(["prop4"]);
         });
 
+        test('some properties of all objs are valid including type check', function () {
+          var validProperties = [{value: "prop1", type: "string"}, {value: "prop2", type: "string"},
+            {value: "prop4", type: "string"}];
+          expect(ValidateModule.verifyAll(testArr, validProperties))
+            .to.eql(["prop2","prop4"]);
+        });
+
         test('array not empty', function () {
-          var validProperties = ["prop1", "prop2", "prop4"];
+          var validProperties = [{value: "prop1"}, {value: "prop2"}, {value: "prop4"}];
           expect(ValidateModule.verifyArrayNotEmpty(validProperties))
             .to.eql(true);
         });

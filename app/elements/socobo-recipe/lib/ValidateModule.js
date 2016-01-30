@@ -3,15 +3,24 @@ var ValidateModule = ValidateModule || (function () {
     'use strict';
 
     function _verifySinglePropertyValueNotEmpty(obj, property) {
-      return obj[property] !== "" && obj[property] !== undefined && obj[property] !== null;
+      return (!obj[property]) ? false : true;
+    }
+
+    function _verifySingleProperty(obj, property, type){
+      var valid;
+      valid = _verifySinglePropertyValueNotEmpty(obj, property);
+      if (type && valid) {
+        valid = (typeof obj[property]) === type;
+      }
+      return valid;
     }
 
     function _verifyAllPropertyValuesNotEmpty(obj, propertiesArray) {
       var invalidProperties = [], prop, valid;
       for (prop in propertiesArray) {
-        valid = _verifySinglePropertyValueNotEmpty(obj, propertiesArray[prop]);
+        valid = _verifySingleProperty(obj, propertiesArray[prop].value, propertiesArray[prop].type);
         if (!valid) {
-          invalidProperties.push(propertiesArray[prop]);
+          invalidProperties.push(propertiesArray[prop].value);
         }
       }
       return invalidProperties;
@@ -36,12 +45,26 @@ var ValidateModule = ValidateModule || (function () {
     function _verifyArrayNotEmpty(arr) {
       return arr.length > 0;
     }
+    function _isNumber(input) {
+      return typeof parseInt(input) === "number";
+    }
+    function _isString(input) {
+      return typeof input === "string";
+    }
+    function _isBoolean(input) {
+      return typeof input === "boolean";
+    }
 
     return {
-      verifySingleProperty : _verifySinglePropertyValueNotEmpty,
-      verifyMultipleProperties : _verifyAllPropertyValuesNotEmpty,
-      verifyAll : _verifyAllPropertyValuesOfAllObjectsNotEmpty,
-      verifyArrayNotEmpty : _verifyArrayNotEmpty
+      verifySinglePropertyNotEmpty: _verifySinglePropertyValueNotEmpty,
+      verifySingleProperty: _verifySingleProperty,
+      verifyMultipleProperties: _verifyAllPropertyValuesNotEmpty,
+      verifyAll: _verifyAllPropertyValuesOfAllObjectsNotEmpty,
+      verifyArrayNotEmpty : _verifyArrayNotEmpty,
+      isNumber: _isNumber,
+      isString: _isString,
+      isBoolean: _isBoolean
+
     };
 
   }());
