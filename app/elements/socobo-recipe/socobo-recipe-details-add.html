@@ -204,7 +204,7 @@ Custom property | Description | Default
                   with-backdrop>
       <!-- DIALOG -->
       <!-- EXIT DIALOG-->
-      <paper-icon-button id="exit" class="style-exit-add-button" icon="clear" dialog-dismiss on-tap="clearInputFields">
+      <paper-icon-button id="exit" class="style-exit-add-button" icon="clear" dialog-dismiss on-tap="_clearInputFields">
       </paper-icon-button>
       <!-- RECIPE NAME -->
       <paper-input
@@ -259,7 +259,7 @@ Custom property | Description | Default
             id="addIngr"
             mini="true"
             class="style-add-ingr-button"
-            on-tap="addIngr">
+            on-tap="_addIngr">
           </paper-fab>
         </div>
 
@@ -285,7 +285,7 @@ Custom property | Description | Default
                 class="step"
                 step="{{item}}"
                 id="{{item.number}}"
-                on-rem_step="removeStep">
+                on-rem_step="_removeStep">
               </socobo-recipe-details-step>
             </template>
           </div>
@@ -294,7 +294,7 @@ Custom property | Description | Default
             id="addStep"
             mini="true"
             class="style-add-step-button"
-            on-tap="addStep">
+            on-tap="_addStep">
           </paper-fab>
         </div>
       </div>
@@ -306,7 +306,7 @@ Custom property | Description | Default
           id="abort"
           class="style-abort-fab"
           dialog-dismiss
-          on-tap="clearInputFields">
+          on-tap="_clearInputFields">
         </paper-fab>
         <paper-fab
           icon="done"
@@ -384,7 +384,7 @@ Custom property | Description | Default
          *  @private
          *  @function
          */
-        addStep: function() {
+        _addStep: function() {
           var step = {
             desc: "",
             number: 0
@@ -398,7 +398,7 @@ Custom property | Description | Default
          * @private
          * @function
          */
-        addIngr: function() {
+        _addIngr: function() {
           var ingr = {
             desc: "",
             amount: "",
@@ -414,7 +414,7 @@ Custom property | Description | Default
          * @private
          * @function
          */
-        removeStep: function(e) {
+        _removeStep: function(e) {
           var model = e.model;
           var itemIndex = model.get("index");
           this.cutElementOffArray(itemIndex, "recipe_inputs");
@@ -450,7 +450,7 @@ Custom property | Description | Default
          * @private
          * @function
          */
-        clearInputFields: function() {
+        _clearInputFields: function() {
           // clear title and description
           var inputFields = Polymer.dom(this.$.dialog).querySelectorAll(".inputs");
           inputFields.forEach(function(field) {
@@ -505,16 +505,16 @@ Custom property | Description | Default
           }
           var validationResult = this.validate(this.recipe);
           console.log(validationResult);
-          if(validationResult.isValid){
+          if (validationResult.isValid) {
             if (this.image === undefined || this.image === null || this.image === "") {
               this.recipe.image = "";
             } else {
               this.recipe.image = this.image.getImageAsString();
             }
             this.fire("add_request", this.recipe);
-            this.clearInputFields();
+            this._clearInputFields();
             this.$.dialog.close();
-          }else{
+          } else {
             this._notify(validationResult.message);
           }
         },

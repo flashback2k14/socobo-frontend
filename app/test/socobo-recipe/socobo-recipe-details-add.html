@@ -104,7 +104,7 @@
             }
           };
 
-          socoboRecipeDetailsAdd.removeStep(e);
+          socoboRecipeDetailsAdd._removeStep(e);
           expect(socoboRecipeDetailsAdd.recipe_inputs.length).to.be.eql(1);
         });
 
@@ -134,25 +134,25 @@
               }
             }
           };
-          socoboRecipeDetailsAdd.removeStep(e);
+          socoboRecipeDetailsAdd._removeStep(e);
           expect(socoboRecipeDetailsAdd.recipe_inputs.length).to.be.eql(1);
         });
 
         test("Call clearInputFields on clicking the exit cross button", function(){
-          mock_add.expects("clearInputFields").once();
+          mock_add.expects("_clearInputFields").once();
           var btn_exit = socoboRecipeDetailsAdd.$.exit;
           MockInteractions.tap(btn_exit);
           mock_add.verify();
         });
 
         test("Call clearInputFields on clicking the exit fab button", function(){
-          mock_add.expects("clearInputFields").once();
+          mock_add.expects("_clearInputFields").once();
           var btn_exit = socoboRecipeDetailsAdd.$.abort;
           MockInteractions.tap(btn_exit);
           mock_add.verify();
         });
 
-        test("clearInputFields", function(){
+        test("_clearInputFields", function(){
           socoboRecipeDetailsAdd.querySelector("#add_image").src = "#";
           var inputFields = socoboRecipeDetailsAdd.querySelectorAll(".inputs");
           socoboRecipeDetailsAdd.ingredient_inputs = [{desc : "test_ingr"}];
@@ -167,7 +167,7 @@
           expect(socoboRecipeDetailsAdd.$.text_input.value).is.not.eql("");
           expect(socoboRecipeDetailsAdd.querySelector("#add_image").src).is.not.eql("");
 
-          socoboRecipeDetailsAdd.clearInputFields();
+          socoboRecipeDetailsAdd._clearInputFields();
 
           expect(socoboRecipeDetailsAdd.ingredient_inputs.length).is.eql(0);
           expect(socoboRecipeDetailsAdd.recipe_inputs.length).is.eql(0);
@@ -218,7 +218,7 @@
         });
 
         test('createNewRecipe creates a recipe correctly', function (done) {
-          mock_add.expects("clearInputFields").once();
+          mock_add.expects("_clearInputFields").once();
           var steps = [{number: 0, desc: "testStep"}];
           var ingredients = [{desc : "test_ingr", amount: 12, unit: "kg"}];
           var title = "test_title";

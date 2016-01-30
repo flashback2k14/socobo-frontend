@@ -153,7 +153,7 @@ Custom property | Description | Default
           ingredient: {
             type: Object,
             value: {
-              amount : 0
+              amount: 0
             }
           },
           /**
@@ -173,9 +173,12 @@ Custom property | Description | Default
             value: "show"
           }
         },
-        _convertToInt: function () {
+        /**
+         * Converts the ingredients amount from string to number
+         */
+        _convertToInt: function() {
           var toChange =  this.ingredient.amount;
-          if(typeof toChange !== "number"){
+          if (typeof toChange !== "number") {
             this.ingredient.amount = Number(toChange);
           }
         },

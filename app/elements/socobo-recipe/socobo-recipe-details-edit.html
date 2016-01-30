@@ -33,7 +33,7 @@ Custom property | Description | Default
         top: 20px;
         max-height: 85%;
         width: 90%;
-        min-width:700px;
+        min-width: 700px;
         padding: 0;
         overflow: auto;
         background-color: white;
@@ -42,22 +42,26 @@ Custom property | Description | Default
         border-radius: 5px;
         line-height: 2;
       }
+
       .content {
         @apply(--layout-horizontal);
         padding: 0;
         margin: 0;
         height: 100%;
       }
+
       .leftColumn {
         width: 300px;
         padding: 0 30px 30px 30px;
       }
+
       .rightColumn {
         width: 100%;
         margin-right: 0;
         padding: 0 30px 30px 30px;
         overflow: hidden;
       }
+
       .separator {
         border: 1px solid var(--socobo-recipe-style-border-color);
         margin-top: 2px;
@@ -74,10 +78,12 @@ Custom property | Description | Default
         color: var(--socobo-recipe-style-text-color);
         font-weight: 100;
       }
+
       .style-exit-button:hover {
         color: var(--socobo-recipe-style-icon-focus-color);
         cursor: pointer;
       }
+
       .style-exit-button iron-icon {
         width: 30px;
         height: 30px;
@@ -89,6 +95,7 @@ Custom property | Description | Default
         padding: 0 30px 0 30px;
         margin-bottom: 20px;
       }
+
       .subHeadings {
         color: var(--socobo-recipe-style-sub-heading-color);
         font-size: 18px;
@@ -107,10 +114,12 @@ Custom property | Description | Default
         border-radius: 10px;
 
       }
+
       .overlay:hover {
         opacity: 0.4;
         cursor: pointer;
       }
+
       .overlay iron-icon {
         position: absolute;
         top: 50%;
@@ -122,6 +131,7 @@ Custom property | Description | Default
         color: white;
         opacity: 1.0;
       }
+
       .recipeImg {
         position: relative;
         top: 0;
@@ -133,6 +143,7 @@ Custom property | Description | Default
         margin-top: 30px;
         border-radius: 10px;
       }
+
       .recipeImg_image {
         position: absolute;
         width: 280px;
@@ -141,6 +152,7 @@ Custom property | Description | Default
         border-radius: 10px;
 
       }
+
       .style-file-chooser {
         display: none;
       }
@@ -149,20 +161,22 @@ Custom property | Description | Default
       .step {
         width: 100%;
       }
+
       .step_input paper-input {
         @apply(--layout-flex);
         padding-right: 30px;
         width: 800px;
       }
+
       .step_input paper-icon-button {
-        width:40px;
+        width: 40px;
         height: 40px;
         line-height: 40px;
         text-align: center;
       }
 
       /* INGREDIENTS AND STEPS*/
-      .style-add-ingr-button, .style-add-step-button{
+      .style-add-ingr-button, .style-add-step-button {
         @apply(--socobo-recipe-style-heading-font);
         margin: 20px 0 0 0;
         color: var(--socobo-recipe-style-action-btn-text-color);
@@ -170,7 +184,7 @@ Custom property | Description | Default
         font-size: 10px;
       }
 
-      .style-add-ingr-button:hover, .style-add-step-button:hover{
+      .style-add-ingr-button:hover, .style-add-step-button:hover {
         background-color: var(--socobo-recipe-style-action-btn-color);
         color: var(--socobo-recipe-style-icon-text-color);
       }
@@ -179,11 +193,13 @@ Custom property | Description | Default
       paper-fab {
         margin: 10px;
       }
+
       .style-abort-fab {
         --paper-fab-background: var(--socobo-recipe-style-secundary-action-btn-color);
       }
+
       /* NOTIFICATION */
-      .error-note{
+      .error-note {
         --paper-toast-background-color: var(--socobo-recipe-style-error-notification-color);
         --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
       }
@@ -196,7 +212,7 @@ Custom property | Description | Default
                   with-backdrop>
       <!-- DIALOG -->
       <!-- EXIT DIALOG-->
-      <paper-icon-button id="exit" class="style-exit-button" icon="clear" on-tap="clearInputFields" dialog-dismiss>
+      <paper-icon-button id="exit" class="style-exit-button" icon="clear" on-tap="_clearInputFields" dialog-dismiss>
       </paper-icon-button>
 
       <!-- RECIPE NAME -->
@@ -221,6 +237,7 @@ Custom property | Description | Default
 
           <!-- START IMAGE SECTION -->
           <input type="file" id="editfileChooser" class="style-file-chooser"/>
+
           <div elevation="1" class="recipeImg" id="editImageHolder">
             <!-- OVERLAY EDIT IMAGE -->
             <div class="overlay" on-tap="_openFileChooser">
@@ -273,7 +290,7 @@ Custom property | Description | Default
             mini="true"
             class="style-add-ingr-button"
             icon="add"
-            on-tap="addIngr">
+            on-tap="_addIngr">
           </paper-fab>
           <!-- END LEFT COLUMN -->
         </div>
@@ -301,7 +318,7 @@ Custom property | Description | Default
                 class="inputs step"
                 step="{{item}}"
                 id="{{item.number}}"
-                on-rem_step="removeStep">
+                on-rem_step="_removeStep">
               </socobo-recipe-details-step>
             </template>
           </div>
@@ -311,7 +328,7 @@ Custom property | Description | Default
             mini="true"
             class="style-add-step-button"
             icon="add"
-            on-tap="addStep">
+            on-tap="_addStep">
           </paper-fab>
           <!-- END RIGHT COLUMN -->
         </div>
@@ -325,7 +342,7 @@ Custom property | Description | Default
           class="style-abort-fab"
           icon="clear"
           dialog-dismiss
-          on-tap="clearInputFields">
+          on-tap="_clearInputFields">
         </paper-fab>
         <paper-fab
           id="ok"
@@ -347,24 +364,42 @@ Custom property | Description | Default
          * LISTENERS
          */
         listeners: {
-          "editfileChooser.change": "encode"
+          "editfileChooser.change": "_encode"
         },
-
         /**
          * PROPERTIES
          */
         properties: {
+          /**
+           * recipe object {Object}
+           * var recipe = {
+           *  desc: "The title",
+           *  text: "Description",
+           *  image: "The image",
+           *  steps: "Array of steps"
+           *  ingredients: "Array of ingredients"
+           * }
+           */
           recipe: {
             type: Object,
             value: {}
           },
+          /**
+           * Image service object
+           */
           image: {
             type: Object
           },
+          /**
+           * Used to handle the recipe input fields
+           */
           recipe_inputs: {
             type: Array,
             value: []
           },
+          /**
+           * Used to handle the ingredients input fields
+           */
           ingredient_inputs: {
             type: Array,
             value: []
@@ -385,61 +420,54 @@ Custom property | Description | Default
             value: []
           }
         },
-
         /**
-         * SHOW / HIDE
+         * Toggle the display status of the dialog
          */
         toggleDialog: function() {
           this.$.dialog.toggle();
         },
-
         /**
-         * EXIT
+         * Fires exit event
          */
         exit: function() {
           this.fire("exit_request");
         },
-
         /**
-         * INIT
+         * InInitializeit steps
          */
         initSteps: function() {
           for (var step in this.recipe.clone.steps) {
             this.push("recipe_inputs", this.recipe.clone.steps[step]);
           }
         },
-
         /**
-         * INIT
+         * Initialize ingredients
          */
         initIngredients: function() {
           for (var ingr in this.recipe.clone.ingredients) {
             this.push("ingredient_inputs", this.recipe.clone.ingredients[ingr]);
           }
         },
-
         /**
-         * INIT
+         * Initialize the image
          */
-        initImage: function() {
+        _initImage: function() {
           this.image = this.recipe.clone.image;
         },
-
         /**
-         * ADD
+         * Add step input field
          */
-        addStep: function() {
+        _addStep: function() {
           var step = {
             desc: "",
             number: 0
           };
           this.push("recipe_inputs", step);
         },
-
         /**
-         * ADD
+         * Add ingredient input field
          */
-        addIngr: function() {
+        _addIngr: function() {
           var ingr = {
             desc: "",
             amount: "",
@@ -448,36 +476,33 @@ Custom property | Description | Default
           this.push("ingredient_inputs", ingr);
           this.numberOfIngr++;
         },
-
         /**
-         * REMOVE
+         * Remove step input field
          */
-        removeStep: function(e) {
+        _removeStep: function(e) {
           var model = e.model;
           var itemIndex = model.get("index");
           this.cutElementOffArray(itemIndex, "recipe_inputs");
         },
-
         /**
-         * REMOVE
+         * Remove ingredient input field
          */
         _removeIngr: function(e) {
           var model = e.model;
           var itemIndex = model.get("index");
           this.cutElementOffArray(itemIndex, "ingredient_inputs");
         },
-
         /**
-         * REMOVE
+         * Removes the element at the index from the array
          */
         cutElementOffArray: function(index, arr) {
-          this.splice(arr, index ,1);
+          this.splice(arr, index, 1);
         },
 
         /**
-         * CLEAR
+         * Clears all input fields
          */
-        clearInputFields: function() {
+        _clearInputFields: function() {
           var inputFields = Polymer.dom(this.$.dialog).querySelectorAll(".inputs");
           var image = document.querySelector("#edit_image");
           var placeholder = document.querySelector("#edit_placeholder");
@@ -495,22 +520,19 @@ Custom property | Description | Default
           if (chooser !== null) {
             chooser.value = null;
           }
-
           this.recipe.clone = {};
-          this.revokeEdit();
+          this._revokeEdit();
         },
-
         /**
-         * CLEAR
+         * Resets the array for the ingredients and steps
          */
-        revokeEdit: function() {
+        _revokeEdit: function() {
           //Reset the temporary arrays
           this.recipe_inputs = [];
           this.ingredient_inputs = [];
         },
-
         /**
-         * FILE CHOOSER
+         * Open the file picker
          *
          * @private
          */
@@ -519,16 +541,16 @@ Custom property | Description | Default
         },
 
         /**
-         * FILE CHOOSER
+         * Encode the image in the file chooser
          */
-        encode: function() {
+        _encode: function() {
           this.image = new ImageService("#editfileChooser");
           this.image.encode(document.querySelector("#edit_image"));
           this.image.encode(document.querySelector("#edit_placeholder"));
         },
 
         /**
-         * NEW
+         * Create a new recipe
          */
         createNewRecipe: function() {
           this.recipe.original.desc = this.recipe.clone.desc;
@@ -544,10 +566,8 @@ Custom property | Description | Default
             this.recipe.original.steps[k].number = counter;
             counter++;
           }
-          var v = this.validateRecipe();
-          if (v.length <= 0) {
           var validationResult = this.validate(this.recipe.original);
-          if (validationResult.isValid){
+          if (validationResult.isValid) {
             if (this.image === undefined || this.image === null || this.image === "") {
               this.recipe.original.image = "";
             }
@@ -555,19 +575,19 @@ Custom property | Description | Default
               this.recipe.original.image = this.image.getImageAsString();
             }
             this.fire("add_edited_recipe", this.recipe.original);
-            this.clearInputFields();
+            this._clearInputFields();
             this.$.dialog.close();
           } else {
             this._notify(validationResult.message);
           }
-        }
         },
         /**
          * Shows a given message as paper-toast element
-         * @param msg
+         *
+         * @param {String} msg
          * @private
          */
-        _notify: function (msg) {
+        _notify: function(msg) {
           this.$.errorNotification.text = msg;
           this.$.errorNotification.show();
         }

@@ -299,7 +299,7 @@ Custom property | Description | Default
               this.$.editDialog.measurements = data;
               this.$.editDialog.initIngredients();
               this.$.editDialog.initSteps();
-              this.$.editDialog.initImage();
+              this.$.editDialog._initImage();
               this.$.editDialog.toggleDialog();
             }.bind(this)).
           catch(function(error) {
@@ -321,7 +321,7 @@ Custom property | Description | Default
               this.$.addDialog.measurements = data;
               this.$.addDialog.state = "add";
               this.$.addDialog.toggleDialog();
-              this.$.addDialog.clearInputFields();
+              this.$.addDialog._clearInputFields();
             }.bind(this)).
             catch(function(error) {
               this._notifyOnError(error);
