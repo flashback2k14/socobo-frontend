@@ -2,10 +2,20 @@
 <script rel="script" src="lib/MessageModule.js"></script>
 
 <script>
+  /**
+   * Behavior for validating recipes
+   *
+   * @type {{}}
+   */
   var RecipeBehaviors = RecipeBehaviors || {};
   RecipeBehaviors.ValidateBehavior = {
 
     properties: {
+      /**
+       * Mappings {Object} - Key value pairs where the
+       * key is the existing value in the message and
+       * the value is the replacement
+       */
       mappings: {
         type: Object,
         value: {
@@ -16,8 +26,20 @@
         }
       }
     },
-    validate : function(objRoot){
-      var errorMsg = new MessageModule(), titelExists, textExists, stpsExists, ingrExists, valid = true, msg;
+    /**
+     * Validates the given recipe object
+     *
+     * @param {Object} objRoot
+     * @returns {{isValid: boolean, message: (*|String)}}
+     */
+    validate: function(objRoot) {
+      var errorMsg = new MessageModule();
+      var titelExists;
+      var textExists;
+      var stpsExists;
+      var ingrExists;
+      var valid = true;
+      var msg;
       errorMsg.setPrefix("Please add the missing information: ");
       errorMsg.setMappings(this.mappings);
 
@@ -26,39 +48,36 @@
       stpsExists = ValidateModule.verifyArrayNotEmpty(objRoot.steps);
       ingrExists = ValidateModule.verifyArrayNotEmpty(objRoot.ingredients);
 
-      if(!titelExists){
+      if (!titelExists) {
         errorMsg.addMsgPart("Main title");
         valid = false;
       }
-      if(!textExists && !stpsExists){
+      if (!textExists && !stpsExists) {
         errorMsg.addMsgPart("Description or Steps");
         valid = false;
       }
-      if(stpsExists){
+      if (stpsExists) {
         var missingSteps = ValidateModule.verifyAll(objRoot.steps, [{value: "desc", type: "string"}]);
-        console.log("MISSING STP",  missingSteps);
-        if(ValidateModule.verifyArrayNotEmpty(missingSteps)){
+        if (ValidateModule.verifyArrayNotEmpty(missingSteps)) {
           errorMsg.addMsgParts("Steps ",missingSteps);
           valid = false;
         }
       }
-      if(!ingrExists){
+      if (!ingrExists) {
         errorMsg.addMsgPart("Ingredients");
         valid = false;
-      }else{
+      } else {
         var missingIngredients = ValidateModule
           .verifyAll(objRoot.ingredients, [{value: "desc", type: "string"},
             {value: "amount", type: "number"}, {value: "unit", type: "string"}]);
-        console.log("MISSING", missingIngredients);
-        if(ValidateModule.verifyArrayNotEmpty(missingIngredients)){
+        if (ValidateModule.verifyArrayNotEmpty(missingIngredients)) {
           errorMsg.addMsgParts("Ingredients ", missingIngredients);
           valid = false;
         }
       }
       msg = errorMsg.buildMsg();
-      return {isValid: valid, message: msg}
+      return {isValid: valid, message: msg};
     }
-
-  }
+  };
 
 </script>

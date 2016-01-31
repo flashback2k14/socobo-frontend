@@ -99,7 +99,6 @@ var MessageModule = (function(utils) {
     var word;
     var tmpMsg = messageString;
     var regex;
-    console.log("Map", wordMap);
     if (wordMap) {
       for (word in wordMap) {
         regex = new RegExp(word, "g");

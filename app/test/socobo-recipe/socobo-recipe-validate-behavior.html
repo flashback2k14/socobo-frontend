@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>socobo-recipe-details-add basic tests</title>
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+  <script src="../../elements/socobo-recipe/lib/MessageModule.js"></script>
+
+  <link rel="import" href="../../elements/socobo-recipe/elements.html">
+  <link rel="import" href="../../elements/elements.html">
+</head>
+<body>
+
+  <script>
+    suite('<socobo-recipe-validate-behavior>', function() {
+
+      suite('Check interactions', function () {
+
+        var SocoboRecipeValidateBehavior, recipe;
+
+        setup(function() {
+          SocoboRecipeValidateBehavior = RecipeBehaviors.ValidateBehavior;
+          recipe = {
+            desc: "TestTitle",
+            text: "TestDescription",
+            steps: [
+              {
+                desc: "S1"
+              },
+              {
+                desc: "S2"
+              }
+            ],
+            ingredients: [
+              {
+                desc: "I1",
+                amount: 11,
+                unit: "kg"
+              },
+              {
+                desc: "I2",
+                amount: 22,
+                unit: "l"
+              }
+            ]
+          }
+        });
+
+        test("Complete recipe is valid", function(){
+          var result = SocoboRecipeValidateBehavior.validate(recipe);
+          assert.isTrue(result.isValid);
+        });
+
+        test("Title, Description and Incredients entries are enough to be valid", function(){
+          recipe.steps = [];
+          var result = SocoboRecipeValidateBehavior.validate(recipe);
+          assert.isTrue(result.isValid);
+        });
+
+        test("Title, Steps and Incredients entries are enough to be valid", function(){
+          recipe.text = "";
+          var result = SocoboRecipeValidateBehavior.validate(recipe);
+          assert.isTrue(result.isValid);
+        });
+
+        test("At least steps or a description is required", function(){
+          recipe.text = "";
+          recipe.steps = [];
+          var result = SocoboRecipeValidateBehavior.validate(recipe);
+          assert.isFalse(result.isValid);
+        });
+
+        test("Steps require a description", function(){
+          recipe.steps[0].desc = "";
+          var result = SocoboRecipeValidateBehavior.validate(recipe);
+          assert.isFalse(result.isValid);
+        });
+
+        test("Title is required", function(){
+          recipe.desc = "";
+          var result = SocoboRecipeValidateBehavior.validate(recipe);
+          assert.isFalse(result.isValid);
+        });
+
+        test("Ingredients are required", function(){
+          recipe.ingredients = [];
+          var result = SocoboRecipeValidateBehavior.validate(recipe);
+          assert.isFalse(result.isValid);
+        });
+
+        test("Ingredient title is required", function(){
+          recipe.ingredients[0].desc = "";
+          var result = SocoboRecipeValidateBehavior.validate(recipe);
+          assert.isFalse(result.isValid);
+        });
+
+        test("Ingredient unit is required", function(){
+          recipe.ingredients[0].unit = "";
+          var result = SocoboRecipeValidateBehavior.validate(recipe);
+          assert.isFalse(result.isValid);
+        });
+
+        test("Ingredient amount is required", function(){
+          recipe.ingredients[0].amount = 0;
+          var result = SocoboRecipeValidateBehavior.validate(recipe);
+          assert.isFalse(result.isValid);
+        });
+
+        test("Ingredient amount must be a number", function(){
+          recipe.ingredients[0].amount = "12";
+          var result = SocoboRecipeValidateBehavior.validate(recipe);
+          assert.isFalse(result.isValid);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
