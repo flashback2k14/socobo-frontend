@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>socobo-element-list-item basic tests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../../elements/elements.html">
+</head>
+<body>
+
+  <test-fixture id="Toast">
+    <template>
+      <socobo-element-toast></socobo-element-toast>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite("<socobo-element-toast>", function() {
+      var toast;
+
+      setup(function() {
+        toast = fixture('Toast');
+      });
+
+      test("exists", function(done) {
+        expect(toast).to.not.be.eql(undefined);
+        done();
+      });
+
+      test("hast a paper-toast", function(done) {
+        expect(toast.querySelector('paper-toast')).to.not.be.eql(undefined);
+        done();
+      });
+
+      test("firing socobo-show-toast event opens toast", function(done) {
+        var msg = {type: "success", message: "foo"};
+        toast.fire("socobo-show-toast", msg);
+        flush(function() {
+          expect(toast.querySelector('paper-toast').opened).to.be.eql(true);
+          done();
+        });
+      });
+
+      test("firing two socobo-show-toast events consecutively still only opens one toast", function(done) {
+        var msg = {type: "success", message: "foo"};
+        toast.fire("socobo-show-toast", msg);
+        toast.fire("socobo-show-toast", msg);
+
+        flush(function() {
+          expect(toast.querySelectorAll('paper-toast').length).to.be.eql(1);
+          done();
+        });
+      });
+
+      test("after duration passed no toast is displayed", function(done) {
+        var msg = {type: "success", message: "foo"};
+        toast.fire("socobo-show-toast", msg);
+
+        flush(function() {
+          toast.async(function() {
+            expect(toast.querySelector('paper-toast').opened).to.be.eql(false, "Toast should not be opened");
+            done();
+          }, 5000);
+        });
+      });
+
+      test("_extractDuration defaults to 3000 if no duration is set", function(done) {
+        var msg = {type: "success", message: "foo"};
+        expect(toast._extractDuration(msg)).to.be.eql(3000);
+        done();
+      });
+
+      test("_extractDuration returns duration set in the input", function(done) {
+        var msg = {type: "success", message: "foo", duration: 9000};
+        var msgInfinity = {type: "success", message: "foo", duration: Infinity};
+
+        expect(toast._extractDuration(msg)).to.be.eql(9000);
+        expect(toast._extractDuration(msgInfinity)).to.be.eql(Infinity);
+        done();
+      });
+
+      test("_extractDuration normalizes negative/0 values to default of 3000", function(done) {
+        var msg = {type: "success", message: "foo", duration: -1};
+        var msgZero = {type: "success", message: "foo", duration: 0};
+
+        expect(toast._extractDuration(msgZero)).to.be.eql(3000);
+        done();
+      });
+    });
+  </script>
+</body>
+</html>

@@ -186,7 +186,7 @@ Custom property | Description | Default
         },
 
         /**
-         * Listener to handle the create item events. Takes care creating the item and
+         * Listener to handle the create item events. Takes care of creating the item and
          * updating Firebase.
          *
          * @param {Object} e
@@ -260,12 +260,15 @@ Custom property | Description | Default
             var ref = new Firebase(this._handleLogin(this.userLogin) + "/" + item.__firebaseKey__);
             ref.update(item, function(error) {
               if (error) {
-                alert("There was an error updating the item");
+                this.fire("socobo-show-toast",
+                  {type: "error", message: "There was an error updating " + item.name});
                 console.log(error);
               } else {
                 self.$.inventoryEditDialog.hide();
+                this.fire("socobo-show-toast",
+                  {type: "success", message: "Successfully updated " + item.name});
               }
-            });
+            }.bind(this));
           }
         }
       });

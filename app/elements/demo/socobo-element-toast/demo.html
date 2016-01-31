@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/html">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>socobo-element-list-item Demo</title>
+    <link rel="import" href="elements.html">
+    <style>
+      .buttons {
+      }
+    </style>
+  </head>
+  <body>
+  <template is="dom-bind" id="demo">
+    <paper-button class="buttons" on-tap="successToast">Success</paper-button>
+    <paper-button class="buttons" on-tap="plainToast">Plain</paper-button>
+    <paper-button class="buttons" on-tap="errorToast">Failure</paper-button>
+    <paper-button class="buttons" on-tap="spinnerStartToast">Spinner start</paper-button>
+    <paper-button class="buttons">Spinner stop</paper-button>
+    <socobo-element-toast></socobo-element-toast>
+  </template>
+
+  <script type="text/javascript">
+    var demo = document.querySelector("#demo");
+
+    demo.successToast = function() {
+      this.fire("socobo-show-toast", {type: "success", duration: 2000, message: "Success!"});
+    };
+    demo.errorToast = function() {
+      this.fire("socobo-show-toast", {type: "error", duration: 2000, message: "Error!"});
+    };
+
+    demo.plainToast = function() {
+      this.fire("socobo-show-toast", {type: "plain", duration: 2000, message: "Info!"});
+    };
+
+    demo.spinnerStartToast = function() {
+      this.fire("socobo-show-toast", {type: "spinner", duration: 2000, message: "Loading!"});
+    };
+  </script>
+  </body>
+</html>
