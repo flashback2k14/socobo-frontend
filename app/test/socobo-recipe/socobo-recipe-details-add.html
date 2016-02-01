@@ -192,6 +192,7 @@
 
         test('createNewRecipe fires an add_request event if the recipe is valid', function (done) {
           socoboRecipeDetailsAdd.addEventListener("add_request", function(){
+            console.log("Fired add event");
             done();
           });
           sinon.stub(socoboRecipeDetailsAdd, "validate", function(){
