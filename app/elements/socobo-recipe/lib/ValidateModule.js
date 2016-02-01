@@ -1,3 +1,4 @@
+/* exported ValidateModule */
 /**
  * Provides different methods to validate data
  *

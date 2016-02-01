@@ -1,3 +1,4 @@
+/* exported UtilsModule */
 var UtilsModule = UtilsModule || (function() {
 
   "use strict";
@@ -39,7 +40,7 @@ var UtilsModule = UtilsModule || (function() {
     isArray: _isArray
   };
 }());
-
+/* exported MessageModule */
 /**
  * Enables building a message based on particular pieces
  * - add single message pieces

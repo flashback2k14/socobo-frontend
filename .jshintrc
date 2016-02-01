@@ -30,6 +30,11 @@
     "RecipeDao": true,
     "ImageService": true,
     "CloneModule": true,
-    "SocoboGrocery": true
+    "SocoboGrocery": true,
+    "MessageModule": true,
+    "ValidateModule": true,
+    "RecipeBehaviors": true,
+    "ValidateBehavior": true,
+    "UtilsModule": true
   }
 }
