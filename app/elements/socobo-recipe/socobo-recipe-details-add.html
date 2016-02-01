@@ -504,7 +504,6 @@ Custom property | Description | Default
             counter++;
           }
           var validationResult = this.validate(this.recipe);
-          console.log(validationResult);
           if (validationResult.isValid) {
             if (this.image === undefined || this.image === null || this.image === "") {
               this.recipe.image = "";
