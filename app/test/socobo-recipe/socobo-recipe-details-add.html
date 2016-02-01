@@ -153,7 +153,7 @@
         });
 
         test("_clearInputFields", function(){
-          socoboRecipeDetailsAdd.querySelector("#add_image").src = "#";
+          socoboRecipeDetailsAdd.querySelector("#add_image").src = "http://lorempixel.com/400/200/food/";
           var inputFields = socoboRecipeDetailsAdd.querySelectorAll(".inputs");
           socoboRecipeDetailsAdd.ingredient_inputs = [{desc : "test_ingr"}];
           socoboRecipeDetailsAdd.recipe_inputs = [{desc : "test_step"}];
