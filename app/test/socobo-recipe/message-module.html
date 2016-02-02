@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Validate module tests</title>
+
+    <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+    <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
+    <link rel="import" href="../../elements/elements.html">
+</head>
+<body>
+    <script>
+
+      suite('<message-module', function () {
+        var messageModule;
+
+        setup(function(){
+          messageModule = new MessageModule();
+        });
+
+        test('add simple message', function () {
+          messageModule.addMsgPart("TEST MESSAGE");
+          expect(messageModule.buildMsg())
+            .to.eql("TEST MESSAGE");
+        });
+
+        test('add two simple message', function () {
+          messageModule.addMsgPart("TEST MESSAGE");
+          messageModule.addMsgPart("2nd TEST MESSAGE");
+          expect(messageModule.buildMsg())
+            .to.eql("TEST MESSAGE, 2nd TEST MESSAGE");
+        });
+
+        test('add two simple message and a array of messages', function () {
+          messageModule.addMsgPart("TEST MESSAGE");
+          messageModule.addMsgPart("2nd TEST MESSAGE");
+          messageModule.addMsgParts("Ingredients", ["Description", "Amount"]);
+          expect(messageModule.buildMsg())
+            .to.eql("TEST MESSAGE, 2nd TEST MESSAGE, Ingredients(Description, Amount)");
+        });
+
+        test('add two simple message and a array of messages and a prefix', function () {
+          messageModule.addMsgPart("TEST MESSAGE");
+          messageModule.addMsgPart("2nd TEST MESSAGE");
+          messageModule.addMsgParts("Ingredients", ["Description", "Amount"]);
+          messageModule.setPrefix("Please add the missing elements: ");
+          expect(messageModule.buildMsg())
+            .to.eql("Please add the missing elements:" +
+            " TEST MESSAGE, 2nd TEST MESSAGE, Ingredients(Description, Amount)");
+        });
+
+        test('final message contains only mapped words', function () {
+          var wordMap = {
+            desc: "Title",
+            text: "Description",
+            amt: "Amount"
+          };
+          messageModule.setMappings(wordMap);
+          messageModule.addMsgPart("desc");
+          messageModule.addMsgPart("text");
+          messageModule.addMsgParts("Ingredients", ["desc", "amt"]);
+          messageModule.setPrefix("Please add the missing elements: ");
+          expect(messageModule.buildMsg())
+            .to.eql("Please add the missing elements:" +
+            " Title, Description, Ingredients(Title, Amount)");
+        });
+
+      });
+
+    </script>
+</body>
+</html>

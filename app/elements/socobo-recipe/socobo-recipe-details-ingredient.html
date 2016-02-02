@@ -105,21 +105,23 @@ Custom property | Description | Default
         <span>
           <paper-input label="Amount"
                        class="amount_input"
-                       type="number"
                        value="{{ingredient.amount}}"
-                       pattern="[\d,.]+"
+                       required="true"
                        auto-validate
-                       error-message="Invalid characters">
+                       pattern="[\d]+"
+                       error-message="Invalid value"
+                       on-change="_convertToInt">
           </paper-input>
         </span>
-          <!---->
+        <!---->
         <span>
           <div class="horizontal-section">
           <paper-dropdown-menu
             label="Measurement"
             class="vertical-layout width-small"
             id="measurementDropdown"
-            vertical-align="bottom">
+            vertical-align="bottom"
+            required="true">
             <paper-menu
               id="measurementDropdownMenu"
               class="dropdown-content"
@@ -151,6 +153,7 @@ Custom property | Description | Default
           ingredient: {
             type: Object,
             value: {
+              amount: 0
             }
           },
           /**
@@ -168,6 +171,15 @@ Custom property | Description | Default
           state: {
             type: String,
             value: "show"
+          }
+        },
+        /**
+         * Converts the ingredients amount from string to number
+         */
+        _convertToInt: function() {
+          var toChange =  this.ingredient.amount;
+          if (typeof toChange !== "number") {
+            this.ingredient.amount = Number(toChange);
           }
         },
         /**
