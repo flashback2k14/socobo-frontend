@@ -38,7 +38,9 @@ Custom property | Description | Default
     </style>
 
     <div>
-      <paper-toast class="socobo-toast-plain" id="toast"></paper-toast>
+      <paper-toast
+        class="socobo-toast-plain"
+        id="toast"></paper-toast>
     </div>
   </template>
 
@@ -48,10 +50,20 @@ Custom property | Description | Default
         is: "socobo-element-toast",
 
         properties: {
+
+          /**
+           * Array to hold the queued up messages
+           *
+           * @private
+           */
           _messages: {
             type: Array,
             value: []
           }
+        },
+
+        listeners: {
+          "iron-overlay-closed": "_messageAdded"
         },
 
         observers: [
@@ -78,10 +90,10 @@ Custom property | Description | Default
          * @private
          */
         _styleToast: function(toast, msg) {
-          Array.from(toast.classList).filter(function(clazz) {
-            return clazz.indexOf("socobo-toast") !== -1;
-          }).forEach(function(c) {
-            toast.classList.remove(c);
+          toast.className.split(" ").forEach(function(clazz) {
+            if (clazz.indexOf("socobo-toast") !== -1) {
+              toast.classList.remove(clazz);
+            }
           });
           switch (msg.type) {
             case "success":
@@ -110,6 +122,7 @@ Custom property | Description | Default
             return msg.duration;
           }
         },
+
         /**
            * Observer for the _messages Array that handles changes to the array.
            * Displays the toast if no other toast is shown at the moment and queues up the message
@@ -125,7 +138,6 @@ Custom property | Description | Default
             this._toast.duration = this._extractDuration(msg);
 
             this._toast.show();
-            this.async(this._messageAdded, this._toast.duration);
           }
         },
         /**
@@ -135,6 +147,13 @@ Custom property | Description | Default
         ready: function() {
           this._toast = this.$.toast;
           window.addEventListener("socobo-show-toast", this._showToast.bind(this));
+
+          // Overriding the _renderClosed function of the paper-toast with the one from
+          // IronOverlayBehavior so the closed event is fired
+          this._toast._renderClosed = function() {
+            this.classList.remove('paper-toast-open');
+            Polymer.IronOverlayBehaviorImpl._renderClosed.apply(this, arguments);
+          }
         }
       });
     })();
