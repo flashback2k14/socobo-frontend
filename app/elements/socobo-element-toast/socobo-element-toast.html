@@ -151,9 +151,9 @@ Custom property | Description | Default
           // Overriding the _renderClosed function of the paper-toast with the one from
           // IronOverlayBehavior so the closed event is fired
           this._toast._renderClosed = function() {
-            this.classList.remove('paper-toast-open');
+            this.classList.remove("paper-toast-open");
             Polymer.IronOverlayBehaviorImpl._renderClosed.apply(this, arguments);
-          }
+          };
         }
       });
     })();
