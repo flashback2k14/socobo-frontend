@@ -81,7 +81,7 @@
         var msgInfinity = {type: "success", message: "foo", duration: Infinity};
 
         expect(toast._extractDuration(msg)).to.be.eql(9000);
-        expect(toast._extractDuration(msgInfinity)).to.be.eql(Infinity);
+        expect(toast._extractDuration(msgInfinity)).to.be.eql(3000);
         done();
       });
 

@@ -31,16 +31,13 @@ Custom property | Description | Default
          --paper-toast-background-color: var(--socobo-toast-style-plain-notification-color);
          --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
        }
-      .socobo-toast-spinner {
-          --paper-toast-background-color: var(--socobo-toast-style-spinner-notification-color);
-          --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
-        }
     </style>
 
     <div>
       <paper-toast
         class="socobo-toast-plain"
-        id="toast"></paper-toast>
+        id="toast">
+      </paper-toast>
     </div>
   </template>
 
@@ -102,9 +99,6 @@ Custom property | Description | Default
             case "error":
               toast.classList.add("socobo-toast-error");
               break;
-            case "spinner":
-              toast.classList.add("socobo-toast-spinner");
-              break;
             default:
               toast.classList.add("socobo-toast-plain");
           }
@@ -116,7 +110,7 @@ Custom property | Description | Default
          * Defaults to a set default value. Disallows infinity.
          */
         _extractDuration: function(msg) {
-          if ((msg.duration && msg.duration < 1) || !msg.duration) {
+          if ((msg.duration && msg.duration < 1) || !msg.duration || msg.duration === Infinity) {
             return this._DEFAULT;
           } else {
             return msg.duration;

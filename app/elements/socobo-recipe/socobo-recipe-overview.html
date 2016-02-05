@@ -161,8 +161,6 @@ Custom property | Description | Default
     </socobo-element-buttons>
 
     <!-- Notification -->
-    <paper-toast id="errorNotification" class="error-note"></paper-toast>
-    <paper-toast id="successNotification" class="success-note"></paper-toast>
     <paper-toast id="loadNotification" class="load-note" duration="-1">
       <div>
         <paper-spinner id="loadspinner" class="loadspinner" active></paper-spinner>
@@ -372,7 +370,7 @@ Custom property | Description | Default
          * @private
          */
         _addNewRecipe: function(e) {
-          this._notifyOnLoading("Adding recipe");
+          // this._notifyOnLoading("Adding recipe");
           RecipeDao.getInstance(this.userLogin)
             .add(e.detail)
             .then(function(success) {
@@ -484,8 +482,7 @@ Custom property | Description | Default
          * @function
          */
         _notifyOnError: function(msg) {
-          this.$.errorNotification.text = msg;
-          this.$.errorNotification.show();
+          this.fire("socobo-show-toast", {type: "error", message: msg});
         },
         /**
          * Shows a given success message as paper-toast element
@@ -495,8 +492,7 @@ Custom property | Description | Default
          * @function
          */
         _notifyOnSuccess: function(msg) {
-          this.$.successNotification.text = msg;
-          this.$.successNotification.show();
+          this.fire("socobo-show-toast", {type: "success", message: msg});
         },
         /**
          * Shows a given loading message as paper-toast element
@@ -506,8 +502,7 @@ Custom property | Description | Default
          * @function
          */
         _notifyOnLoading: function(msg) {
-          this.$.loadtext.innerHTML = msg;
-          this.$.loadNotification.opened = true;
+          this.fire("socobo-show-toast", {type: "spinner", message: msg, duration: Infinity});
         },
         /**
          * Enables all checkboxes on checking the main checkbox of the search bar
