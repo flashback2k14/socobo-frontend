@@ -237,6 +237,8 @@ Custom property | Description | Default
                 recipe.missingItems.push(item);
               });
             }
+            // calc index for fulfillment degree
+            recipe.index = recipe.matchingItemCount / recipe.ingredients.length;
             // push recipe into data binding array
             this.push("recipeRanking", recipe);
           }.bind(this));
@@ -459,7 +461,7 @@ Custom property | Description | Default
          * @function
          */
         _compareRecipeMatchingAsc: function(a, b) {
-          return (a.ingredients.length * a.matchingItemCount) - (b.ingredients.length * b.matchingItemCount);
+          return a.index - b.index;
         },
 
         /**
@@ -472,7 +474,7 @@ Custom property | Description | Default
          * @function
          */
         _compareRecipeMatchingDesc: function(a, b) {
-          return (b.ingredients.length * b.matchingItemCount) - (a.ingredients.length * a.matchingItemCount);
+          return b.index - a.index;
         },
 
         /**
