@@ -238,7 +238,7 @@ Custom property | Description | Default
               });
             }
             // calc index for fulfillment degree
-            recipe.index = recipe.matchingItemCount / recipe.ingredients.length;
+            recipe.index = (recipe.ingredients.length > 0) ? (recipe.matchingItemCount / recipe.ingredients.length) : 0;
             // push recipe into data binding array
             this.push("recipeRanking", recipe);
           }.bind(this));
