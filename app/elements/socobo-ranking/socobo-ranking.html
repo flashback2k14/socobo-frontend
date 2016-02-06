@@ -370,15 +370,15 @@ Custom property | Description | Default
                 case WEIGHTS.TBSP:
                   return ingredientAmount <= itemCount;
                 case WEIGHTS.TSP:
-                  return ingredientAmount * CONVERT.tbspToG <= itemCount * CONVERT.tspToG;
+                  return ingredientAmount * CONVERT.tspToG <= itemCount *  CONVERT.tbspToG;
                 case WEIGHTS.CUP:
-                  return ingredientAmount * CONVERT.tbspToG <= itemCount * CONVERT.cupToG;
+                  return ingredientAmount * CONVERT.cupToG <= itemCount * CONVERT.tbspToG;
                 case WEIGHTS.OUNCES:
-                  return ingredientAmount * CONVERT.tbspToG <= itemCount * CONVERT.ozToG;
+                  return ingredientAmount * CONVERT.ozToG <= itemCount * CONVERT.tbspToG;
                 case WEIGHTS.G:
-                  return ingredientAmount * CONVERT.tbspToG <= itemCount;
+                  return ingredientAmount <= itemCount * CONVERT.tbspToG;
                 case WEIGHTS.KG:
-                  return ingredientAmount * CONVERT.tbspToG <= itemCount * CONVERT.kgToG;
+                  return ingredientAmount * CONVERT.kgToG <= itemCount * CONVERT.tbspToG;
                 default:
                   return false;
               }
@@ -390,15 +390,15 @@ Custom property | Description | Default
                 case WEIGHTS.TSP:
                   return ingredientAmount <= itemCount;
                 case WEIGHTS.TBSP:
-                  return ingredientAmount * CONVERT.tspToG <= itemCount * CONVERT.tbspToG;
+                  return ingredientAmount * CONVERT.tbspToG <= itemCount * CONVERT.tspToG;
                 case WEIGHTS.CUP:
-                  return ingredientAmount * CONVERT.tspToG <= itemCount * CONVERT.cupToG;
+                  return ingredientAmount * CONVERT.cupToG <= itemCount * CONVERT.tspToG;
                 case WEIGHTS.OUNCES:
-                  return ingredientAmount * CONVERT.tspToG <= itemCount * CONVERT.ozToG;
+                  return ingredientAmount * CONVERT.ozToG <= itemCount * CONVERT.tspToG;
                 case WEIGHTS.G:
-                  return ingredientAmount * CONVERT.tspToG <= itemCount;
+                  return ingredientAmount <= itemCount * CONVERT.tspToG;
                 case WEIGHTS.KG:
-                  return ingredientAmount * CONVERT.tspToG <= itemCount * CONVERT.kgToG;
+                  return ingredientAmount * CONVERT.kgToG <= itemCount * CONVERT.tspToG;
                 default:
                   return false;
               }
@@ -410,15 +410,15 @@ Custom property | Description | Default
                 case WEIGHTS.CUP:
                   return ingredientAmount <= itemCount;
                 case WEIGHTS.TBSP:
-                  return ingredientAmount * CONVERT.cupToG <= itemCount * CONVERT.tbspToG;
+                  return ingredientAmount * CONVERT.tbspToG <= itemCount * CONVERT.cupToG;
                 case WEIGHTS.TSP:
-                  return ingredientAmount * CONVERT.cupToG <= itemCount * CONVERT.tspToG;
+                  return ingredientAmount * CONVERT.tspToG <= itemCount * CONVERT.cupToG;
                 case WEIGHTS.OUNCES:
-                  return ingredientAmount * CONVERT.cupToG <= itemCount * CONVERT.ozToG;
+                  return ingredientAmount * CONVERT.ozToG <= itemCount * CONVERT.cupToG;
                 case WEIGHTS.G:
-                  return ingredientAmount * CONVERT.cupToG <= itemCount;
+                  return ingredientAmount <= itemCount * CONVERT.cupToG;
                 case WEIGHTS.KG:
-                  return ingredientAmount * CONVERT.cupToG <= itemCount * CONVERT.kgToG;
+                  return ingredientAmount * CONVERT.kgToG <= itemCount * CONVERT.cupToG;
                 default:
                   return false;
               }
@@ -430,15 +430,15 @@ Custom property | Description | Default
                 case WEIGHTS.OUNCES:
                   return ingredientAmount <= itemCount;
                 case WEIGHTS.G:
-                  return ingredientAmount * CONVERT.ozToG <= itemCount;
+                  return ingredientAmount <= itemCount * CONVERT.ozToG;
                 case WEIGHTS.KG:
-                  return ingredientAmount * CONVERT.ozToG <= itemCount * CONVERT.kgToG;
+                  return ingredientAmount * CONVERT.kgToG <= itemCount * CONVERT.ozToG;
                 case WEIGHTS.TSP:
-                  return ingredientAmount * CONVERT.ozToG <= itemCount * CONVERT.tspToG;
+                  return ingredientAmount * CONVERT.tspToG <= itemCount * CONVERT.ozToG;
                 case WEIGHTS.TBSP:
-                  return ingredientAmount * CONVERT.ozToG <= itemCount * CONVERT.tbspToG;
+                  return ingredientAmount * CONVERT.tbspToG <= itemCount * CONVERT.ozToG;
                 case WEIGHTS.CUP:
-                  return ingredientAmount * CONVERT.ozToG <= itemCount * CONVERT.cupToG;
+                  return ingredientAmount * CONVERT.cupToG <= itemCount * CONVERT.ozToG;
                 default:
                   return false;
               }
