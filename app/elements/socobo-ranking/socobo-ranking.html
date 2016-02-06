@@ -363,6 +363,86 @@ Custom property | Description | Default
                   return false;
               }
               break;
+            // inventory item measurement
+            case WEIGHTS.TBSP:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.TBSP:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.TSP:
+                  return ingredientAmount * CONVERT.tbspToG <= itemCount * CONVERT.tspToG;
+                case WEIGHTS.CUP:
+                  return ingredientAmount * CONVERT.tbspToG <= itemCount * CONVERT.cupToG;
+                case WEIGHTS.OUNCES:
+                  return ingredientAmount * CONVERT.tbspToG <= itemCount * CONVERT.ozToG;
+                case WEIGHTS.G:
+                  return ingredientAmount * CONVERT.tbspToG <= itemCount;
+                case WEIGHTS.KG:
+                  return ingredientAmount * CONVERT.tbspToG <= itemCount * CONVERT.kgToG;
+                default:
+                  return false;
+              }
+              break;
+            // inventory item measurement
+            case WEIGHTS.TSP:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.TSP:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.TBSP:
+                  return ingredientAmount * CONVERT.tspToG <= itemCount * CONVERT.tbspToG;
+                case WEIGHTS.CUP:
+                  return ingredientAmount * CONVERT.tspToG <= itemCount * CONVERT.cupToG;
+                case WEIGHTS.OUNCES:
+                  return ingredientAmount * CONVERT.tspToG <= itemCount * CONVERT.ozToG;
+                case WEIGHTS.G:
+                  return ingredientAmount * CONVERT.tspToG <= itemCount;
+                case WEIGHTS.KG:
+                  return ingredientAmount * CONVERT.tspToG <= itemCount * CONVERT.kgToG;
+                default:
+                  return false;
+              }
+              break;
+            // inventory item measurement
+            case WEIGHTS.CUP:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.CUP:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.TBSP:
+                  return ingredientAmount * CONVERT.cupToG <= itemCount * CONVERT.tbspToG;
+                case WEIGHTS.TSP:
+                  return ingredientAmount * CONVERT.cupToG <= itemCount * CONVERT.tspToG;
+                case WEIGHTS.OUNCES:
+                  return ingredientAmount * CONVERT.cupToG <= itemCount * CONVERT.ozToG;
+                case WEIGHTS.G:
+                  return ingredientAmount * CONVERT.cupToG <= itemCount;
+                case WEIGHTS.KG:
+                  return ingredientAmount * CONVERT.cupToG <= itemCount * CONVERT.kgToG;
+                default:
+                  return false;
+              }
+              break;
+            // inventory item measurement
+            case WEIGHTS.OUNCES:
+              // ingredient unit
+              switch (ingredientUnit) {
+                case WEIGHTS.OUNCES:
+                  return ingredientAmount <= itemCount;
+                case WEIGHTS.G:
+                  return ingredientAmount * CONVERT.ozToG <= itemCount;
+                case WEIGHTS.KG:
+                  return ingredientAmount * CONVERT.ozToG <= itemCount * CONVERT.kgToG;
+                case WEIGHTS.TSP:
+                  return ingredientAmount * CONVERT.ozToG <= itemCount * CONVERT.tspToG;
+                case WEIGHTS.TBSP:
+                  return ingredientAmount * CONVERT.ozToG <= itemCount * CONVERT.tbspToG;
+                case WEIGHTS.CUP:
+                  return ingredientAmount * CONVERT.ozToG <= itemCount * CONVERT.cupToG;
+                default:
+                  return false;
+              }
+              break;
             // default
             default:
               return false;
