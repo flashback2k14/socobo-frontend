@@ -212,7 +212,7 @@ Custom property | Description | Default
                   with-backdrop>
       <!-- DIALOG -->
       <!-- EXIT DIALOG-->
-      <paper-icon-button id="exit" class="style-exit-button" icon="clear" on-tap="_clearInputFields" dialog-dismiss>
+      <paper-icon-button id="exit" class="style-exit-button" icon="clear" on-tap="_clearInputFields">
       </paper-icon-button>
 
       <!-- RECIPE NAME -->
@@ -522,6 +522,8 @@ Custom property | Description | Default
           }
           this.recipe.clone = {};
           this._revokeEdit();
+
+          this.$.dialog.close();
         },
         /**
          * Resets the array for the ingredients and steps
