@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>socobo-inventory-show basic tests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../bower_components/web-component-tester/browser.js"></script>
+  <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+  <script src="../../bower_components/iron-test-helpers/mock-interactions.js"></script>
+
+  <link rel="import" href="../../elements/elements.html">
+  <link rel="import" href="../../elements/socobo-inventory/socobo-inventory-validate-behavior.html">
+</head>
+<body>
+
+  <test-fixture id="InventoryValidation">
+    <template>
+      <socobo-inventory-show></socobo-inventory-show>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('inventory validation', function() {
+      var show;
+      var item;
+
+      setup(function() {
+        show = fixture('InventoryValidation');
+        item = Object.create(InventoryBehaviors.ValidateBehavior);
+      });
+
+      test('valid items are validated correctly', function(done) {
+        var validItem = item.extend({name: "Valid name", count: "4", measurement: {__firebaseKey__: "0", value: "pcs"}});
+        expect(validItem.validate().isValid).to.be.eql(true);
+
+        done();
+      });
+
+      test('items without measurement are not valid', function(done) {
+        var invalidItem = item.extend({name: "Valid name", count: "4"});
+        var anotherInvalidItem = item.extend({name: "Valid name", count: "4"});
+        expect((invalidItem.validate().isValid)).to.be.eql(false);
+        expect(anotherInvalidItem.validate().isValid).to.be.eql(false);
+
+        done();
+      });
+
+      test('items without name are not valid', function(done) {
+        var invalidItem = item.extend({count: "4"});
+        expect(invalidItem.validate().isValid).to.be.eql(false);
+
+        done();
+      });
+
+      test('item with too short name are not valid', function(done) {
+        var invalidItem = item.extend({name: "name"});
+        expect(invalidItem.validate().isValid).to.be.eql(false);
+
+        done();
+      });
+
+      test('items without count are not valid', function(done) {
+        var invalidItem = item.extend({name: "Valid name", measurement: {__firebaseKey__: "0", value: "pcs"}});
+        expect(invalidItem.validate().isValid).to.be.eql(false);
+
+        done();
+      });
+    });
+  </script>
+</body>
+</html>

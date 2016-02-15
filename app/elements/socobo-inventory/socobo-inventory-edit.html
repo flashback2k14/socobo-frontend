@@ -1,3 +1,4 @@
+
 <!--
 The following custom properties and mixins are available for styling:
 
@@ -88,7 +89,7 @@ Custom property | Description | Default
               id="itemName"
               label="Name"
               maxlength="30"
-              minlength="5"
+              minlength="2"
               auto-validate
               required
               auto-focus
@@ -158,23 +159,44 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-inventory-edit",
+
         properties: {
           /**
            *  Array of measurement objects. [{value: value}].
-          */
+           */
           measurements: {
             type: Array,
-            value: ["Values"]
+            value: function() {
+              return [];
+            }
+          },
+
+          /**
+           * @private
+           */
+          item: {
+            type: Object,
+            value: function() {
+              return Object.create(InventoryBehaviors.ValidateBehavior);
+            }
+          },
+
+          /**
+           * @private
+           */
+          categories: {
+            type: Array,
+            value: function() {
+              return ["Backen", "Gewürze", "Gemüse", "Obst"];
+            }
           }
         },
 
+        observers: [
+          "_validate(item.*)"
+        ],
+
         ready: function() {
-          this.categories = [
-            "Backen",
-            "Gewürze",
-            "Gemüse",
-            "Obst"
-          ];
         },
 
         /**Displays the dialog
@@ -183,7 +205,7 @@ Custom property | Description | Default
          * @param {Object} itemToEdit
          *
          * @function
-        */
+         */
         show: function(itemToEdit) {
           this.$.dialog.toggle();
           this._resetItem(itemToEdit);
@@ -204,10 +226,10 @@ Custom property | Description | Default
          * @param {Object} item
          * @private
          * @function
-           */
+         */
         _resetItem: function(item) {
           if (item !== undefined) {
-            this.item = item;
+            this.item.extend(item);
             this.$.bestBeforeInput.value = item.bestBefore;
             this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
             this.measurements.forEach(function(m, i) {
@@ -215,6 +237,9 @@ Custom property | Description | Default
                 this.$.measurementDropdownMenu.select(i);
               }
             }.bind(this));
+            // trigger Polymers data binding helpers
+            this.notifyPath("item.name", this.item.name);
+            this.notifyPath("item.count", this.item.count);
           }
         },
 
@@ -225,10 +250,11 @@ Custom property | Description | Default
          */
         _editItem: function() {
           var item = this._populateItem(this.item);
-          if (this._validate(item)) {
+          var validation = item.validate();
+          if (validation.isValid) {
             this.fire("edit-item", item);
           } else {
-            alert("Some information is missing");
+            this.fire("socobo-show-toast", {type: "error", msg: validation.message});
           }
         },
 
@@ -241,6 +267,11 @@ Custom property | Description | Default
          * @function
          */
         _populateItem: function(item) {
+          if (item.count && /^(\s)*([0-9]+(\s)*)$/.test(item.count)) {
+            item.count = Number(item.count);
+          } else {
+            item.count = NaN;
+          }
           item.measurement = this.measurements[this.$.measurementDropdownMenu.selected];
           if (this.$.categoryDropdownMenu.selected !== -1) {
             this.item.category = this.categories[this.$.categoryDropdownMenu.selected];
@@ -257,22 +288,11 @@ Custom property | Description | Default
         /**
          * Validates the item
          *
-         * @param {Object} item
-         * @returns {boolean}
          * @private
          * @function
          */
-        _validate: function(item) {
-          if (!item.name || item.name.length < 5) {
-            return false;
-          }
-          if (!item.measurement || item.measurement.value.length === 0) {
-            return false;
-          }
-          if (!item.count) {
-            return false;
-          }
-          return true;
+        _validate: function() {
+          this.$.editItemButton.disabled = !this.item.validate().isValid;
         }
       });
     })();
