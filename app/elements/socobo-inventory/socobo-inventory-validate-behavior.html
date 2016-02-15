@@ -1,0 +1,74 @@
+<script src="../socobo-recipe/lib/ValidateModule.js"></script>
+<script src="../socobo-recipe/lib/MessageModule.js"></script>
+
+<script>
+  /* exported InventoryBehaviors*/
+  /* exported InventoryBehaviors.ValidateBahavior */
+  /**
+   * Behavior for validating inventory items
+   *
+   * @type {{}}
+   */
+  var InventoryBehaviors = InventoryBehaviors || {};
+  InventoryBehaviors.ValidateBehavior = {
+
+    properties: {
+      /**
+       * Mappings {Object} - Key value pairs where the
+       * key is the existing value in the message and
+       * the value is the replacement
+       */
+      mappings: {
+        type: Object,
+        value: {
+          name: "Name",
+          count: "Amount",
+          measurement: "Measurement"
+        }
+      }
+    },
+
+    extend: function(item) {
+      Object.keys(item).forEach(function(p) {
+        this[p] = item[p];
+      }.bind(this));
+
+      return this;
+    },
+
+    /**
+     * Validates the given inventory object
+     *
+     * @returns {{isValid: boolean, message: (*|String)}}
+     */
+    validate: function() {
+      var errorMsg = new MessageModule();
+      var nameExists;
+      var countExists;
+      var measurementExists;
+      var valid = true;
+      errorMsg.setPrefix("Please add the missing information: ");
+      errorMsg.setMappings(this.mappings);
+
+      nameExists = ValidateModule.verifySingleProperty(this, "name");
+      countExists = /^(\s)*([0-9]+(\s)*)$/.test(this.count) &&
+        ValidateModule.verifySingleProperty(this, "count");
+      measurementExists = ValidateModule.verifySingleProperty(this, "measurement");
+
+      if (!nameExists) {
+        errorMsg.addMsgPart("Add a name");
+      }
+      if (!countExists) {
+        errorMsg.addMsgPart("Enter a valid number as amount");
+      }
+      if (!measurementExists) {
+        errorMsg.addMsgPart("Pleas choose a unit");
+      }
+
+      valid = nameExists && countExists && measurementExists;
+
+      return {isValid: valid, message: errorMsg.buildMsg()};
+    }
+  };
+
+</script>
