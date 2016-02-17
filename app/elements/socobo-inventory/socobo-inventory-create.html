@@ -71,6 +71,7 @@ Custom property | Description | Default
     </style>
     <div>
       <paper-dialog
+        on-iron-overlay-closed="_resetItem"
         class="create-dialog"
         id="dialog"
         entry-animation="scale-up-animation"
@@ -86,7 +87,7 @@ Custom property | Description | Default
               id="itemName"
               label="Name"
               maxlength="30"
-              minlength="5"
+              minlength="2"
               auto-validate
               required
               auto-focus
@@ -110,12 +111,13 @@ Custom property | Description | Default
             <paper-dropdown-menu
               label="Measurement"
               class="vertical-layout width-small"
-              id="measurementDropdown">
+              id="measurementDropdown"
+              on-iron-select="_measurementSelected">
               <paper-menu
                 id="measurementDropdownMenu"
                 class="dropdown-content">
                 <template is="dom-repeat" items="[[measurements]]" as="measurement">
-                  <paper-item>[[measurement.value]]</paper-item>
+                  <paper-item m="[[measurement]]">[[measurement.value]]</paper-item>
                 </template>
               </paper-menu>
             </paper-dropdown-menu>
@@ -133,6 +135,7 @@ Custom property | Description | Default
               id="bestBeforeInput">
             </paper-input>
             <paper-dropdown-menu
+              on-iron-select="_categorySelected"
               class="vertical-layout width-small style-dropdown-category"
               label="Category"
               id="categoryDropdown">
@@ -140,7 +143,7 @@ Custom property | Description | Default
                 id="categoryDropdownMenu"
                 class="dropdown-content">
                 <template is="dom-repeat" items="[[categories]]" as="category">
-                  <paper-item>[[category]]</paper-item>
+                  <paper-item c="[[category]]">[[category]]</paper-item>
                 </template>
               </paper-menu>
             </paper-dropdown-menu>
@@ -148,7 +151,7 @@ Custom property | Description | Default
         </paper-dialog-scrollable>
         <div class="buttons">
           <paper-button id="cancelDialogButton" dialog-dismiss>Cancel</paper-button>
-          <paper-button id="createItemButton" on-click="_createItem">Ok</paper-button>
+          <paper-button id="submitItemButton" on-tap="_createItem">Ok</paper-button>
         </div>
       </paper-dialog>
     </div>
@@ -157,23 +160,8 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-inventory-create",
-        properties: {
-          /* Array of measurement objects. {value: value}.
-          */
-          measurements: {
-            type: Array,
-            value: ["Values"]
-          }
-        },
 
-        ready: function() {
-          this.categories = [
-            "Backen",
-            "Gewürze",
-            "Gemüse",
-            "Obst"
-          ];
-        },
+        behaviors: [InventoryBehaviors.ItemBehavior],
 
         /**
          * Displays the dialog <br>
@@ -182,7 +170,6 @@ Custom property | Description | Default
          */
         show: function() {
           this.$.dialog.toggle();
-          this._resetItem();
         },
 
         /** Hides the dialog
@@ -198,10 +185,13 @@ Custom property | Description | Default
          *
          * @private
          */
-        _resetItem: function() {
-          // resetting the item
-          this.item = {};
-          this.$.bestBeforeInput.value = "";
+        _resetItem: function(e) {
+          if (!(e && e.target === this.$.dialog)) {
+            return;
+          }
+          this.set("item.name","");
+          this.set("item.count","");
+          this.set("item.bestBefore", "");
           this.$.categoryDropdownMenu.select(-1);
           this.$.measurementDropdownMenu.select(-1);
         },
@@ -214,52 +204,11 @@ Custom property | Description | Default
         _createItem: function() {
           var item = this._populateItem(this.item);
 
-          if (!this._validate(item)) {
+          if (!this._validate()) {
             alert("Some information is missing");
           } else {
             this.fire("create-item", item);
           }
-        },
-
-        /**
-         * Populate the item with data from the dropdowns that cannot
-         * be handled with Polymer data binding
-         *
-         * @param {Object} item
-         * @returns {Object}
-         * @private
-         */
-        _populateItem: function(item) {
-          item.measurement = this.measurements[this.$.measurementDropdownMenu.selected];
-          if (this.$.categoryDropdownMenu.selected !== -1) {
-            this.item.category = this.categories[this.$.categoryDropdownMenu.selected];
-          }
-
-          item.desc = item.name;
-          item.info = item.count + " " + item.measurement.value;
-
-          return item;
-        },
-
-        /**
-         * Validate the item
-         * TODO: Build error object
-         *
-         * @param {Object} item
-         * @returns {boolean}
-         * @private
-         */
-        _validate: function(item) {
-          if (!item.name || item.name.length < 5) {
-            return false;
-          }
-          if (!item.measurement || !item.measurement.value || item.measurement.value.length === 0) {
-            return false;
-          }
-          if (!item.count) {
-            return false;
-          }
-          return true;
         }
       });
     })();

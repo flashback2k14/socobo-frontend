@@ -36,7 +36,7 @@
       });
 
       test('has a save button', function(done) {
-        expect(dialog.$.editItemButton).to.not.be.eql(undefined);
+        expect(dialog.$.submitItemButton).to.not.be.eql(undefined);
         done();
       });
 
@@ -52,6 +52,7 @@
         dialog.addEventListener('edit-item', function(e) {
           expect(e.detail).to.not.be.eql(null);
           expect(e.detail).to.not.be.eql(undefined);
+          expect(e.detail.measurement.value).to.be.eql("pcs");
           done();
         });
 
@@ -59,8 +60,8 @@
 
         dialog.show(item);
         expect(dialog.item.validate().isValid).to.be.eql(true);
-        dialog.$.measurementDropdownMenu.select(0);
-        dialog._editItem();
+        //dialog.$.measurementDropdownMenu.select(0);
+        MockInteractions.tap(dialog.$.submitItemButton);
       });
     });
   </script>
