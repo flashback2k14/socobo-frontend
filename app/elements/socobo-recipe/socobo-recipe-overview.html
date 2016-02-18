@@ -504,17 +504,17 @@ Custom property | Description | Default
           this.fire("socobo-show-toast", {type: "success", message: msg});
         },
         /**
-         * Shows a given loading message as paper-toast element
+         * Shows a given loading message as paper-material notification at the top
          *
          * @param {String} msg
          * @private
          * @function
          */
         _toggleLoadingNotification: function(msg) {
-          var wrapper;
+          var wrapperStyle;
           this.$.loadingText.innerHTML = msg;
-          wrapper = this.$.loadingWrapper;
-          wrapper.style.display === "block" ? wrapper.style.display = "none" : wrapper.style.display = "block";
+          wrapperStyle = this.$.loadingWrapper.style;
+          wrapperStyle.display = (wrapperStyle.display === "block") ? "none" : "block";
         },
         /**
          * Enables all checkboxes on checking the main checkbox of the search bar
