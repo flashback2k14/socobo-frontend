@@ -216,7 +216,7 @@
           });
         });
 
-        test('createNewRecipe fires socobo-show-toast event if reciep is invalid', function() {
+        test('createNewRecipe fires socobo-show-toast event if reciep is invalid', function(done) {
           socoboRecipeDetailsAdd.addEventListener("socobo-show-toast", function(){
             done();
           });
