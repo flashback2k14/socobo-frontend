@@ -31,7 +31,7 @@ Custom property | Description | Default
 
       /* CONTENT */
       .wrapper {
-        top: 20px;
+        height: 75%;
         max-height: 85%;
         width: 90%;
         min-width:700px;
@@ -204,7 +204,7 @@ Custom property | Description | Default
                   with-backdrop>
       <!-- DIALOG -->
       <!-- EXIT DIALOG-->
-      <paper-icon-button id="exit" class="style-exit-add-button" icon="clear" dialog-dismiss on-tap="_clearInputFields">
+      <paper-icon-button id="exit" class="style-exit-add-button" icon="clear" on-tap="_clearInputFields">
       </paper-icon-button>
       <!-- RECIPE NAME -->
       <paper-input
@@ -462,6 +462,8 @@ Custom property | Description | Default
           // clear images
           Polymer.dom(this.$.dialog).querySelector("#add_image").src = "";
           Polymer.dom(this.$.dialog).querySelector("#fileChooser").value = null;
+
+          this.$.dialog.close();
         },
 
         /**

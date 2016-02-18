@@ -22,7 +22,6 @@ Custom property | Description | Default
 @demo demo/socobo-recipe/demo.html
 -->
 <dom-module id="socobo-recipe-overview">
-
   <template>
 
     <style>
@@ -82,6 +81,12 @@ Custom property | Description | Default
         right: 80px;
       }
 
+      .style-dialog-position {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-center-justified);
+      }
+
       /* NOTIFICATION */
       .loadingInfo{
         @apply(--layout-horizontal);
@@ -118,16 +123,19 @@ Custom property | Description | Default
     </paper-material>
     <!-- Show Dialog -->
     <socobo-recipe-details-show
-      id="showDialog">
+      id="showDialog"
+      class="style-dialog-position">
     </socobo-recipe-details-show>
     <!-- Add Dialog -->
     <socobo-recipe-details-add
       id="addDialog"
+      class="style-dialog-position"
       on-add_request="_addNewRecipe">
     </socobo-recipe-details-add>
     <!-- Edit Dialog -->
     <socobo-recipe-details-edit
       id="editDialog"
+      class="style-dialog-position"
       on-add_edited_recipe="_editRecipe">
     </socobo-recipe-details-edit>
     <!-- Search -->
@@ -323,7 +331,6 @@ Custom property | Description | Default
               this.$.addDialog.measurements = data;
               this.$.addDialog.state = "add";
               this.$.addDialog.toggleDialog();
-              this.$.addDialog._clearInputFields();
             }.bind(this)).
             catch(function(error) {
               this._notifyOnError(error);

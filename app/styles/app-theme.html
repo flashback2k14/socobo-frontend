@@ -15,28 +15,33 @@
   /* Application theme */
   :root {
     /* App Colors */
-    --dark-primary-color:         rgba(26, 35, 126,1.0); /*#303F9F;*/
-    --default-primary-color:      rgba(49, 27, 146,1.0); /*#3F51B5;*/
-    --light-primary-color:        #C5CAE9;
-    --text-primary-color:         #FFFFFF; /*text/icons*/
-    --accent-color:               rgba(242,0,63,1.0);    /*#FF4081;*/
-    --primary-background-color:   #FFFFFF;
-    --primary-text-color:         #212121;
-    --secondary-text-color:       #727272;
-    --disabled-text-color:        #BDBDBD;
-    --divider-color:              #B6B6B6;
-    --bg-focus-color:             #E0E0E0;
-    --border-color:               #000000;
+    --dark-primary-color: rgba(26,35,126,1.0);  /*#303F9F;*/
+    --primary-color: rgba(49,27,146,1.0);       /*#3F51B5;*/
+    --light-primary-color: rgba(27,57,146,1.0);
+
+    --dark-accent-color: rgba(204,0,53,1.0);
+    --accent-color: rgba(242,0,63,1.0);         /*#FF4081;*/
+    --light-accent-color: rgba(255,26,85,1.0);
+
+    --primary-background-color: #FFFFFF;
+
+    --primary-text-color: #212121;
+    --secondary-text-color: #727272;
+    --disabled-text-color: #BDBDBD;
+
+    --divider-color: #B6B6B6;
+    --bg-focus-color: #E0E0E0;
+    --border-color: #000000;
 
     /* Components */
     /* paper-drawer-panel */
-    --drawer-menu-color:            var(--text-primary-color);
-    --drawer-border-color:          1px solid var(--disabled-text-color);
-    --drawer-toolbar-border-color:  1px solid var(--border-color);
+    --drawer-menu-color: var(--primary-background-color);
+    --drawer-border-color: 1px solid var(--disabled-text-color);
+    --drawer-toolbar-border-color: 1px solid var(--border-color);
 
     /* paper-menu */
-    --paper-menu-background-color:  var(--text-primary-color);
-    --menu-link-color:              var(--primary-text-color);
+    --paper-menu-background-color: var(--primary-background-color);
+    --menu-link-color: var(--primary-text-color);
 
     /* App fonts */
     --socobo-heading-font: {
@@ -139,15 +144,15 @@
     -webkit-border-radius: 40px;
     -moz-border-radius: 40px;
     border-radius: 50%;
-    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
-    -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .8);
-    box-shadow: 0 0 8px rgba(0, 0, 0, .8);
+    -webkit-box-shadow: 0 0 8px var(--border-color);
+    -moz-box-shadow: 0 0 8px var(--border-color);
+    box-shadow: 0 0 8px var(--border-color);
   }
 
   /* Custom Socobo Elements Wrapper */
   .style-pm-margin-padding {
     padding: 0;
-    margin: 0;
+    margin: 0 0 30px 0;
   }
   .style-pm-height {
     height: 700px;
@@ -216,7 +221,7 @@
 
   socobo-recipe {
     --socobo-recipe-style-border-color: var(--light-primary-color);
-    --socobo-recipe-style-icon-text-color: var(--light-primary-color);
+    --socobo-recipe-style-icon-text-color: var(--primary-background-color);
     --socobo-recipe-style-text-color: var(--secondary-text-color);
     --socobo-recipe-style-icon-focus-color: var(--accent-color);
     --socobo-recipe-style-action-btn-color: var(--accent-color);
@@ -225,12 +230,12 @@
     --socobo-recipe-style-error-notification-color: var(--accent-color);
     --socobo-recipe-style-loading-notification-color: var(--default-primary-color);
     --socobo-recipe-style-success-notification-color: var(--default-primary-color);
-    --socobo-recipe-style-notification-text-color: var(--text-primary-color);
+    --socobo-recipe-style-notification-text-color: var(--primary-background-color);
     --socobo-recipe-style-heading-color: var(--default-primary-color);
     --socobo-recipe-style-sub-heading-color: var(--default-primary-color);
     --socobo-recipe-style-image-overlay-color: var(--default-primary-color);
     --socobo-recipe-style-step-number-color: var(--light-primary-color);
-    --socobo-recipe-style-step-number-text-color: var(--dark-primary-color);
+    --socobo-recipe-style-step-number-text-color: var(--primary-background-color);
     --socobo-recipe-style-step-number-focus-color: var(--default-primary-color);
     --socobo-recipe-style-step-number-text-focus-color: var(--divider-color);
     --socobo-recipe-style-step-content-focus-color: var(--light-primary-color);
@@ -260,7 +265,7 @@
   /* Small */
   @media (max-width: 600px) {
     .bg {
-      background: var(--text-primary-color);
+      background: var(--primary-background-color);
     }
     #drawer .paper-toolbar {
       margin-left: 16px;
