@@ -510,8 +510,8 @@ Custom property | Description | Default
             } else {
               this.recipe.image = this.image.getImageAsString();
             }
-            this.fire("add_request", this.recipe);
             this._clearInputFields();
+            this.fire("add_request", this.recipe);
             this.$.dialog.close();
           } else {
             this.fire("socobo-show-toast", {type: "error", message: validationResult.message});
