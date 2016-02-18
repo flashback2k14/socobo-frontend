@@ -69,7 +69,7 @@ Custom property | Description | Default
         --paper-spinner-layer-4-color: var(--socobo-recipe-style-spinner-color-level4);
       }
 
-      .loadspinner {
+      .loadingSpinner {
         --paper-spinner-layer-1-color: var(--socobo-recipe-style-spinner-color-level1);
         --paper-spinner-layer-2-color: var(--socobo-recipe-style-spinner-color-level2);
         --paper-spinner-layer-3-color: var(--socobo-recipe-style-spinner-color-level3);
@@ -83,25 +83,39 @@ Custom property | Description | Default
       }
 
       /* NOTIFICATION */
-      .error-note{
-        --paper-toast-background-color: var(--socobo-recipe-style-error-notification-color);
-        --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
-      }
-      .success-note{
-        --paper-toast-background-color: var(--socobo-recipe-style-success-notification-color);
-        --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
-      }
-      .load-note{
-        --paper-toast-background-color: var(--socobo-recipe-style-loading-notification-color);
-        --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
+      .loadingInfo{
         @apply(--layout-horizontal);
         @apply(--layout-center);
-        padding-top: 0;
-        padding-bottom: 0;
+      }
+      .loadingWrapper {
+        display: none;
+        position: fixed;
+        left: 50%;
+        margin-left: -90px;
+        width: 180px;
+        height: 30px;
+        top: 42px;
+        background-color: var(--socobo-recipe-style-notification-text-color);
+        padding: 5px;
+        border-radius: 20px;
       }
 
-    </style>
+      .loadingSpinner {
+        margin-right: 15px;
+      }
 
+
+    </style>
+    <paper-material elevation="2" id="loadingWrapper" class="loadingWrapper">
+      <div id="loadingInfo" class="loadingInfo">
+        <div>
+          <paper-spinner active id="loadingSpinner" class="loadingSpinner"></paper-spinner>
+        </div>
+        <div>
+          <span id="loadingText" class="loadingText"></span>
+        </div>
+      </div>
+    </paper-material>
     <!-- Show Dialog -->
     <socobo-recipe-details-show
       id="showDialog">
@@ -159,16 +173,6 @@ Custom property | Description | Default
       on-delete-items="_removeAllChecked"
       show-delete="{{_showDelete}}">
     </socobo-element-buttons>
-
-    <!-- Notification -->
-    <paper-toast id="loadNotification" class="load-note" duration="-1">
-      <div>
-        <paper-spinner id="loadspinner" class="loadspinner" active></paper-spinner>
-      </div>
-      <div>
-        <paper-item id="loadtext"></paper-item>
-      </div>
-    </paper-toast>
   </template>
 
   <script>
@@ -351,14 +355,16 @@ Custom property | Description | Default
          * @private
          */
         _removeRecipe: function(e) {
-          this._notifyOnLoading("Deleting recipe");
+          this._toggleLoadingNotification("Removing Recipe");
           RecipeDao.getInstance(this.userLogin)
             .remove(e.detail)
             .then(function(success) {
+              this._toggleLoadingNotification();
               this._notifyOnSuccess(success.value);
               this._updateAfterDeletion(e.detail, this.recipes, "recipes");
             }.bind(this))
             .catch(function(error) {
+              this._toggleLoadingNotification();
               this._notifyOnError(error.value);
             }.bind(this));
         },
@@ -370,12 +376,12 @@ Custom property | Description | Default
          * @private
          */
         _addNewRecipe: function(e) {
-          // this._notifyOnLoading("Adding recipe");
+          this._toggleLoadingNotification("Adding Recipe");
           RecipeDao.getInstance(this.userLogin)
             .add(e.detail)
             .then(function(success) {
+              this._toggleLoadingNotification();
               this._notifyOnSuccess(success.value);
-
               RecipeDao.getInstance(this.userLogin)
                 .getAll()
                 .then(function(recipes) {
@@ -383,6 +389,7 @@ Custom property | Description | Default
                   this.set("recipes", recipes.value);
                 }.bind(this))
                 .catch(function(error) {
+                  this._toggleLoadingNotification();
                   this._notifyOnError(error.value);
                 }.bind(this));
 
@@ -400,10 +407,11 @@ Custom property | Description | Default
          * @private
          */
         _editRecipe: function(e) {
-          this._notifyOnLoading("Updating recipe");
+          this._toggleLoadingNotification("Updating Recipe");
           RecipeDao.getInstance(this.userLogin)
             .update(e.detail)
             .then(function(success) {
+              this._toggleLoadingNotification();
               this._notifyOnSuccess(success.value);
 
               RecipeDao.getInstance(this.userLogin)
@@ -413,6 +421,7 @@ Custom property | Description | Default
                   this.set("recipes", recipes.value);
                 }.bind(this))
                 .catch(function(error) {
+                  this._toggleLoadingNotification();
                   this._notifyOnError(error.value);
                 }.bind(this));
 
@@ -501,8 +510,11 @@ Custom property | Description | Default
          * @private
          * @function
          */
-        _notifyOnLoading: function(msg) {
-          this.fire("socobo-show-toast", {type: "spinner", message: msg, duration: Infinity});
+        _toggleLoadingNotification: function(msg) {
+          var wrapper;
+          this.$.loadingText.innerHTML = msg;
+          wrapper = this.$.loadingWrapper;
+          wrapper.style.display === "block" ? wrapper.style.display = "none" : wrapper.style.display = "block";
         },
         /**
          * Enables all checkboxes on checking the main checkbox of the search bar
