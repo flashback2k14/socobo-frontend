@@ -143,7 +143,7 @@ Custom property | Description | Default
                 id="categoryDropdownMenu"
                 class="dropdown-content">
                 <template is="dom-repeat" items="[[categories]]" as="category">
-                  <paper-item c="[[category]]">[[category]]</paper-item>
+                  <paper-item c="[[category]]">[[category.value]]</paper-item>
                 </template>
               </paper-menu>
             </paper-dropdown-menu>
