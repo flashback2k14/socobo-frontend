@@ -1,7 +1,7 @@
 {
   "suites": ["app/test"],
   "verbose": false,
-  "persistent": true,
+  "persistent": false,
   "expanded": true,
   "plugins": {
     "sauce": {
