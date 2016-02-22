@@ -17,7 +17,7 @@ var ValidateModule = ValidateModule || (function() {
    * @private
    */
   function _verifySinglePropertyValueNotEmpty(obj, property) {
-    return (!obj[property]) ? false : true;
+    return !!obj[property];
   }
   /**
    * Verifies that a single property is not empty
@@ -30,8 +30,7 @@ var ValidateModule = ValidateModule || (function() {
    * @private
    */
   function _verifySingleProperty(obj, property, type) {
-    var valid;
-    valid = _verifySinglePropertyValueNotEmpty(obj, property);
+    var valid = _verifySinglePropertyValueNotEmpty(obj, property);
     if (type && valid) {
       valid = (typeof obj[property]) === type;
     }
