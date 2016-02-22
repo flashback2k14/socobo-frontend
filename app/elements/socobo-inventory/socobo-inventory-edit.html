@@ -1,3 +1,4 @@
+
 <!--
 The following custom properties and mixins are available for styling:
 
@@ -88,7 +89,7 @@ Custom property | Description | Default
               id="itemName"
               label="Name"
               maxlength="30"
-              minlength="5"
+              minlength="2"
               auto-validate
               required
               auto-focus
@@ -110,6 +111,7 @@ Custom property | Description | Default
               required>
             </paper-input>
               <paper-dropdown-menu
+                on-iron-select="_measurementSelected"
                 label="Measurement"
                 class="vertical-layout width-small"
                 id="measurementDropdown">
@@ -117,7 +119,7 @@ Custom property | Description | Default
                   id="measurementDropdownMenu"
                   class="dropdown-content">
                   <template is="dom-repeat" items="[[measurements]]" as="measurement">
-                    <paper-item>[[measurement.value]]</paper-item>
+                    <paper-item m="[[measurement]]">[[measurement.value]]</paper-item>
                   </template>
                 </paper-menu>
               </paper-dropdown-menu>
@@ -134,6 +136,7 @@ Custom property | Description | Default
               id="bestBeforeInput">
             </paper-input>
             <paper-dropdown-menu
+              on-iron-select="_categorySelected"
               class="vertical-layout width-small style-dropdown-category"
               label="Category"
               id="categoryDropdown">
@@ -141,7 +144,7 @@ Custom property | Description | Default
                 id="categoryDropdownMenu"
                 class="dropdown-content">
                 <template is="dom-repeat" items="[[categories]]" as="category">
-                  <paper-item>[[category]]</paper-item>
+                  <paper-item c="[[category]]">[[category]]</paper-item>
                 </template>
               </paper-menu>
             </paper-dropdown-menu>
@@ -149,7 +152,7 @@ Custom property | Description | Default
         </paper-dialog-scrollable>
         <div class="buttons">
           <paper-button id="cancelDialogButton" dialog-dismiss>Cancel</paper-button>
-          <paper-button id="editItemButton" on-click="_editItem">Save</paper-button>
+          <paper-button id="submitItemButton" on-click="_editItem">Save</paper-button>
         </div>
       </paper-dialog>
     </div>
@@ -158,32 +161,15 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-inventory-edit",
-        properties: {
-          /**
-           *  Array of measurement objects. [{value: value}].
-          */
-          measurements: {
-            type: Array,
-            value: ["Values"]
-          }
-        },
 
-        ready: function() {
-          this.categories = [
-            "Backen",
-            "Gewürze",
-            "Gemüse",
-            "Obst"
-          ];
-        },
+        behaviors: [InventoryBehaviors.ItemBehavior],
 
         /**Displays the dialog
          *
-         * @param {Object} userLogin
          * @param {Object} itemToEdit
          *
          * @function
-        */
+         */
         show: function(itemToEdit) {
           this.$.dialog.toggle();
           this._resetItem(itemToEdit);
@@ -204,17 +190,20 @@ Custom property | Description | Default
          * @param {Object} item
          * @private
          * @function
-           */
+         */
         _resetItem: function(item) {
           if (item !== undefined) {
-            this.item = item;
-            this.$.bestBeforeInput.value = item.bestBefore;
+            this.item.extend(item);
             this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
             this.measurements.forEach(function(m, i) {
               if (item.measurement.value === m.value) {
                 this.$.measurementDropdownMenu.select(i);
               }
             }.bind(this));
+            // trigger Polymers data binding helpers
+            this.notifyPath("item.name", this.item.name);
+            this.notifyPath("item.count", this.item.count);
+            this.notifyPath("item.bestBefore", this.item.bestBefore);
           }
         },
 
@@ -225,54 +214,12 @@ Custom property | Description | Default
          */
         _editItem: function() {
           var item = this._populateItem(this.item);
-          if (this._validate(item)) {
+          var validation = item.validate();
+          if (validation.isValid) {
             this.fire("edit-item", item);
           } else {
-            alert("Some information is missing");
+            this.fire("socobo-show-toast", {type: "error", msg: validation.message});
           }
-        },
-
-        /**
-         * Populate the item with the values from the dropdowns and set item.desc and item.info
-         *
-         * @param {Object} item
-         * @returns {Object}
-         * @private
-         * @function
-         */
-        _populateItem: function(item) {
-          item.measurement = this.measurements[this.$.measurementDropdownMenu.selected];
-          if (this.$.categoryDropdownMenu.selected !== -1) {
-            this.item.category = this.categories[this.$.categoryDropdownMenu.selected];
-          } else {
-            delete this.item.category;
-          }
-
-          item.desc = item.name;
-          item.info = item.count + " " + item.measurement.value;
-
-          return item;
-        },
-
-        /**
-         * Validates the item
-         *
-         * @param {Object} item
-         * @returns {boolean}
-         * @private
-         * @function
-         */
-        _validate: function(item) {
-          if (!item.name || item.name.length < 5) {
-            return false;
-          }
-          if (!item.measurement || item.measurement.value.length === 0) {
-            return false;
-          }
-          if (!item.count) {
-            return false;
-          }
-          return true;
         }
       });
     })();

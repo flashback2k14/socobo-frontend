@@ -36,7 +36,7 @@
       });
 
       test('has a save button', function(done) {
-        expect(dialog.$.editItemButton).to.not.be.eql(undefined);
+        expect(dialog.$.submitItemButton).to.not.be.eql(undefined);
         done();
       });
 
@@ -52,50 +52,16 @@
         dialog.addEventListener('edit-item', function(e) {
           expect(e.detail).to.not.be.eql(null);
           expect(e.detail).to.not.be.eql(undefined);
+          expect(e.detail.measurement.value).to.be.eql("pcs");
           done();
         });
 
-        dialog.show({name: "Valid name", count: "4", measurement: {__firebaseKey__: "0", value: "pcs"}});
-        dialog.$.measurementDropdownMenu.select(0);
-        var saveButton = dialog.$.editItemButton;
-        MockInteractions.tap(saveButton);
-      });
+        var item = {name: "Valid name", count: "4", measurement: {__firebaseKey__: "0", value: "pcs"}};
 
-      test('valid items are validated correctly', function(done) {
-        var validItem = {name: "Valid name", count: "4", measurement: {__firebaseKey__: "0", value: "pcs"}};
-        expect(dialog._validate(validItem)).to.be.eql(true);
-
-        done();
-      });
-
-      test('items without measurement are not valid', function(done) {
-        var invalidItem = {name: "Valid name", count: "4"};
-        var anotherInvalidItem = {name: "Valid name", count: "4"};
-        expect(dialog._validate(invalidItem)).to.be.eql(false);
-        expect(dialog._validate(anotherInvalidItem)).to.be.eql(false);
-
-        done();
-      });
-
-      test('items without name are not valid', function(done) {
-        var invalidItem = {count: "4"};
-        expect(dialog._validate(invalidItem)).to.be.eql(false);
-
-        done();
-      });
-
-      test('item with too short name are not valid', function(done) {
-        var invalidItem = {name: "name"};
-        expect(dialog._validate(invalidItem)).to.be.eql(false);
-
-        done();
-      });
-
-      test('items without count are not valid', function(done) {
-        var invalidItem = {name: "Valid name", measurement: {__firebaseKey__: "0", value: "pcs"}};
-        expect(dialog._validate(invalidItem)).to.be.eql(false);
-
-        done();
+        dialog.show(item);
+        expect(dialog.item.validate().isValid).to.be.eql(true);
+        //dialog.$.measurementDropdownMenu.select(0);
+        MockInteractions.tap(dialog.$.submitItemButton);
       });
     });
   </script>

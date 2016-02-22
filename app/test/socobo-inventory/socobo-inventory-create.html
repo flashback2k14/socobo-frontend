@@ -30,7 +30,7 @@
       });
 
       test('has an ok button', function(done) {
-        expect(dialog.$.createItemButton).to.not.be.eql(undefined);
+        expect(dialog.$.submitItemButton).to.not.be.eql(undefined);
         done();
       });
 
@@ -57,42 +57,22 @@
         dialog.show();
         expect(dialog.item.desc).to.be.eql(undefined);
         expect(dialog.item.info).to.be.eql(undefined);
+        expect(dialog.item.name).to.be.eql(String.empty);
         done();
       });
 
       test('valid items are validated correctly', function(done) {
         var validItem = {name: "Valid name", count: "4", measurement: {value: "g"}};
-        expect(dialog._validate(validItem)).to.be.eql(true);
+        dialog.item.extend(validItem);
+        expect(dialog._validate()).to.be.eql(true);
 
         done();
       });
 
       test('items without measurement are not valid', function(done) {
         var invalidItem = {name: "Valid name", count: "4"};
-        var anotherInvalidItem = {name: "Valid name", count: "4", measurement: {}};
-        expect(dialog._validate(invalidItem)).to.be.eql(false);
-        expect(dialog._validate(anotherInvalidItem)).to.be.eql(false);
-
-        done();
-      });
-
-      test('items without name are not valid', function(done) {
-        var invalidItem = {count: "4"};
-        expect(dialog._validate(invalidItem)).to.be.eql(false);
-
-        done();
-      });
-
-      test('item with too short name are not valid', function(done) {
-        var invalidItem = {name: "name"};
-        expect(dialog._validate(invalidItem)).to.be.eql(false);
-
-        done();
-      });
-
-      test('items without count are not valid', function(done) {
-        var invalidItem = {name: "Valid name", measurement: {value: "kg"}};
-        expect(dialog._validate(invalidItem)).to.be.eql(false);
+        dialog.item.extend(invalidItem);
+        expect(dialog._validate()).to.be.eql(false);
 
         done();
       });
@@ -106,10 +86,13 @@
         });
 
         dialog.show();
-        dialog.item = {name: "Valid name", count: "4", measurement: {value: "g"}};
-        dialog.measurements = [{value: "Foo"}, {value: "g"}];
-        dialog.$.measurementDropdownMenu.selected = 1;
-        var createButton = dialog.$.createItemButton;
+
+        // preparing valid item data
+        dialog.set('item.name', "Valid name");
+        dialog.set('item.count', "4");
+        dialog.set('item.measurement', {value: "g"});
+
+        var createButton = dialog.$.submitItemButton;
         MockInteractions.tap(createButton);
       });
     });
