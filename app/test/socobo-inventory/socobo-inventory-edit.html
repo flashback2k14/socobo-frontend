@@ -30,38 +30,16 @@
         dialog.measurements = [{__firebaseKey__: 0, value: "pcs"}, {__firbaseKey__: 1, value: "kg"}];
       });
 
-      test('has a cancel button', function(done) {
-        expect(dialog.$.cancelDialogButton).to.not.be.eql(undefined);
+      test('show opens the dialog', function(done) {
+        dialog.show();
+        expect(dialog.querySelector("socobo-inventory-dialog").$.dialog.opened).to.be.eql(true);
         done();
       });
 
-      test('has a save button', function(done) {
-        expect(dialog.$.submitItemButton).to.not.be.eql(undefined);
+      test('hide closes the dialog', function(done) {
+        dialog.hide();
+        expect(dialog.querySelector("socobo-inventory-dialog").$.dialog.opened).to.be.eql(false);
         done();
-      });
-
-      test('show sets item data', function(done) {
-        var item = {desc: 'test item', info: 'test info', measurement: {__firebaseKey__: "0", value: "pcs"}};
-        dialog.show(item);
-        expect(dialog.item.desc).to.be.eql(item.desc);
-        expect(dialog.item.info).to.be.eql(item.info);
-        done();
-      });
-
-      test('clicking save fires an edit event', function(done) {
-        dialog.addEventListener('edit-item', function(e) {
-          expect(e.detail).to.not.be.eql(null);
-          expect(e.detail).to.not.be.eql(undefined);
-          expect(e.detail.measurement.value).to.be.eql("pcs");
-          done();
-        });
-
-        var item = {name: "Valid name", count: "4", measurement: {__firebaseKey__: "0", value: "pcs"}};
-
-        dialog.show(item);
-        expect(dialog.item.validate().isValid).to.be.eql(true);
-        //dialog.$.measurementDropdownMenu.select(0);
-        MockInteractions.tap(dialog.$.submitItemButton);
       });
     });
   </script>
