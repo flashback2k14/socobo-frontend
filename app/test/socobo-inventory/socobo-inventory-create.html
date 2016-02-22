@@ -29,71 +29,16 @@
         dialog = fixture('InventoryCreate');
       });
 
-      test('has an ok button', function(done) {
-        expect(dialog.$.submitItemButton).to.not.be.eql(undefined);
-        done();
-      });
-
-      test('has a cancel button', function(done) {
-        expect(dialog.$.cancelDialogButton).to.not.be.eql(undefined);
-        done();
-      });
-
-      test('does not have a save button', function(done) {
-        expect(dialog.$.editItemButton).to.be.eql(undefined);
-        done();
-      });
-
-      test('show does not set item data even if present', function(done) {
-        var item = {measurement: {value: 'pcs'}, desc: 'test item', info: 'test info'};
-        dialog.measurements = [{value: "pcs"}];
-        dialog.show(item);
-        expect(dialog.item.desc).to.be.eql(undefined);
-        expect(dialog.item.info).to.be.eql(undefined);
-        done();
-      });
-
-      test('show sets item data to initial values if nothing is passed in', function(done) {
+      test('show opens the dialog', function(done) {
         dialog.show();
-        expect(dialog.item.desc).to.be.eql(undefined);
-        expect(dialog.item.info).to.be.eql(undefined);
-        expect(dialog.item.name).to.be.eql(String.empty);
+        expect(dialog.querySelector("socobo-inventory-dialog").$.dialog.opened).to.be.eql(true);
         done();
       });
 
-      test('valid items are validated correctly', function(done) {
-        var validItem = {name: "Valid name", count: "4", measurement: {value: "g"}};
-        dialog.item.extend(validItem);
-        expect(dialog._validate()).to.be.eql(true);
-
+      test('hide closes the dialog', function(done) {
+        dialog.hide();
+        expect(dialog.querySelector("socobo-inventory-dialog").$.dialog.opened).to.be.eql(false);
         done();
-      });
-
-      test('items without measurement are not valid', function(done) {
-        var invalidItem = {name: "Valid name", count: "4"};
-        dialog.item.extend(invalidItem);
-        expect(dialog._validate()).to.be.eql(false);
-
-        done();
-      });
-
-      test('fires create event', function(done) {
-        dialog.addEventListener('create-item', function(e) {
-          expect(e.detail).to.not.be.eql(undefined);
-          expect(e.detail.name).to.be.eql("Valid name");
-
-          done();
-        });
-
-        dialog.show();
-
-        // preparing valid item data
-        dialog.set('item.name', "Valid name");
-        dialog.set('item.count', "4");
-        dialog.set('item.measurement', {value: "g"});
-
-        var createButton = dialog.$.submitItemButton;
-        MockInteractions.tap(createButton);
       });
     });
   </script>
