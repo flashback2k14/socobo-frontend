@@ -117,7 +117,7 @@ Custom property | Description | Default
               readonly
               label="Category"
               class="vertical-layout width-small style-disabled-inputs"
-              value="[[item.category]]">
+              value="[[item.category.value]]">
             </paper-input>
           </div>
         </paper-dialog-scrollable>
@@ -138,7 +138,7 @@ Custom property | Description | Default
          * @function
          */
         show: function(item) {
-          this.item = item;
+          this.set("item", item);
           this.$.showInventoryDialog.toggle();
         }
       });
