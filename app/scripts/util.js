@@ -61,21 +61,7 @@ var Util = (function() {
       _toggleMI(menuItem);
     });
   };
-  /**
-   * show info toast
-   *
-   * @param {HTMLElement} toast
-   * @param {String} text
-   * @param {String} bgColor
-   * @param {String} color
-   */
-  var showToast = function(toast, text, bgColor, color) {
-    toast.text = text;
-    toast.style.background = bgColor;
-    toast.style.color = color;
-    toast.show();
-  };
-
+  
   /**
    * make functions public
    */
@@ -83,7 +69,6 @@ var Util = (function() {
     objectToString: objectToString,
     stringToObject: stringToObject,
     isUserLoginExpired: isUserLoginExpired,
-    toggleMenuItems: toggleMenuItems,
-    showToast: showToast
+    toggleMenuItems: toggleMenuItems
   };
 })();

@@ -112,8 +112,6 @@ Custom property | Description | Default
         </div>
       </div>
     </div>
-    <!-- Notification-->
-    <paper-toast id="infoRanking" duration="2000"></paper-toast>
   </template>
 
   <script>
@@ -167,17 +165,35 @@ Custom property | Description | Default
           SocoboRanking.getInstance(this.userLogin)
             .getData()
             .then(function(data) {
-              this._notify("Loading Data finished! Calculating started...");
+              var msgObj = {
+                type: "plain", 
+                duration: 2000, 
+                message: "Loading Data finished! Calculating started..."
+              };
+              this.fire("socobo-show-toast", msgObj);
               this._calcRanking(data);
             }.bind(this))
             .catch(function(error) {
-              this._notify(error.message);
+              var msgObj = {
+                type: "error", 
+                duration: 2000, 
+                message: "ERROR: " + error.message
+              };
+              this.fire("socobo-show-toast", msgObj);
             }.bind(this));
           // register changed listener
           if (this.isFirstLoad) {
             SocoboRanking.getInstance(this.userLogin).registerChangedListener(this);
             this.isFirstLoad = false;
           }
+        },
+        /**
+         * unregister tracking changed listeners
+         * 
+         * @function
+         */
+        unregisterListeners: function() {
+          SocoboRanking.getInstance(this.userLogin).unregisterChangedListener();
         },
 
         /**
@@ -190,12 +206,22 @@ Custom property | Description | Default
         _calcRanking: function(data) {
           // check Data
           if (data === null || typeof(data) === "undefined") {
-            this._notify("No Data for Ranking available!");
+            var msgObj = {
+              type: "error", 
+              duration: 2000, 
+              message: "Ranking - Error - No Data for Ranking available!"
+            };
+            this.fire("socobo-show-toast", msgObj);
             return false;
           }
           // check Data length
           if (data.length !== 2) {
-            this._notify("Error - One needed Item is missing!");
+            var msgObj2 = {
+              type: "error", 
+              duration: 2000, 
+              message: "Ranking - Error - One needed Item is missing!" 
+            };
+            this.fire("socobo-show-toast", msgObj2);
             return false;
           }
           //extract data
@@ -245,7 +271,12 @@ Custom property | Description | Default
           // sort desc
           this._sortList(true);
           // notify user
-          this._notify("Calculating finished!");
+          var msgObj3 = {
+            type: "plain", 
+            duration: 2000, 
+            message: "Calculating finished!" 
+          };
+          this.fire("socobo-show-toast", msgObj3);
           // reset loading flag
           this.isLoading = false;
         },
@@ -524,7 +555,12 @@ Custom property | Description | Default
          */
         _reload: function() {
           // notify user
-          this._notify("Reloading...");
+          var msgObj = {
+            type: "plain", 
+            duration: 2000, 
+            message: "Reloading..." 
+          };
+          this.fire("socobo-show-toast", msgObj);
           // reset recipe ranking
           this.set("recipeRanking", []);
           // reload data
@@ -594,20 +630,6 @@ Custom property | Description | Default
         },
 
         /**
-         * Show Toast with specific message
-         *
-         * @param {String} msg
-         * @private
-         * @function
-         */
-        _notify: function(msg) {
-          this.$.infoRanking.text = msg;
-          if (!this.$.infoRanking.opened) {
-            this.$.infoRanking.show();
-          }
-        },
-
-        /**
          * tracking changes in inventory items
          *
          * @private
@@ -639,7 +661,12 @@ Custom property | Description | Default
          * @function
          */
         _onChangedError: function(e) {
-          this._notify("Ranking - Reloading Error: " + e.detail.message);
+          var msgObj = {
+            type: "error", 
+            duration: 2000, 
+            message: "Ranking - Reloading Error: " + e.detail.message 
+          };
+          this.fire("socobo-show-toast", msgObj);
         },
 
         /**
