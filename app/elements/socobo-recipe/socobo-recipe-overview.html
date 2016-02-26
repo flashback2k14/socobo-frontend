@@ -187,6 +187,7 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-recipe-overview",
+        behaviors: [ToastElementBehaviors.SendBehavior],
         /**
          *Public properties
          * - recipes [Array]
@@ -508,7 +509,8 @@ Custom property | Description | Default
          * @function
          */
         _notifyOnSuccess: function(msg) {
-          this.fire("socobo-show-toast", {type: "success", message: msg});
+          //this.fire("socobo-show-toast", {type: "success", message: msg});
+          this.notify("TEST");
         },
         /**
          * Shows a given loading message as paper-material notification at the top

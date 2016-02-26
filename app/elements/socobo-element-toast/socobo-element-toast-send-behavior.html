@@ -1,0 +1,57 @@
+<script>
+  /* exported ToastElementBehaviors */
+  /* exported ToastElementBehaviors.SendBahavior */
+  /**
+   * Behavior for sending notifications
+   *
+   * @type {{}}
+   */
+  var ToastElementBehaviors = ToastElementBehaviors || {};
+  ToastElementBehaviors.SendBehavior = {
+
+    properties: {
+      _DURATION: {
+        type: Number,
+        readOnly: true,
+        value: 2000
+      },
+      _PLAIN_TYPE: {
+        type: String,
+        readOnly: true,
+        value: "plain"
+      },
+      _ERROR_TYPE: {
+        type: String,
+        readOnly: true,
+        value: "error"
+      },
+      _SUCCESS_TYPE: {
+        type: String,
+        readOnly: true,
+        value: "success"
+      },
+      _EVENT: {
+        type: String,
+        readOnly: true,
+        value: "socobo-show-toast"
+      }
+    },
+    notify: function(msg, customDuration) {
+      var defaultDuration = customDuration ? customDuration : this._DURATION;
+      var obj = this._buildMessageObj(
+        this._PLAIN_TYPE,
+        defaultDuration,
+        msg
+      );
+      this.fire(this._EVENT, obj);
+    },
+    _buildMessageObj: function(toastType, customDuration, msg){
+      return {
+        type: toastType,
+        duration: customDuration,
+        message: msg
+      };
+    }
+  };
+
+</script>
