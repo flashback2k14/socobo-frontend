@@ -13,7 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 var gulp = require("gulp");
 var rename = require("gulp-rename");
 var newFile = require("gulp-file");
-var stripCode = require('gulp-strip-code');
+var stripCode = require("gulp-strip-code");
 var $ = require("gulp-load-plugins")();
 var del = require("del");
 var runSequence = require("run-sequence");
@@ -211,7 +211,7 @@ gulp.task("copyGhPages", function() {
   var newIndex = newFile(
     "index.html",
     "<META http-equiv=refresh content='0;URL=app/elements/'>",
-    { src: true }
+    {src: true}
   ).pipe(gulp.dest("ghPages"));
   // merge all files together
   return merge(bc, app, renameDoc, removeImports, config, newIndex)
