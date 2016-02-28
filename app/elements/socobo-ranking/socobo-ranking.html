@@ -179,6 +179,14 @@ Custom property | Description | Default
             this.isFirstLoad = false;
           }
         },
+        /**
+         * clear data after logout
+         *
+         * @function
+         */
+        clearData: function() {
+          this.set("recipeRanking", []);
+        },
 
         /**
          * Calculate Ranking

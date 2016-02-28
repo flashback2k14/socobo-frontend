@@ -211,6 +211,15 @@ Custom property | Description | Default
               .addItemToActiveList({desc: item.desc + " - " + item.amount + " " + item.unit});
           }.bind(this));
         },
+        /**
+         * clear data after logout
+         *
+         * @function
+         */
+        clearData: function() {
+          this.set("groceryItems", []);
+          this.set("groceryArchiveItems", []);
+        },
 
         /**
          * PRIVATE API
