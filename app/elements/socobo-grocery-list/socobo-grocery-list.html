@@ -354,8 +354,7 @@ Custom property | Description | Default
             items.splice(checkItemIndex, 1);
           } else {
             this._notify({
-              type: "plain",
-              duration: 2000,
+              type: "error",
               message: "There is no active Item checked for unchecking."
             });
           }
@@ -471,15 +470,13 @@ Custom property | Description | Default
               // notify user
               this._notify({
                 type: "error",
-                duration: 2000,
                 message: "There is no Item available."
               });
             }
           } else {
             // notify user
             this._notify({
-              type: "plain",
-              duration: 2000,
+              type: "error",
               message: "There is no checked Item. Please check the Item before delete."
             });
           }
@@ -513,7 +510,6 @@ Custom property | Description | Default
             // notify user
             this._notify({
               type: "error",
-              duration: 2000,
               message: "There is no Item available."
             });
           }
@@ -541,7 +537,6 @@ Custom property | Description | Default
             // notify user
             this._notify({
               type: "error",
-              duration: 2000,
               message: "There is no Item available."
             });
           }
@@ -571,7 +566,6 @@ Custom property | Description | Default
             // notify user
             this._notify({
               type: "error",
-              duration: 2000,
               message: "There is no Item available."
             });
           }
@@ -677,7 +671,6 @@ Custom property | Description | Default
         _groceryChangedError: function(error) {
           this._notify({
             type: "error",
-            duration: 2000,
             message: "Grocery List - Error: " + error.code + " - " + error.message
           });
         },

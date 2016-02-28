@@ -135,7 +135,6 @@
     // show toast to inform the user
     Util.notify(this, {
       type: "error",
-      duration: 2000,
       message: "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message
     });
   };
@@ -143,7 +142,6 @@
     // show toast to inform the user
     Util.notify(this, {
       type: "error",
-      duration: 2000,
       message: "Your Passwords does not match! Please retry!"
     });
   };
@@ -175,7 +173,6 @@
     // show toast to inform the user
     Util.notify(this, {
       type: "success",
-      duration: 2000,
       message: "User " + e.detail.email + " is logged in!"
     });
   };
@@ -205,8 +202,6 @@
     }
     // show toast to inform the user
     Util.notify(this, {
-      type: "plain",
-      duration: 2000,
       message: infoText
     });
     // unregister tracking listeners

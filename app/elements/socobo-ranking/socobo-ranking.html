@@ -166,8 +166,6 @@ Custom property | Description | Default
             .getData()
             .then(function(data) {
               this._notify({
-                type: "plain",
-                duration: 2000,
                 message: "Loading Data finished! Calculating started..."
               });
               this._calcRanking(data);
@@ -175,7 +173,6 @@ Custom property | Description | Default
             .catch(function(error) {
               this._notify({
                 type: "error",
-                duration: 2000,
                 message: "Ranking - Error - " + error.message
               });
             }.bind(this));
@@ -206,7 +203,6 @@ Custom property | Description | Default
           if (data === null || typeof(data) === "undefined") {
             this._notify({
               type: "error",
-              duration: 2000,
               message: "Ranking - Error - No Data for Ranking available!"
             });
             return false;
@@ -215,7 +211,6 @@ Custom property | Description | Default
           if (data.length !== 2) {
             this._notify({
               type: "error",
-              duration: 2000,
               message: "Ranking - Error - One needed Item is missing!"
             });
             return false;
@@ -268,8 +263,6 @@ Custom property | Description | Default
           this._sortList(true);
           // notify user
           this._notify({
-            type: "plain",
-            duration: 2000,
             message: "Calculating finished!"
           });
           // reset loading flag
@@ -551,8 +544,6 @@ Custom property | Description | Default
         _reload: function() {
           // notify user
           this._notify({
-            type: "plain",
-            duration: 2000,
             message: "Reloading..."
           });
           // reset recipe ranking
@@ -657,7 +648,6 @@ Custom property | Description | Default
         _onChangedError: function(e) {
           this._notify({
             type: "error",
-            duration: 2000,
             message: "Ranking - Reloading Error: " + e.detail.message
           });
         },
