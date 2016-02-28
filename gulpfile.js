@@ -11,6 +11,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 // Include Gulp & tools we"ll use
 var gulp = require("gulp");
+var rename = require("gulp-rename");
+var newFile = require("gulp-file");
+var stripCode = require('gulp-strip-code');
 var $ = require("gulp-load-plugins")();
 var del = require("del");
 var runSequence = require("run-sequence");
@@ -170,6 +173,50 @@ gulp.task("copy", ["copyAbout"], function() {
   return merge(app, bower)
     .pipe($.size({
       title: "copy"
+    }));
+});
+
+gulp.task("copyGhPages", function() {
+  // copy bower_components
+  var bc = gulp.src([
+    "app/bower_components/**/*"
+  ]).pipe(gulp.dest("ghPages/app/bower_components"));
+  // copy socobo elements
+  var app = gulp.src([
+    "app/elements/**/*",
+    "app/styles/app-theme.html",
+    "!app/elements/elements.html",
+    "!app/elements/routing.html",
+    "!app/elements/documentation.html"
+  ]).pipe(gulp.dest("ghPages/app/elements"));
+  // rename documentation.html to index.html
+  var renameDoc = gulp.src("app/elements/documentation.html")
+    .pipe(rename("index.html"))
+    .pipe(gulp.dest("ghPages/app/elements"));
+  // remove routing and app-theme from elements.html
+  var removeImports = gulp.src("app/elements/elements.html")
+    .pipe(stripCode({
+      start_comment: "BEGIN-REMOVE-IMPORTS",
+      end_comment: "END-REMOVE-IMPORTS"
+    }))
+    .pipe(gulp.dest("ghPages/app/elements"));
+  // copy config files
+  var config = gulp.src([
+    ".bowerrc",
+    ".editorconfig",
+    ".gitignore",
+    "bower.json"
+  ]).pipe(gulp.dest("ghPages"));
+  // create new index.html as entry point
+  var newIndex = newFile(
+    "index.html",
+    "<META http-equiv=refresh content='0;URL=app/elements/'>",
+    { src: true }
+  ).pipe(gulp.dest("ghPages"));
+  // merge all files together
+  return merge(bc, app, renameDoc, removeImports, config, newIndex)
+    .pipe($.size({
+      title: "copyGhPages"
     }));
 });
 
