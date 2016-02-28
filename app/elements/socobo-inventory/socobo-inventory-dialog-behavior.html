@@ -1,3 +1,4 @@
+<script type="application/javascript" src="../../bower_components/lodash/lodash.min.js"></script>
 <script>
   var InventoryBehaviors = InventoryBehaviors || {};
   InventoryBehaviors.DialogBehavior = {
@@ -6,8 +7,12 @@
      *
      * @function
      */
-    show: function() {
-      this.$.dialog.show();
+    show: function(item) {
+      if (item) {
+        this.setItem(item);
+      }
+
+      this.$.dialog.open();
     },
 
     /** Hides the dialog
@@ -15,7 +20,55 @@
      * @function
      */
     hide: function() {
-      this.$.dialog.hide();
+      this.$.dialog.close();
+    },
+
+    /**
+     * Set the internal item data to the item passed in
+     *
+     * @param {Object} item
+     *
+     * @function
+     */
+    setItem: function(item) {
+      if (item !== undefined) {
+        this._setAndNotify(item);
+        this._setMeasurement(item);
+        // trigger Polymers data binding helpers
+      }
+    },
+
+    _setAndNotify: function(item) {
+      Object.keys(item).forEach(function(k) {
+        this.set("item." + k,  item[k]);
+      }, this);
+    },
+
+    _setMeasurement(item) {
+      if (!this.$.measurementDropdown) {
+        return;
+      }
+      this.measurements.forEach(function(m, i) {
+        if (item.measurement.value === m.value) {
+          this.$.measurementDropdownMenu.select(i);
+        }
+      }.bind(this));
+    },
+
+    /**
+     * Resets the item and all dropdowns back to initial values
+     *
+     * @param {Event} e
+     * @private
+     */
+    _clearItem: function(e) {
+      if (!(e && e.target === this.$.dialog)) {
+        return;
+      }
+      this.set("item.name","");
+      this.set("item.count","");
+      this.set("item.bestBefore", "");
+      this.$.measurementDropdownMenu.select(-1);
     }
   };
 </script>

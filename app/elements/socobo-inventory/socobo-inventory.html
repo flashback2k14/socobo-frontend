@@ -49,14 +49,6 @@ Custom property | Description | Default
         location="{{measurementLocation}}"
         data="{{measurements}}">
       </firebase-collection>
-      <!-- categories-->
-      <firebase-collection
-        id="categoryCollection"
-        order-by-child="name"
-        location="{{categoryLocation}}"
-        data="{{categories}}">
-      </firebase-collection>
-
       <socobo-inventory-overview
         id="inventoryOverview"
         on-edit_request="_editItem"
