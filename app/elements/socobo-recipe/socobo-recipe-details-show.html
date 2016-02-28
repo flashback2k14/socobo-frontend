@@ -17,7 +17,6 @@ Custom property | Description | Default
 -->
 <dom-module id="socobo-recipe-details-show">
   <template>
-
     <style>
       :host {
         display: block;
@@ -25,8 +24,8 @@ Custom property | Description | Default
 
       /* CONTENT */
       .wrapper {
-        top: 20px;
-        min-height: 85%;
+        height: 75%;
+        max-height: 85%;
         width: 90%;
         min-width:700px;
         padding: 0;
@@ -148,7 +147,7 @@ Custom property | Description | Default
                   with-backdrop>
       <!-- DIALOG -->
       <!-- EXIT DIALOG-->
-      <paper-icon-button id="exit" class="style-exit-show-button" icon="clear" dialog-dismiss>
+      <paper-icon-button id="exit" class="style-exit-show-button" icon="clear" on-tap="toggleDialog">
       </paper-icon-button>
       <!-- RECIPE NAME -->
       <h1
@@ -175,7 +174,6 @@ Custom property | Description | Default
               <iron-image
                 id="recipe_image"
                 class="recipeImg_image"
-                src="placeholder.png"
                 sizing="cover"
                 preload="true"
                 fade
@@ -220,43 +218,54 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-recipe-details-show',
+        is: "socobo-recipe-details-show",
         properties: {
-          recipe : {
-            type : Object,
-            value : {}
+          recipe: {
+            type: Object,
+            value: {}
           },
-          recipe_inputs : {
-            type : Array,
-            value : [
+          recipe_inputs: {
+            type: Array,
+            value: [
               "step0"
             ]
           },
-          ingredient_inputs : {
-            type : Array,
-            value : [
+          ingredient_inputs: {
+            type: Array,
+            value: [
               "ingr0"
             ]
           },
-          numberOfSteps : {
-            type : Number,
-            value : 1
+          numberOfSteps: {
+            type: Number,
+            value: 1
           },
-          numberOfIngr : {
-            type : Number,
-            value : 1
+          numberOfIngr: {
+            type: Number,
+            value: 1
           }
         },
-        exit : function () {
+
+        /**
+         * Exits the dialog and notifies observers
+         *
+         * @function
+         */
+        exit: function() {
           this.fire("exit_request");
         },
-        toggleDialog : function(){
+
+        /**
+         * Toggles the dialog
+         *
+         * @function
+         */
+        toggleDialog: function() {
           this.$.dialog.toggle();
         }
       });
     })();
   </script>
-
 </dom-module>
 
 

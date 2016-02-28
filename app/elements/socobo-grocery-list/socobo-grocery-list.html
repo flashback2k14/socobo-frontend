@@ -1,0 +1,677 @@
+<script src="lib/socobo-grocery.js"></script>
+
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+@demo demo/socobo-grocery-list/demo.html
+-->
+<dom-module id="socobo-grocery-list">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      }
+      .container {
+        @apply(--layout-vertical);
+        width: 100%;
+        height: 100%;
+      }
+
+      .style-paper-toolbar {
+        --paper-toolbar-height: var(--socobo-grocery-list-paper-toolbar-height, 55px);
+      }
+      .style-paper-tabs {
+        @apply(--layout-horizontal);
+        @apply(--layout-self-start);
+        --paper-tabs: {
+          margin-left: 15px;
+          margin-bottom: 0;
+          padding-bottom: 0;
+        };
+        --paper-tabs-selection-bar-color: var(--socobo-grocery-list-paper-tab-ink, --accent-color);
+      }
+      .style-paper-tab {
+        --paper-tab: {
+          min-width: 25%;
+          width: 200px;
+          background: var(--socobo-grocery-list-paper-tab-bg, --default-primary-color);
+          color: var(--socobo-grocery-list-paper-tab-color, --text-primary-color);
+        };
+        --paper-tab-ink: var(--socobo-grocery-list-paper-tab-ink, --accent-color);
+      }
+      .style-paper-fab {
+        @apply(--layout-horizontal);
+        @apply(--layout-self-end);
+        margin-top: -30px;
+        margin-right: 24px;
+      }
+      .style-content-container {
+        margin-top: 5px;
+      }
+      .style-no-recipe {
+        display: block;
+        font-size: 40px;
+        text-align: center;
+        font-weight: 100;
+        color: var(--socobo-recipe-style-icon-text-color, --default-primary-color);
+        line-height: 80px;
+      }
+
+      .grocery-list-item {}
+      .grocery-list-item-archive {}
+    </style>
+
+    <div class="container">
+      <!-- Search -->
+      <socobo-element-search
+        id="elSearch"
+        elevation-height="0"
+        hide-search-input
+        hide-search-button
+        on-check-all-items="_handleCheckAllItems"
+        on-uncheck-all-items="_handleUncheckAllItems"
+        on-changed-search-query="_handleChangedSearchQuery"
+        on-add-to-grocery-list="_handleAddToGroceryList">
+      </socobo-element-search>
+      <!-- Toolbar w/ Tabs -->
+      <paper-toolbar class="style-paper-toolbar">
+        <paper-tabs id="tabsList" class="style-paper-tabs" selected="{{selected}}">
+          <paper-tab id="tabActive" class="style-paper-tab">ACTIVE</paper-tab>
+          <paper-tab id="tabArchive" class="style-paper-tab">ARCHIVE</paper-tab>
+        </paper-tabs>
+      </paper-toolbar>
+      <!-- FAB -->
+      <paper-fab
+        id="btnDelete"
+        class="style-paper-fab"
+        icon="delete"
+        elevation="3"
+        disabled
+        on-tap="_deleteAllItems">
+      </paper-fab>
+      <!-- Content -->
+      <iron-pages selected="{{selected}}">
+        <!-- Active Items -->
+        <div class="style-content-container">
+          <template is="dom-if" if="[[!groceryItems.length]]">
+            <p class="style-no-recipe">No Grocery Items available.</p>
+          </template>
+          <template id="listGroceryItems" is="dom-repeat" items="{{groceryItems}}" as="activeItem">
+            <socobo-element-list-item
+              obj="{{activeItem}}"
+              class="grocery-list-item"
+              delete-icon="assignment"
+              dialog-text="Do you really want to move the item to archive?"
+              hidden$="{{_setHidden(activeItem, searchQuery)}}"
+              on-check="_handleCheck"
+              on-uncheck="_handleUncheck"
+              on-edit_request="_handleEditRequest"
+              on-delete_request="_handleDeleteRequest">
+            </socobo-element-list-item>
+          </template>
+        </div>
+        <!-- Archive Items -->
+        <div class="style-content-container">
+          <template is="dom-if" if="[[!groceryArchiveItems.length]]">
+            <p class="style-no-recipe">No Grocery Items in Archive.</p>
+          </template>
+          <template id="listGroceryItemsArchive" is="dom-repeat" items="{{groceryArchiveItems}}" as="archiveItem">
+            <socobo-element-list-item
+              obj="{{archiveItem}}"
+              class="grocery-list-item-archive"
+              edit-icon="assignment-return"
+              hidden$="{{_setHidden(archiveItem, searchQuery)}}"
+              on-check="_handleCheck"
+              on-uncheck="_handleUncheck"
+              on-edit_request="_handleMoveRequest"
+              on-delete_request="_handleDeleteRequest">
+            </socobo-element-list-item>
+        </template>
+        </div>
+      </iron-pages>
+    </div>
+    <!-- Notification-->
+    <paper-toast id="infoGroceryList" duration="2000"></paper-toast>
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: "socobo-grocery-list",
+        /**
+         * Element Properties.
+         */
+        properties: {
+          /**
+           * User Login Object
+           */
+          userLogin: {
+            type: Object,
+            value: {}
+          },
+          /**
+           * data binding array
+           */
+          groceryItems: {
+            type: Array,
+            value: [],
+            notify: true
+          },
+          /**
+           * data binding array
+           */
+          groceryArchiveItems: {
+            type: Array,
+            value: [],
+            notify: true
+          },
+          /**
+           * Tab Routing
+           */
+          selected: {
+            type: Number,
+            value: 0
+          }
+        },
+
+        /**
+         * register listeners for changed items
+         */
+        listeners: {
+          "grocery-active-item-added": "_groceryActiveItemAdded",
+          "grocery-active-item-removed": "_groceryActiveItemRemoved",
+          "grocery-archive-item-added": "_groceryArchiveItemAdded",
+          "grocery-changed-error": "_groceryChangedError"
+        },
+
+        /**
+         * PUBLIC API
+         */
+        /**
+         * Load Data
+         *
+         * @function
+         */
+        loadData: function() {
+          SocoboGrocery.getInstance(this, this.userLogin).registerGroceryItemListeners();
+        },
+        /**
+         * add items to List from ranking
+         *
+         * @param {Array} items
+         * @function
+         */
+        addToList: function(items) {
+          items.forEach(function(item) {
+            SocoboGrocery.getInstance(this, this.userLogin)
+              .addItemToActiveList({desc: item.desc + " - " + item.amount + " " + item.unit});
+          }.bind(this));
+        },
+
+        /**
+         * PRIVATE API
+         */
+        /**
+         * Handle Changed Search Query
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
+        _handleChangedSearchQuery: function(e) {
+          this.searchQuery = e.detail.searchQuery;
+          if (this.searchQuery === null && this.setItemToFallback) {
+            SocoboGrocery.getInstance(this, this.userLogin).addItemToActiveList({desc: this.fallbackItems[0].desc});
+            this.fallbackItems = [];
+          }
+        },
+        /**
+         * Handle Add To Grocery List
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
+        _handleAddToGroceryList: function(e) {
+          if (this.setItemToFallback) {
+            this.setItemToFallback = false;
+          }
+          SocoboGrocery.getInstance(this, this.userLogin).addItemToActiveList(e.detail);
+        },
+
+        /**
+         * MULTI CHECKS
+         */
+        /**
+         * Handle Check All Items
+         *
+         * @private
+         * @function
+         */
+        _handleCheckAllItems: function() {
+          this.checkItems = [];
+          this.checkItemsArchive = [];
+          this.toggleAttribute("disabled", false, this.$.btnDelete);
+          this._checkOrUncheck(true);
+        },
+        /**
+         * Handle Uncheck All Items
+         *
+         * @private
+         * @function
+         */
+        _handleUncheckAllItems: function() {
+          this.toggleAttribute("disabled", true, this.$.btnDelete);
+          this._checkOrUncheck(false);
+        },
+        /**
+         * handle check state
+         *
+         * @param {Object} state
+         * @private
+         * @function
+         */
+        _checkOrUncheck: function(state) {
+          // init variable
+          var list;
+          // get specific list
+          if (this.selected === 0) {
+            list = this.querySelectorAll(".grocery-list-item");
+          } else {
+            list = this.querySelectorAll(".grocery-list-item-archive");
+          }
+          // check or uncheck
+          for (var i = 0; i < list.length; i++) {
+            var element = list[i];
+            if (!element.hidden) {
+              element.isChecked = state;
+              if (state) {
+                this._handleCheck({detail: element.obj});
+              } else {
+                this._handleUncheck({detail: element.obj});
+              }
+            }
+          }
+        },
+
+        /**
+         * SINGLE CHECKS
+         */
+        /**
+         * Handle Check
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
+        _handleCheck: function(e) {
+          if (this.selected === 0) {
+            if (this._getIndex(this.checkItems, e.detail) === -1) {
+              this.checkItems.push(e.detail);
+            }
+          } else {
+            if (this._getIndex(this.checkItemsArchive, e.detail) === -1) {
+              this.checkItemsArchive.push(e.detail);
+            }
+          }
+        },
+        /**
+         * Handle Uncheck
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
+        _handleUncheck: function(e) {
+          if (this.selected === 0) {
+            this._uncheck(this.checkItems, e.detail);
+          } else {
+            this._uncheck(this.checkItemsArchive, e.detail);
+          }
+        },
+        /**
+         * Uncheck given Item, if exists
+         *
+         * @param {Array} items
+         * @param {Object} item
+         * @private
+         * @function
+         */
+        _uncheck: function(items, item) {
+          // get index from checkItems
+          var checkItemIndex = this._getIndex(items, item);
+          if (checkItemIndex !== -1) {
+            items.splice(checkItemIndex, 1);
+          } else {
+            this._notify("There is no Active Item checked for unchecking.");
+          }
+        },
+
+        /**
+         * DELETE
+         */
+        /**
+         * delete all checked Items
+         *
+         * @private
+         * @function
+         */
+        _deleteAllItems: function() {
+          if (this.selected === 0) {
+            this._deleteAll(this.checkItems);
+          } else {
+            this._deleteAll(this.checkItemsArchive);
+          }
+        },
+        /**
+         * delete all given Items
+         *
+         * @param {Array} items
+         * @private
+         * @function
+         */
+        _deleteAll: function(items) {
+          // clone array, because reference errors
+          var clonedArray = CloneModule.clone(items);
+          // iterate over cloned array and delete all checked items
+          clonedArray.forEach(function(item) {
+            this._handleDeleteRequest({detail: item});
+          }.bind(this));
+          // reset fab
+          this.toggleAttribute("disabled", true, this.$.btnDelete);
+          // reset checkbox in search element
+          this.$.elSearch.resetQuery();
+        },
+        /**
+         * Handle Delete Request
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
+        _handleDeleteRequest: function(e) {
+          /* Check the selected Tab */
+          switch (this.selected) {
+            /* Active */
+            case 0:
+              /*
+               * if length is 0, then the delete button from the list item
+               * is pressed, otherwise the request comes from deleteAll
+               */
+              if (this.checkItems.length === 0) {
+                this._deleteSingle(true, e.detail, "groceryItems");
+              } else {
+                this._delete(this.checkItems, e.detail, "groceryArchiveItems", "groceryItems");
+              }
+              break;
+            /* Archive */
+            case 1:
+              /*
+               * if length is 0, then the delete button from the list item
+               * is pressed, otherwise the request comes from deleteAll
+               */
+              if (this.checkItemsArchive.length === 0) {
+                this._deleteSingle(false, e.detail, "groceryArchiveItems");
+              } else {
+                this._delete(this.checkItemsArchive, e.detail, null, "groceryArchiveItems");
+              }
+              break;
+            /* No valid value */
+            default:
+              break;
+          }
+        },
+        /**
+         * Delete given Item, if exists - handle delete All request
+         *
+         * @param {Array} items
+         * @param {Object} item
+         * @param {String} pushToPath
+         * @param {String} spliceFromPath
+         * @private
+         * @function
+         */
+        _delete: function(items, item, pushToPath, spliceFromPath) {
+          // get index from checkItems
+          var checkItemIndex = this._getIndex(items, item);
+          if (checkItemIndex !== -1) {
+            // push deleted item to archive
+            if (pushToPath !== null) {
+              // Add Item to Archive List
+              SocoboGrocery.getInstance(this, this.userLogin).addItemToArchiveList({desc: item.desc});
+            }
+            // remove deleted item from checkItems
+            items.splice(checkItemIndex, 1);
+            // get index from groceryItems
+            var groceryItemIndex = this._getIndex(this.get(spliceFromPath), item);
+            if (groceryItemIndex !== -1) {
+              // remove item from data binding
+              this.splice(spliceFromPath, groceryItemIndex, 1);
+              // delete item from DB
+              if (spliceFromPath === "groceryItems") {
+                SocoboGrocery.getInstance(this, this.userLogin).removeItemFromActiveList(item);
+              } else {
+                SocoboGrocery.getInstance(this, this.userLogin).removeItemFromArchiveList(item);
+              }
+            } else {
+              // notify user
+              this._notify("The Item is not available");
+            }
+          } else {
+            // notify user
+            this._notify("The Item is not checked. Please check the Item before delete.");
+          }
+        },
+        /**
+         * Delete given item, if exists - handle delete request from list item
+         *
+         * @param {Boolean} moveToArchive
+         * @param {Object} item
+         * @param {String} spliceFromPath
+         * @private
+         * @function
+         */
+        _deleteSingle: function(moveToArchive, item, spliceFromPath) {
+          // add item to archive
+          if (moveToArchive) {
+            SocoboGrocery.getInstance(this, this.userLogin).addItemToArchiveList({desc: item.desc});
+          }
+          // get index from groceryItems
+          var groceryItemIndex = this._getIndex(this.get(spliceFromPath), item);
+          if (groceryItemIndex !== -1) {
+            // remove item from data binding
+            this.splice(spliceFromPath, groceryItemIndex, 1);
+            // delete item from DB
+            if (spliceFromPath === "groceryItems") {
+              SocoboGrocery.getInstance(this, this.userLogin).removeItemFromActiveList(item);
+            } else {
+              SocoboGrocery.getInstance(this, this.userLogin).removeItemFromArchiveList(item);
+            }
+          } else {
+            // notify user
+            this._notify("The Item is not available");
+          }
+        },
+
+        /**
+         * Handle Edit Request (Active)
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
+        _handleEditRequest: function(e) {
+          // get index from groceryItems
+          var groceryItemIndex = this._getIndex(this.get("groceryItems"), e.detail);
+          if (groceryItemIndex !== -1) {
+            // set item to edit
+            this.$.elSearch.editItemForGroceryList(e.detail);
+            // remove deleted item form groceryItems
+            this.splice("groceryItems", groceryItemIndex, 1);
+            // Remove item from DB
+            this.setItemToFallback = true;
+            SocoboGrocery.getInstance(this, this.userLogin).removeItemFromActiveList(e.detail);
+          } else {
+            // notify user
+            this._notify("The Item is not available");
+          }
+        },
+        /**
+         * Handle Show Request (Archive)
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
+        _handleMoveRequest: function(e) {
+          // get index from groceryArchiveItems
+          var moveItemIndex = this._getIndex(this.get("groceryArchiveItems"), e.detail);
+          if (moveItemIndex !== -1) {
+            // Remove item from data binding
+            this.splice("groceryArchiveItems", moveItemIndex, 1);
+            // Remove item from DB
+            SocoboGrocery
+              .getInstance(this, this.userLogin)
+              .removeItemFromArchiveList(e.detail);
+            // Add item to data binding
+            SocoboGrocery
+              .getInstance(this, this.userLogin)
+              .addItemToActiveList({desc: e.detail.desc});
+          } else {
+            // notify user
+            this._notify("The Item is not available");
+          }
+        },
+
+        /**
+         * SEARCH
+         */
+        /**
+         * set Item to hidden or not
+         *
+         * @param {Object} item
+         * @param {String} searchQuery
+         * @private
+         * @function
+         */
+        _setHidden: function(item, searchQuery) {
+          return !(searchQuery === null ||
+          typeof searchQuery === "undefined" ||
+          item.desc.toUpperCase().match(searchQuery.toUpperCase()));
+        },
+
+        /**
+         * UTIL
+         */
+        /**
+         * Get Index from selected item in Items
+         *
+         * @param {Array} items
+         * @param {Object} selectedItem
+         * @returns {Number}
+         * @private
+         * @function
+         */
+        _getIndex: function(items, selectedItem) {
+          // set index for not found item
+          var index = -1;
+          // search the selected item
+          items.forEach(function(item, i) {
+            if (item.desc === selectedItem.desc) {
+              index = i;
+            }
+          }.bind(this));
+          // return selected item index
+          return index;
+        },
+        /**
+         * Show Toast with specific message
+         *
+         * @param {String} msg
+         * @private
+         * @function
+         */
+        _notify: function(msg) {
+          this.$.infoGroceryList.text = msg;
+          if (!this.$.infoGroceryList.opened) {
+            this.$.infoGroceryList.show();
+          }
+        },
+
+        /**
+         * LISTENER METHODS
+         */
+        /**
+         * Handle item added to active list
+         *
+         * @param {Object} item
+         * @private
+         * @function
+         */
+        _groceryActiveItemAdded: function(item) {
+          var activeItem = {
+            key: item.detail.key,
+            desc: item.detail.desc
+          };
+          this.push("groceryItems", activeItem);
+        },
+        /**
+         * Handle item deleted from active list
+         *
+         * @param {Object} item
+         * @private
+         * @function
+         */
+        _groceryActiveItemRemoved: function(item) {
+          if (this.setItemToFallback) {
+            this.fallbackItems = [];
+            var fallbackItem = {
+              key: item.detail.key,
+              desc: item.detail.desc
+            };
+            this.fallbackItems.push(fallbackItem);
+          }
+        },
+        /**
+         * Handle item added to archive list
+         *
+         * @param {Object} item
+         * @private
+         * @function
+         */
+        _groceryArchiveItemAdded: function(item) {
+          var archiveItem = {
+            key: item.detail.key,
+            desc: item.detail.desc
+          };
+          this.push("groceryArchiveItems", archiveItem);
+        },
+        /**
+         * Handle errors from changed data
+         *
+         * @param {Object} error
+         * @private
+         * @function
+         */
+        _groceryChangedError: function(error) {
+          this._notify(error.code + " - " + error.message);
+        },
+
+        /**
+         * init variable
+         */
+        ready: function() {
+          this.searchQuery = null;
+          this.checkItems = [];
+          this.checkItemsArchive = [];
+          this.fallbackItems = [];
+          this.setItemToFallback = false;
+        }
+      });
+    })();
+  </script>
+</dom-module>

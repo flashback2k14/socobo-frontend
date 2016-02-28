@@ -299,7 +299,7 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-auth-registration',
+        is: "socobo-auth-registration",
         /**
          * This Event is fired if the hyperlink is pressed to navigate to the Login Element. <br/>
          * @event go-to-login
@@ -342,7 +342,8 @@ Custom property | Description | Default
             type: String
           },
           /**
-           * Configuration for the Animation. <br/>
+           * Configuration for the Animation.
+           *
            * `Entry`: scale-up-animation <br/>
            * `Exit`: fade-out-animation
            */
@@ -350,16 +351,16 @@ Custom property | Description | Default
             type: Object,
             value: function() {
               return {
-                'entry': {
-                  name: 'scale-up-animation',
+                "entry": {
+                  name: "scale-up-animation",
                   node: this,
                   timing: {duration: 1000}
                 },
-                'exit': {
-                  name: 'fade-out-animation',
+                "exit": {
+                  name: "fade-out-animation",
                   node: this
                 }
-              }
+              };
             }
           }
         },
@@ -367,53 +368,46 @@ Custom property | Description | Default
          * Define Listener for finished Animation.
          */
         listeners: {
-          'neon-animation-finish': '_onAnimationFinish'
+          "neon-animation-finish": "_onAnimationFinish"
         },
         /**
-         * Method for handle finished Animation. <br/>
+         * Method for handle finished Animation.
+         *
          * @private
-         * @method _onAnimationFinish
+         * @function
          */
         _onAnimationFinish: function() {
           if (!this.opened) {
-            this.style.display = 'none';
+            this.style.display = "none";
           }
         },
         /**
-         * Method for showing the Element. <br/>
-         * @method show
+         * Method for showing the Element.
+         *
+         * @function
          */
         show: function() {
           this.opened = true;
-          this.style.display = 'block';
+          this.style.display = "block";
           this.cancelAnimation();
-          this.playAnimation('entry');
+          this.playAnimation("entry");
         },
         /**
-         * Method for hiding the Element. <br/>
-         * @method hide
+         * Method for hiding the Element.
+         *
+         * @function
          */
         hide: function() {
           this.opened = false;
           this.cancelAnimation();
-          this.playAnimation('exit');
-        },
-        /**
-         * toggle all buttons
-         * @private
-         * @methode _toggleRegisterButtons
-         */
-        _toggleRegisterButtons: function() {
-          this._toggleButton(this.$.btnRegGooglePlus);
-          this._toggleButton(this.$.btnRegTwitter);
-          this._toggleButton(this.$.btnRegFacebook);
-          this._toggleButton(this.$.btnRegEmail);
+          this.playAnimation("exit");
         },
         /**
          * toggle button to enable / disable Button
-         * @param {HTMLElement} el
+         *
+         * @param {Object} el
          * @private
-         * @method _toggleButton
+         * @function
          */
         _toggleButton: function(el) {
           if (el.get("disabled")) {
@@ -423,50 +417,68 @@ Custom property | Description | Default
           }
         },
         /**
-         * Method for register with Google+ Account. <br/>
+         * toggle all buttons
+         *
          * @private
-         * @method _registerWithGooglePlus
+         * @function
+         */
+        _toggleRegisterButtons: function() {
+          this._toggleButton(this.$.btnRegGooglePlus);
+          this._toggleButton(this.$.btnRegTwitter);
+          this._toggleButton(this.$.btnRegFacebook);
+          this._toggleButton(this.$.btnRegEmail);
+        },
+        /**
+         * Method for register with Google+ Account.
+         *
+         * @private
+         * @function
          */
         _registerWithGooglePlus: function() {
-          this._handleRegister('google');
+          this._handleRegister("google");
         },
         /**
-         * Method for register with Twitter Account. <br/>
+         * Method for register with Twitter Account.
+         *
          * @private
-         * @method _registerWithTwitter
+         * @function
          */
         _registerWithTwitter: function() {
-          this._handleRegister('twitter');
+          this._handleRegister("twitter");
         },
         /**
-         * Method for register with Facebook Account. <br/>
+         * Method for register with Facebook Account.
+         *
          * @private
-         * @method _registerWithFacebook
+         * @function
          */
         _registerWithFacebook: function() {
-          this._handleRegister('facebook');
+          this._handleRegister("facebook");
         },
         /**
-         * Method for register with Emailaddress Account. <br/>
+         * Method for register with Emailaddress Account.
+         *
          * @private
-         * @method _registerWithEmail
+         * @function
          */
         _registerWithEmail: function() {
-          this._handleRegister('email');
+          this._handleRegister("email");
         },
         /**
-         * Method for go to Login Element. <br/>
+         * Method for go to Login Element.
+         *
          * @private
-         * @method _goToLogin
+         * @function
          */
         _goToLogin: function() {
-          this.fire('go-to-login');
+          this.fire("go-to-login");
         },
         /**
-         * Method for clearing all input fields. <br/>
+         * Method for clearing all input fields.
+         *
          * @param {Boolean} clearAll
          * @private
-         * @method _clearInputFields
+         * @function
          */
         _clearInputFields: function(clearAll) {
           if (clearAll) {
@@ -477,24 +489,26 @@ Custom property | Description | Default
         },
         /**
          * Helper Function
+         *
          * @private
-         * @method _checkDbName
+         * @function
          */
         _checkDbName: function() {
           return this.firebasebaseurl.toLowerCase().indexOf("dev") !== -1;
         },
         /**
-         * Method for handle user registration. <br/>
+         * Method for handle user registration.
+         *
          * @param {String} provider Social Provider
          * @private
-         * @method _handleRegister
+         * @function
          */
         _handleRegister: function(provider) {
           var fbBaseURL = this.firebasebaseurl;
           var userIsAdmin = this._checkDbName();
           var hasTermsAccepted = this.$.chbAcceptAGB.checked;
 
-          if (provider === 'email') {
+          if (provider === "email") {
             var isPasswordMatching = false;
 
             var emailAddress = this.$.txtEmailAddress.value;
@@ -509,34 +523,34 @@ Custom property | Description | Default
 
             if (isPasswordMatching) {
               var userObj = {
-                'email': emailAddress,
-                'password': password
+                "email": emailAddress,
+                "password": password
               };
 
               SocoboAuth.getInstance().registerUserAndLogin(fbBaseURL, provider, userObj, userIsAdmin, hasTermsAccepted)
                 .then(function(user) {
                   this._clearInputFields(true);
-                  this.fire('login-successful', user);
+                  this.fire("login-successful", user);
                 }.bind(this))
                 .catch(function(err) {
                   this._clearInputFields(false);
-                  this.fire('login-failed', err);
+                  this.fire("login-failed", err);
                 }.bind(this));
 
             } else {
               this._clearInputFields(false);
-              this.fire('passwords-not-matching');
+              this.fire("passwords-not-matching");
             }
           } else {
 
             SocoboAuth.getInstance().registerUserAndLogin(fbBaseURL, provider, null, userIsAdmin, hasTermsAccepted)
               .then(function(user) {
                 this._clearInputFields(true);
-                this.fire('login-successful', user);
+                this.fire("login-successful", user);
               }.bind(this))
               .catch(function(err) {
                 this._clearInputFields(false);
-                this.fire('login-failed', err);
+                this.fire("login-failed", err);
               }.bind(this));
           }
         }

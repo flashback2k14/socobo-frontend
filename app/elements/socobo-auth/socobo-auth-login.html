@@ -258,18 +258,21 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-auth-login',
+        is: "socobo-auth-login",
         /**
-         * This Event is fired if the hyperlink is pressed to navigate to the Registration Element. <br/>
+         * This Event is fired if the hyperlink is pressed to navigate to the Registration Element.
+         *
          * @event go-to-register
          */
         /**
-         * This Event is fired if the buttons are pressed and the login was successful. <br/>
+         * This Event is fired if the buttons are pressed and the login was successful.
+         *
          * `Detail`: user {Object} <br/>
          * @event login-successful
          */
         /**
-         * This Event is fired if the buttons are pressed and the login was failed. <br/>
+         * This Event is fired if the buttons are pressed and the login was failed.
+         *
          * `Detail`: err {Object} <br/>
          * @event login-failed
          */
@@ -297,7 +300,8 @@ Custom property | Description | Default
             type: String
           },
           /**
-           * Configuration for the Animation. <br/>
+           * Configuration for the Animation.
+           *
            * `Entry`: scale-up-animation <br/>
            * `Exit`: fade-out-animation
            */
@@ -305,16 +309,16 @@ Custom property | Description | Default
             type: Object,
             value: function() {
               return {
-                'entry': {
-                  name: 'scale-up-animation',
+                "entry": {
+                  name: "scale-up-animation",
                   node: this,
                   timing: {duration: 1000}
                 },
-                'exit': {
-                  name: 'fade-out-animation',
+                "exit": {
+                  name: "fade-out-animation",
                   node: this
                 }
-              }
+              };
             }
           }
         },
@@ -322,126 +326,137 @@ Custom property | Description | Default
          * Define Listener for finished Animation.
          */
         listeners: {
-          'neon-animation-finish': '_onAnimationFinish'
+          "neon-animation-finish": "_onAnimationFinish"
         },
         /**
-         * Method for handle finished Animation. <br/>
+         * Method for handle finished Animation.
+         *
          * @private
-         * @method _onAnimationFinish
+         * @function
          */
         _onAnimationFinish: function() {
           if (!this.opened) {
-            this.style.display = 'none';
+            this.style.display = "none";
           }
         },
         /**
-         * Method for showing the Element. <br/>
-         * @method show
+         * Method for showing the Element.
+         *
+         * @function
          */
         show: function() {
           this.opened = true;
-          this.style.display = 'block';
+          this.style.display = "block";
           this.cancelAnimation();
-          this.playAnimation('entry');
+          this.playAnimation("entry");
         },
         /**
-         * Method for hiding the Element. <br/>
-         * @method hide
+         * Method for hiding the Element.
+         *
+         * @function
          */
         hide: function() {
           this.opened = false;
           this.cancelAnimation();
-          this.playAnimation('exit');
+          this.playAnimation("exit");
         },
         /**
-         * Method for login with Google+ Account. <br/>
+         * Method for login with Google+ Account.
+         *
          * @private
-         * @method loginWithGooglePlus
+         * @function
          */
         _loginWithGooglePlus: function() {
-          this._handleLogin('google');
+          this._handleLogin("google");
         },
         /**
-         * Method for login with Twitter Account. <br/>
+         * Method for login with Twitter Account.
+         *
          * @private
-         * @method loginWithTwitter
+         * @function
          */
         _loginWithTwitter: function() {
-          this._handleLogin('twitter');
+          this._handleLogin("twitter");
         },
         /**
-         * Method for login with Facebook Account. <br/>
+         * Method for login with Facebook Account.
+         *
          * @private
-         * @method loginWithFacebook
+         * @function
          */
         _loginWithFacebook: function() {
-          this._handleLogin('facebook');
+          this._handleLogin("facebook");
         },
         /**
-         * Method for login with Emailaddress Account. <br/>
+         * Method for login with Emailaddress Account.
+         *
          * @private
-         * @method loginWithEmail
+         * @function
          */
         _loginWithEmail: function() {
-          this._handleLogin('email');
+          this._handleLogin("email");
         },
         /**
-         * Method for go to Register Element. <br/>
+         * Method for go to Register Element.
+         *
          * @private
-         * @method goToRegister
+         * @function
          */
         _goToRegister: function() {
-          this.fire('go-to-register');
+          this.fire("go-to-register");
         },
         /**
-         * Method for clearing all input fields. <br/>
+         * Method for clearing all input fields.
+         *
          * @param {Boolean} clearAll
          * @private
-         * @method clearInputFields
+         * @function
          */
         _clearInputFields: function(clearAll) {
-          if (clearAll) this.$.txtEmailaddress.value = "";
+          if (clearAll) {
+            this.$.txtEmailaddress.value = "";
+          }
           this.$.txtPassword.value = "";
         },
         /**
-         * Method for handle user login. <br/>
+         * Method for handle user login.
+         *
          * @param {String} provider Social Provider
          * @private
-         * @method handleLogin
+         * @function
          */
         _handleLogin: function(provider) {
           var fbBaseURL = this.firebasebaseurl;
-          var userIsAdmin = false; //ToDo: Checkbox? Only for Development!?
 
-          if (provider === 'email') {
+          if (provider === "email") {
             var emailAddress = this.$.txtEmailaddress.value;
             var password = this.$.txtPassword.value;
 
             var userObj = {
-              'email': emailAddress,
-              'password': password
+              "email": emailAddress,
+              "password": password
             };
 
-            SocoboAuth.getInstance().loginWithEmailaddress(fbBaseURL, userObj, false, userIsAdmin)
+            SocoboAuth.getInstance().loginWithEmailaddress(fbBaseURL, userObj, false, null, null)
               .then(function(user) {
                 this._clearInputFields(true);
-                this.fire('login-successful', user);
+                this.fire("login-successful", user);
               }.bind(this))
               .catch(function(err) {
                 this._clearInputFields(false);
-                this.fire('login-failed', err);
+                this.fire("login-failed", err);
               }.bind(this));
 
           } else {
 
-            SocoboAuth.getInstance().loginWithProvider(fbBaseURL, provider, false, userIsAdmin)
+            SocoboAuth.getInstance().loginWithProvider(fbBaseURL, provider, false, null, null)
               .then(function(user) {
                 this._clearInputFields(true);
-                this.fire('login-successful', user);
+                this.fire("login-successful", user);
               }.bind(this))
               .catch(function(err) {
                 this._clearInputFields(false);
-                this.fire('login-failed', err);
+                this.fire("login-failed", err);
               }.bind(this));
           }
         }

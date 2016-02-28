@@ -1,0 +1,216 @@
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+
+@demo demo/socobo-about/demo.html
+-->
+<dom-module id="socobo-about-github-card">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      .horizontal-line {
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+      }
+      .center-line {
+        @apply(--layout-center-justified);
+      }
+      .vertical-line {
+        @apply(--vertical-layout);
+        margin-left: 20px;
+        margin-right: 10px;
+      }
+
+      .spinner {
+        background: url("images/spinner.gif") no-repeat center center;
+      }
+      .hide-element {
+        display: none;
+      }
+
+      .user-card {
+        position: relative;
+        width: 265px;
+        height: 300px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        border-radius: 6px;
+        background: #2E353C;
+        text-align: center;
+        color: #fff;
+        font-weight: 100;
+        transition: background 1000ms ease-out;
+      }
+      .user-data {
+        /*background: #fff url("images/github.png") no-repeat 10px 10px;*/
+        background: #fff no-repeat 10px 10px;
+        background-size: 25px;
+        height: 85px;
+        border: 1px solid #D5D5D5;
+        border-bottom:0;
+      }
+
+      .user-avatar {
+        margin: 20px 0 10px;
+      }
+      .user-avatar-img {
+        height: 130px;
+        width: 130px;
+        border-radius: 100%;
+        border: 3px solid #EEE;
+        vertical-align: middle;
+        background-color: #FFF;
+      }
+
+      .user-name,
+      .user-account {
+        margin: 5px 0;
+      }
+
+      .user-name {
+        font-size: 24px;
+      }
+      .user-account {
+        font-size: 16px;
+        color: #999;
+        margin: 5px 0;
+      }
+      .user-stats {
+        position: relative;
+        top: 145px;
+        border-top: 1px groove #999;
+      }
+
+      .user-repos,
+      .user-followers {
+        margin: 8px 0;
+        padding: 0;
+        font-size: 22px;
+        color: #999;
+      }
+
+      .user-repos-text,
+      .user-followers-text {
+        margin: 0 0 5px 0;
+        padding: 0;
+        font-size: 11px;
+        color: #666;
+        font-weight: normal;
+        line-height: 1.2em;
+      }
+
+      .user-github-url,
+      .user-repos-url,
+      .user-followers-url {
+        text-decoration: none;
+      }
+    </style>
+    <!-- Load Data -->
+    <iron-ajax auto url="{{url}}{{user}}" on-response="_getUserData"></iron-ajax>
+    <!-- Card -->
+    <div id="userCard" class="user-card spinner">
+      <!-- User Data -->
+      <div id="userData" class="user-data hide-element">
+        <!-- Avatar -->
+        <div class="user-avatar">
+          <img id="userAvatarImg" class="user-avatar-img" src="">
+        </div>
+        <!-- Names -->
+        <div class="horizontal-line center-line">
+          <div class="vertical-line">
+            <!-- Username -->
+            <div id="userName" class="user-name"></div>
+            <!-- Account-->
+            <a id="userGithubUrl" class="user-github-url">
+              <p id="userAccount" class="user-account"></p>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- User Stats -->
+      <div id="userStats" class="user-stats hide-element">
+        <!-- Content -->
+        <div class="horizontal-line center-line">
+          <!-- Repos -->
+          <div class="vertical-line">
+            <a id="userReposUrl" class="user-repos-url">
+              <p id="userRepos" class="user-repos"></p>
+              <p class="user-repos-text">REPOS</p>
+            </a>
+          </div>
+          <!-- Followers -->
+          <div class="vertical-line">
+            <a id="userFollowersUrl" class="user-followers-url">
+              <p id="userFollowers" class="user-followers"></p>
+              <p class="user-followers-text">FOLLOWERS</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    /* rewritten element from https://github.com/iamolivinius/polymer-github-card*/
+    (function() {
+      Polymer({
+        is: "socobo-about-github-card",
+        /**
+         * Element Properties
+         */
+        properties: {
+          /**
+           * Github User Name
+           */
+          user: {
+            type: String,
+            value: ""
+          },
+          /**
+           * Github API Url
+           */
+          url: {
+            type: String,
+            value: "https://api.github.com/users/"
+          }
+        },
+        /**
+         * Get User Data from Github
+         *
+         * @param {Object} response
+         * @private
+         * @function
+         */
+        _getUserData: function(response) {
+          this._fillUserData(response.detail.response);
+        },
+        /**
+         * Fill User Data to Element
+         *
+         * @param {Object} user
+         * @private
+         * @function
+         */
+        _fillUserData: function(user) {
+          this.$.userAvatarImg.src = user.avatar_url;
+          this.$.userName.textContent = user.name;
+          this.$.userAccount.textContent = user.login;
+          this.$.userRepos.textContent = user.public_repos;
+          this.$.userFollowers.textContent = user.followers;
+          this.$.userCard.classList.remove("spinner");
+          this.$.userData.classList.remove("hide-element");
+          this.$.userStats.classList.remove("hide-element");
+          this.$.userGithubUrl.href = user.html_url;
+          this.$.userReposUrl.href = user.html_url.concat("?tab=repositories");
+          this.$.userFollowersUrl.href = user.html_url.concat("/followers");
+        }
+      });
+    })();
+  </script>
+</dom-module>

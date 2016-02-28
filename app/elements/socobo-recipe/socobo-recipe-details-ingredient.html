@@ -105,21 +105,23 @@ Custom property | Description | Default
         <span>
           <paper-input label="Amount"
                        class="amount_input"
-                       type="number"
                        value="{{ingredient.amount}}"
-                       pattern="[\d,.]+"
+                       required="true"
                        auto-validate
-                       error-message="Invalid characters">
+                       pattern="[\d]+"
+                       error-message="Invalid value"
+                       on-change="_convertToInt">
           </paper-input>
         </span>
-          <!---->
+        <!---->
         <span>
           <div class="horizontal-section">
           <paper-dropdown-menu
             label="Measurement"
             class="vertical-layout width-small"
             id="measurementDropdown"
-            vertical-align="bottom">
+            vertical-align="bottom"
+            required="true">
             <paper-menu
               id="measurementDropdownMenu"
               class="dropdown-content"
@@ -140,7 +142,7 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-recipe-details-ingredient',
+        is: "socobo-recipe-details-ingredient",
         properties: {
           /**
            * The current ingredient with:
@@ -151,36 +153,47 @@ Custom property | Description | Default
           ingredient: {
             type: Object,
             value: {
+              amount: 0
             }
           },
           /**
            * Measurements from the database
            * which are usable for the ingredients
            */
-          measurements : {
-            type : Array,
+          measurements: {
+            type: Array,
             value: []
           },
           /**
            * State to determine if the ingredients are only shown or
            * if input fields are provided to change the values
            */
-          state : {
-            type : String,
-            value : "show"
+          state: {
+            type: String,
+            value: "show"
+          }
+        },
+        /**
+         * Converts the ingredients amount from string to number
+         */
+        _convertToInt: function() {
+          var toChange =  this.ingredient.amount;
+          if (typeof toChange !== "number") {
+            this.ingredient.amount = Number(toChange);
           }
         },
         /**
          * Determines the state
+         *
          * @private
          */
-        _chooseState :function(){
-          if(this.state === "add"){
+        _chooseState: function() {
+          if (this.state === "add") {
             this.$.ingr_default.style.display = "none";
             this.$.sep.style.display = "none";
             this.$.ingr_input.style.display = "block";
           }
-          if(this.state === "show"){
+          if (this.state === "show") {
             this.$.ingr_default.style.display = "block";
             this.$.sep.style.display = "block";
             this.$.ingr_input.style.display = "none";
@@ -188,28 +201,32 @@ Custom property | Description | Default
         },
         /**
          * Fire event to remove the ingredient
+         *
          * @private
          */
-        _removeIngr : function(){
+        _removeIngr: function() {
           this.fire("rem_ingr", this.ingredient);
         },
         /**
          * Sets the measurement attribute of the ingredients object
-         * @param e
+         *
+         * @param {Event} e
+
          * @private
-           */
-        _select : function(e){
+         */
+        _select: function() {
           this.ingredient.unit = this.measurements[this.$.measurementDropdownMenu.selected];
         },
         /**
          * Transforms the current unit of the ingredient to
          * the index in the measurements array
+
          * @private
          */
-        _selectExistingValue : function(){
+        _selectExistingValue: function() {
           var searchedValue = this.ingredient.unit;
-          for(var measurement in this.measurements){
-            if(searchedValue === this.measurements[measurement]){
+          for (var measurement in this.measurements) {
+            if (searchedValue === this.measurements[measurement]) {
               return measurement;
             }
           }
@@ -217,7 +234,7 @@ Custom property | Description | Default
         /**
          * Called if the component is ready
          */
-        ready : function () {
+        ready: function() {
           this.$.measurementDropdownMenu.selected = this._selectExistingValue();
           this._chooseState();
         }

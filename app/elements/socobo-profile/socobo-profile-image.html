@@ -77,9 +77,10 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-profile-image',
+        is: "socobo-profile-image",
         /**
          * This Event is fired if the profile image is changed. <br/>
+         *
          * @event inner-profile-image-changed
          */
 
@@ -97,16 +98,18 @@ Custom property | Description | Default
         },
         /**
          * Open File chooser to get a new Profile Image. <br/>
-         * @private <br/>
-         * @method _openFileChooser
+         *
+         * @private
+         * @function
          */
         _openFileChooser: function() {
           this.$.fileChooser.click();
         },
         /**
          * Get Image from File chooser and fire custom event. <br/>
-         * @private <br/>
-         * @method _getImage
+         *
+         * @private
+         * @function
          */
         _getImage: function() {
           // get selected files

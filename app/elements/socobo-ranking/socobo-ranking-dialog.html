@@ -13,7 +13,7 @@ Custom property | Description | Default
     <style>
       :host {
         display: block;
-        font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
       }
       .style-detail-dialog {
         min-width: 450px;
@@ -85,7 +85,7 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-ranking-dialog',
+        is: "socobo-ranking-dialog",
         /**
          * This Event is fired if the go to recipe button is clicked. <br/>
          * `Detail`: Object: {item: Recipe} <br/>
@@ -110,15 +110,17 @@ Custom property | Description | Default
         },
         /**
          * Show / Hide Dialog. <br/>
-         * @method toggleDialog
+         *
+         * @function
          */
         toggleDialog: function() {
           this.$.detailDialog.toggle();
         },
         /**
-         * Go to Recipe - fires Event
+         * Go to Recipe - fires go-to-recipe Event
+         *
          * @private
-         * @method _goToRecipe
+         * @function
          */
         _goToRecipe: function() {
           this.fire("go-to-recipe", {item: this.recipe});
@@ -126,8 +128,9 @@ Custom property | Description | Default
         },
         /**
          * Add to Grocery List - fires Event
+         *
          * @private
-         * @method _addToGroceryList
+         * @function
          */
         _addToGroceryList: function() {
           this.fire("add-to-grocery-list", {items: this.recipe.missingItems});

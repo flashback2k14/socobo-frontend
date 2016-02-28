@@ -3,6 +3,7 @@ The following custom properties and mixins are available for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
+`--socobo-recipe-style-action-btn-color` | Background color of the action buttons | --accent-color
 
 @demo demo/socobo-inventory/demo.html
 -->
@@ -15,104 +16,204 @@ Custom property | Description | Default
       }
 
       .button-add {
-        position: absolute;
-        right: 30px;
-        bottom: 30px;
-        --paper-fab-background: var(--accent-color);
+        position: fixed;
+        top: 36px;
+        right: 80px;
       }
     </style>
     <div>
       <socobo-inventory-create
         id="inventoryCreateDialog"
         on-create-item="_onCreateItem"
-        measurements="[[measurements]]">
+        measurements="[[measurements]]"
+        categories="[[categories]]">
       </socobo-inventory-create>
       <socobo-inventory-edit
         id="inventoryEditDialog"
         on-edit-item="_saveItem"
-        measurements="[[measurements]]">
+        measurements="[[measurements]]"
+        categories="[[categories]]">
       </socobo-inventory-edit>
 
+      <!-- Inventory items-->
       <firebase-collection
         id="inventoryCollection"
         order-by-child="created"
         location="{{location}}"
         data="{{data}}">
       </firebase-collection>
+      <!-- measurements -->
       <firebase-collection
         id="measurementCollection"
         order-by-child="name"
         location="{{measurementLocation}}"
         data="{{measurements}}">
       </firebase-collection>
+      <!-- categories-->
+      <firebase-collection
+        id="categoryCollection"
+        order-by-child="name"
+        location="{{categoryLocation}}"
+        data="{{categories}}">
+      </firebase-collection>
 
       <socobo-inventory-overview
+        id="inventoryOverview"
         on-edit_request="_editItem"
         on-delete_request="_confirmDelete"
+        on-check = "_handleCheck"
+        on-uncheck = "_handleUncheck"
+        on-checked-all = "_handleCheckAll"
         data="[[data]]">
       </socobo-inventory-overview>
-
-      <paper-fab id="inventoryButtonAdd" class="button-add" icon="add" on-click="_createItem"></paper-fab>
+    <socobo-element-buttons
+      class="button-add"
+      show-delete="[[_itemsChecked]]"
+      on-add-item="_createItem"
+      on-delete-items="_deleteAllItems">
+    </socobo-element-buttons>
     </div>
   </template>
 
   <script>
-    (function () {
+    (function() {
       Polymer({
-        is: 'socobo-inventory',
+        is: "socobo-inventory",
 
         properties: {
-
-          /*Object containing the user information. Must have following
-          properties:
-          - userId,
-          - firebaseUrl,
-          - expires
+          /**
+           * Object containing the user information. { userId: , firebaseUrl: , expires:}
+           *
           */
           userLogin: {
             type: Object
           },
 
-          /*Specifies the location of the Firebase database
-          */
+          /**
+           * Specifies the location of the Firebase database
+           *
+           */
           location: {
             computed: "_handleLogin(userLogin)",
             type: String,
             value: "https://socobo.firebaseio.com/"
           },
 
+          /**
+           * Specifies the path to the measurements
+           *
+           */
           measurementLocation: {
             computed: "_handleMeasurement(userLogin)",
+            type: String,
+            value: "https://socobo.firebaseio.com/"
+          },
+
+          categoryLocation: {
+            computed: "_computeCategoryLocations(userLogin)",
             type: String,
             value: "https://socobo.firebaseio.com/"
           }
         },
 
-        _handleMeasurement: function(login){
+        /**
+         * Ready handler; initializes the checked items counter
+         */
+        ready: function() {
+          this._checkedItems = 0;
+          this._itemsChecked = false;
+        },
+
+        _computeCategoryLocations: function(login) {
+          return login ? login.firebaseUrl + "categories/inventory" : this.measurementLocation;
+        },
+
+        /**
+         * Computes the measurement location property
+         *
+         * @param {String} login
+         * @returns {String}
+         * @private
+         * @function
+         */
+        _handleMeasurement: function(login) {
           return login ? login.firebaseUrl + "measurements/" : this.measurementLocation;
         },
 
-        /*Construct firebase url for user's inventory from userLogin object</br>
-         @param {Object} login
-         @method _handleLogin
+        /**
+         * Construct firebase url for user's inventory from userLogin object
+         *
+         * @param {Object} login
+         * @private
+         * @function
          */
         _handleLogin: function(login) {
           var url = "";
           if (login) {
             url = login.firebaseUrl + "inventory/";
-            url = login.userId ? url + login.userId + "/" : url
+            url = login.userId ? url + login.userId + "/" : url;
           } else {
             url = this.location;
           }
           return url;
         },
 
-        /*Display dialog to create new inventory items
+        /**
+         * Listener to handle the check all events
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
+        _handleCheckAll: function(e) {
+          this._checkedItems = 0;
+          this._itemsChecked = e.detail.state;
+
+          if (e.detail.state) {
+            this._checkedItems = e.detail.number;
+          }
+        },
+
+        /**
+         * Listener to handle the check item events
+         *
+         * @private
+         * @function
+         */
+        _handleCheck: function() {
+          this._checkedItems++;
+          this._itemsChecked = this._checkedItems !== 0;
+        },
+
+        /**
+         * Listener to handle the uncheck item events
+         *
+         * @private
+         * @function
+         */
+        _handleUncheck: function() {
+          this._checkedItems--;
+          this._itemsChecked = this._checkedItems !== 0;
+        },
+
+        /**
+         * Display dialog to create new inventory items
+         *
+         * @private
+         * @function
         */
-        _createItem: function () {
+        _createItem: function() {
           this.$.inventoryCreateDialog.show();
         },
 
+        /**
+         * Listener to handle the create item events. Takes care creating the item and
+         * updating Firebase.
+         *
+         * @param {Object} e
+         * @private
+         * @function
+         */
         _onCreateItem: function(e) {
           var item = e.detail;
           item.created = Firebase.ServerValue.TIMESTAMP;
@@ -120,23 +221,59 @@ Custom property | Description | Default
           this.$.inventoryCollection.add(item);
           this.$.inventoryCreateDialog.hide();
         },
+
         /**
-         * Handler for the delete_request event fired by the corresponding
-         * socobo-element-list-item. Deletes this item from the database.
+         * Handler for the delete_request event fired by the corresponding socobo-element-list-item.
+         * Deletes this item from the database.
+         *
          * @param {Event} e
+         * @private
+         * @function
          */
         _confirmDelete: function(e) {
           this.$.inventoryCollection.remove(e.detail);
         },
 
-        /* Display dialog to edit inventory items
-        */
+        /**
+         *  Display dialog to edit inventory items
+         *
+         *  @param {Event} e
+
+         *  @private
+         *  @function
+         */
         _editItem: function(e) {
           this.$.inventoryEditDialog.show(e.detail);
         },
 
-        /* Save changes made to inventory items
-        */
+        /**
+         * Listener to handle the delete all items events.
+         * Finds all checked items and delete those from Firebase
+         *
+         * @private
+         * @function
+         */
+        _deleteAllItems: function() {
+          var itemList = this.querySelectorAll(".inventory-list-item");
+          for (var i in itemList) {
+            var element = itemList[i];
+            if (!element.hidden && element.isChecked) {
+              this.$.inventoryCollection.removeByKey(element.obj.__firebaseKey__);
+            }
+          }
+          this._checkedItems = 0;
+          this._itemsChecked = false;
+          this.$.inventoryOverview.resetSearch();
+        },
+
+        /**
+         *  Save changes made to inventory items
+         *
+         *  @param {Object} e
+
+         *  @private
+         *  @function
+         */
         _saveItem: function(e) {
           var item = e.detail;
           var self = this;

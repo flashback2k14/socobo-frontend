@@ -54,14 +54,14 @@ Custom property | Description | Default
 
     <!-- Dialog Element -->
     <paper-dialog
-      id='confirmRemoveAccountDialog'
-      entry-animation='scale-up-animation'
-      exit-animation='fade-out-animation'
+      id="confirmRemoveAccountDialog"
+      entry-animation="scale-up-animation"
+      exit-animation="fade-out-animation"
       modal>
       <h2>Are you sure to delete your account by socobo project?</h2>
-      <div class='buttons'>
+      <div class="buttons">
         <paper-button dialog-dismiss autofocus>Cancel</paper-button>
-        <paper-button on-tap='_deleteAccount'>OK</paper-button>
+        <paper-button on-tap="_deleteAccount">OK</paper-button>
       </div>
     </paper-dialog>
     <!-- Main Page Element -->
@@ -98,7 +98,7 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-profile-page',
+        is: "socobo-profile-page",
         /**
          * This Event is fired if the user changed the profile image. <br/>
          * `Detail`: String: "profileImage Data" <br/>
@@ -152,24 +152,25 @@ Custom property | Description | Default
          */
         /**
          * Show Toast if the Profile Image is changed. <br/>
+         *
          * @param {Object} e Message
          * @private
-         * @method _handleInnerProfileImageChanged
+         * @function
          */
         _handleInnerProfileImageChanged: function(e) {
-          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+          if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
             this.fire("login-expired", {value: "The Login is expired!"});
             return;
           }
           SocoboProfile
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .updateProfileData({profileImage: this.profileObject.profileImage})
-            .then(function(succ) {
-              ProfileUtil.getInstance(this).showToast(this.$.infoToast, e.detail.value, "#333333", "#EEEEEE");
+            .then(function() {
+              ProfileUtil.getInstance().showToast(this.$.infoToast, e.detail.value, "#333333", "#EEEEEE");
               this.fire("profile-user-image-changed", this.profileObject.profileImage);
             }.bind(this))
             .catch(function(err) {
-              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
+              ProfileUtil.getInstance().showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
             }.bind(this));
         },
 
@@ -181,12 +182,13 @@ Custom property | Description | Default
          */
         /**
          * Handle save user information custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleSaveInfoStandard
+         * @function
          */
         _handleSaveInfoStandard: function(e) {
-          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+          if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
             this.fire("login-expired", {value: "The Login is expired!"});
             return;
           }
@@ -194,11 +196,11 @@ Custom property | Description | Default
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .updateProfileData(e.detail)
             .then(function(succ) {
-              ProfileUtil.getInstance(this).showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+              ProfileUtil.getInstance().showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
               this.fire("profile-user-info-changed", e.detail);
             }.bind(this))
             .catch(function(err) {
-              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
+              ProfileUtil.getInstance().showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
             }.bind(this));
         },
 
@@ -207,12 +209,13 @@ Custom property | Description | Default
          */
         /**
          * Handle save biography information custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleSaveInfoBiography
+         * @function
          */
         _handleSaveInfoBiography: function(e) {
-          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+          if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
             this.fire("login-expired", {value: "The Login is expired!"});
             return;
           }
@@ -220,10 +223,10 @@ Custom property | Description | Default
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .updateProfileData(e.detail)
             .then(function(succ) {
-              ProfileUtil.getInstance(this).showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+              ProfileUtil.getInstance().showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
             }.bind(this))
             .catch(function(err) {
-              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
+              ProfileUtil.getInstance().showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
             }.bind(this));
         },
 
@@ -232,13 +235,14 @@ Custom property | Description | Default
          */
         /**
          * Handle change email address custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleChangeEmailAddress
+         * @function
          */
-        _handleChangeEmailAddress: function(e){
+        _handleChangeEmailAddress: function(e) {
           // check if user still logged in
-          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+          if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
             this.fire("login-expired", {value: "The Login is expired!"});
             return;
           }
@@ -259,26 +263,27 @@ Custom property | Description | Default
                   // add success message from update profile data
                   successMessage += success.value;
                   // show info notification
-                  ProfileUtil.getInstance(this).showToast(this.$.infoToast, successMessage, "#333333", "#EEEEEE");
+                  ProfileUtil.getInstance().showToast(this.$.infoToast, successMessage, "#333333", "#EEEEEE");
                   // fire custom event
                   this.fire("email-address-updated", {value: succ.email}, {node: this.$.profileInfo});
                 }.bind(this))
                 .catch(function(error) {
-                  ProfileUtil.getInstance(this).showToast(this.$.infoToast, error.value, "#FF3333", "#EEEEEE");
+                  ProfileUtil.getInstance().showToast(this.$.infoToast, error.value, "#FF3333", "#EEEEEE");
                 }.bind(this));
             }.bind(this))
             .catch(function(err) {
-              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
+              ProfileUtil.getInstance().showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
             }.bind(this));
         },
         /**
          * Handle change password custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleChangePassword
+         * @function
          */
         _handleChangePassword: function(e) {
-          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+          if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
             this.fire("login-expired", {value: "The Login is expired!"});
             return;
           }
@@ -286,20 +291,21 @@ Custom property | Description | Default
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .changeUserPassword(e.detail)
             .then(function(succ) {
-              ProfileUtil.getInstance(this).showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+              ProfileUtil.getInstance().showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
             }.bind(this))
             .catch(function(err) {
-              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
+              ProfileUtil.getInstance().showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
             }.bind(this));
         },
         /**
          * Handle reset password custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleResetPassword
+         * @function
          */
         _handleResetPassword: function(e) {
-          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+          if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
             this.fire("login-expired", {value: "The Login is expired!"});
             return;
           }
@@ -307,20 +313,21 @@ Custom property | Description | Default
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .resetUserPassword(e.detail)
             .then(function(succ) {
-              ProfileUtil.getInstance(this).showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+              ProfileUtil.getInstance().showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
             }.bind(this))
             .catch(function(err) {
-              ProfileUtil.getInstance(this).showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
+              ProfileUtil.getInstance().showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
             }.bind(this));
         },
         /**
          * Handle delete account custom event. </br>
+         *
          * @param {Object} e CustomEvent
          * @private
-         * @method _handleDeleteAccount
+         * @function
          */
         _handleDeleteAccount: function(e) {
-          if (ProfileUtil.getInstance(this).isUserLoginExpired(this.userLogin.expires)) {
+          if (ProfileUtil.getInstance().isUserLoginExpired(this.userLogin.expires)) {
             this.fire("login-expired", {value: "The Login is expired!"});
             return;
           }
@@ -329,8 +336,9 @@ Custom property | Description | Default
         },
         /**
          * Delete Account if the User press the OK Button from the Confirm Dialog. </br>
+         *
          * @private
-         * @method _deleteAccount
+         * @function
          */
         _deleteAccount: function() {
           // collect successful messages
@@ -346,7 +354,7 @@ Custom property | Description | Default
               SocoboProfile
                 .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
                 .removeUserAccount(this._tmpDeleteAccountData)
-                .then(function(success){
+                .then(function(success) {
                   // add success message from remove all user data
                   successMessage += success.value;
                   // show info notification, hide dialog and reset temp delete account data
@@ -354,7 +362,7 @@ Custom property | Description | Default
                   // fire custom event
                   this.fire("user-account-deleted");
                 }.bind(this))
-                .catch(function(error){
+                .catch(function(error) {
                   // show info notification, hide dialog and reset temp delete account data
                   this._deleteAccountNotificationHelper(error.value);
                 }.bind(this));
@@ -366,23 +374,25 @@ Custom property | Description | Default
         },
         /**
          * Show Toast if the Passwords not matching. <br/>
+         *
          * @param {Object} e Message
          * @private
-         * @method _handlePasswordsNotMatching
+         * @function
          */
         _handlePasswordsNotMatching: function(e) {
-          ProfileUtil.getInstance(this).showToast(this.$.infoToast, e.detail.value, "#FF3333", "#EEEEEE");
+          ProfileUtil.getInstance().showToast(this.$.infoToast, e.detail.value, "#FF3333", "#EEEEEE");
         },
 
         /**
          * Delete Account Notification Helper
-         * @param text Notification Message
+         *
+         * @param {String} text
          * @private
-         * @method _deleteAccountNotificationHelper
+         * @function
          */
         _deleteAccountNotificationHelper: function(text) {
           // show info notification
-          ProfileUtil.getInstance(this).showToast(this.$.infoToast, text, "#333333", "#EEEEEE");
+          ProfileUtil.getInstance().showToast(this.$.infoToast, text, "#333333", "#EEEEEE");
           // hide confirm dialog
           this.$.confirmRemoveAccountDialog.toggle();
           // reset temporary account data

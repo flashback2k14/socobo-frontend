@@ -1,0 +1,129 @@
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+
+
+@demo demo/socobo-about/demo.html
+-->
+<dom-module id="socobo-about">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      .container {
+        @apply(--layout-vertical);
+        width: 100%;
+        height: 100%;
+        background: var(--dark-primary-color);
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .center-content {
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+      }
+      .scrollable-content {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        overflow: auto;
+      }
+      .row-content {
+        @apply(--layout-horizontal);
+        @apply(--layout-justified);
+        @apply(--layout-wrap);
+        margin-top: 20px;
+      }
+
+      .style-iron-image {
+        width:200px;
+        height:200px;
+        margin-top: 20px;
+        background: transparent;
+      }
+      .style-paper-material {
+        min-width: 500px;
+        width: 70%;
+        height: 100%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 20px;
+        background: var(--primary-background-color);
+        border-radius: 5px;
+      }
+    </style>
+    <!-- Load Data for Project Information -->
+    <iron-ajax
+      auto
+      url="data/information.md"
+      handle-as="text"
+      last-response="{{information}}">
+    </iron-ajax>
+    <!-- Load Data for Project Terms of Service -->
+    <iron-ajax
+      auto
+      url="data/terms-of-service.md"
+      handle-as="text"
+      last-response="{{termsOfService}}">
+    </iron-ajax>
+    <!-- Content -->
+    <div class="container">
+      <!-- Product Image -->
+      <div class="center-content">
+        <iron-image
+          class="style-iron-image"
+          sizing="cover"
+          preload
+          fade
+          placeholder="images/touch/icon-512x512.png">
+        </iron-image>
+      </div>
+      <!-- Product Details -->
+      <div class="scrollable-content">
+        <!-- Product Information -->
+        <div class="center-content">
+          <paper-material class="style-paper-material" elevation="5">
+            <marked-element markdown="{{information}}">
+              <div class="markdown-html"></div>
+            </marked-element>
+          </paper-material>
+        </div>
+        <!-- Product Team Member -->
+        <div class="center-content">
+          <paper-material class="style-paper-material" elevation="5">
+            <h1>Team Member</h1>
+            <hr/>
+            <div class="row-content">
+              <socobo-about-github-card user="cs13dr1"></socobo-about-github-card>
+              <socobo-about-github-card user="flashback2k14"></socobo-about-github-card>
+              <socobo-about-github-card user="hetec"></socobo-about-github-card>
+              <socobo-about-github-card user="lyio"></socobo-about-github-card>
+            </div>
+          </paper-material>
+        </div>
+        <!-- Product Terms of Service -->
+        <div class="center-content">
+          <paper-material class="style-paper-material" elevation="5">
+            <marked-element
+              id="meInformation"
+              markdown="{{termsOfService}}">
+              <div class="markdown-html"></div>
+            </marked-element>
+          </paper-material>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: "socobo-about"
+      });
+    })();
+  </script>
+</dom-module>

@@ -25,14 +25,13 @@ Custom property | Description | Default
 
   <template>
 
-    <style>
-      :host {
+    <style>:host {
         display: block;
       }
 
       /* CONTENT */
       .wrapper {
-        top: 20px;
+        height: 75%;
         max-height: 85%;
         width: 90%;
         min-width:700px;
@@ -205,7 +204,7 @@ Custom property | Description | Default
                   with-backdrop>
       <!-- DIALOG -->
       <!-- EXIT DIALOG-->
-      <paper-icon-button id="exit" class="style-exit-add-button" icon="clear" dialog-dismiss on-tap="clearInputFields">
+      <paper-icon-button id="exit" class="style-exit-add-button" icon="clear" on-tap="_clearInputFields">
       </paper-icon-button>
       <!-- RECIPE NAME -->
       <paper-input
@@ -229,7 +228,7 @@ Custom property | Description | Default
           <!-- IMAGE SECTION -->
           <input type="file" id="fileChooser" class="style-file-chooser"/>
           <paper-material elevation="1" class="recipeImg" id="imageHolder">
-            <div class="overlay" on-tap="_openFileChooser">
+            <div id="overlay" class="overlay" on-tap="_openFileChooser">
               <iron-icon icon="create"></iron-icon>
             </div>
             <iron-image
@@ -260,7 +259,7 @@ Custom property | Description | Default
             id="addIngr"
             mini="true"
             class="style-add-ingr-button"
-            on-tap="addIngr">
+            on-tap="_addIngr">
           </paper-fab>
         </div>
 
@@ -286,7 +285,7 @@ Custom property | Description | Default
                 class="step"
                 step="{{item}}"
                 id="{{item.number}}"
-                on-rem_step="removeStep">
+                on-rem_step="_removeStep">
               </socobo-recipe-details-step>
             </template>
           </div>
@@ -295,7 +294,7 @@ Custom property | Description | Default
             id="addStep"
             mini="true"
             class="style-add-step-button"
-            on-tap="addStep">
+            on-tap="_addStep">
           </paper-fab>
         </div>
       </div>
@@ -307,7 +306,7 @@ Custom property | Description | Default
           id="abort"
           class="style-abort-fab"
           dialog-dismiss
-          on-tap="clearInputFields">
+          on-tap="_clearInputFields">
         </paper-fab>
         <paper-fab
           icon="done"
@@ -323,34 +322,35 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-recipe-details-add',
+        is: "socobo-recipe-details-add",
+        behaviors: [RecipeBehaviors.ValidateBehavior],
         /**
          * LISTENERS
          */
         listeners: {
-          'fileChooser.change': 'encode'
+          "fileChooser.change": "encode"
         },
 
         /**
          * PROPERTIES
          */
         properties: {
-          recipe : {
-            type : Object,
-            value : {}
+          recipe: {
+            type: Object,
+            value: {}
           },
-          image : {
-            type : Object
+          image: {
+            type: Object
           },
-          recipe_inputs : {
-            type : Array,
-            value : []
+          recipe_inputs: {
+            type: Array,
+            value: []
           },
-          ingredient_inputs : {
-            type : Array,
-            value : []
+          ingredient_inputs: {
+            type: Array,
+            value: []
           },
-          state : {
+          state: {
             type: String,
             value: "show"
           },
@@ -359,80 +359,100 @@ Custom property | Description | Default
            * which are usable for the ingredients
            */
           measurements: {
-            type : Array,
-            value : []
+            type: Array,
+            value: []
           }
         },
 
         /**
          * SHOW / HIDE
          */
-        toggleDialog : function() {
+        toggleDialog: function() {
           this.$.dialog.toggle();
         },
 
         /**
          * EXIT
          */
-        exit : function() {
+        exit: function() {
           this.fire("exit_request");
         },
 
         /**
-         * ADD
+         *  Add a preparation step to the recipe
+
+         *  @private
+         *  @function
          */
-        addStep : function () {
+        _addStep: function() {
           var step = {
-            desc : "",
-            number : 0
+            desc: "",
+            number: 0
           };
           this.push("recipe_inputs", step);
         },
 
         /**
-         * ADD
+         * Add an ingredient to the recipe
+         *
+         * @private
+         * @function
          */
-        addIngr : function () {
+        _addIngr: function() {
           var ingr = {
-            desc : "",
-            amount : "",
-            unit : ""
+            desc: "",
+            amount: "",
+            unit: ""
           };
           this.push("ingredient_inputs", ingr);
           this.numberOfIngr++;
         },
 
         /**
-         * REMOVE
+         * Remove a preparation step
+         *
+         * @private
+         * @function
          */
-        removeStep : function(e){
+        _removeStep: function(e) {
           var model = e.model;
-          var itemIndex = model.get('index');
+          var itemIndex = model.get("index");
           this.cutElementOffArray(itemIndex, "recipe_inputs");
         },
 
         /**
-         * REMOVE
+         * Remove ingredient
+         *
+         * @private
+         * @function
          */
-        _removeIngr : function(e){
+        _removeIngr: function(e) {
           var model = e.model;
-          var itemIndex = model.get('index');
-          this.cutElementOffArray(itemIndex, 'ingredient_inputs');
+          var itemIndex = model.get("index");
+          this.cutElementOffArray(itemIndex, "ingredient_inputs");
         },
 
         /**
-         * REMOVE
+         * Remove an element from the array
+         *
+         * @param {Number} index The index of the element to be removed
+         * @param {Array} arr The array
+         * @private
+         * @function
          */
-        cutElementOffArray : function(index, arr) {
+        cutElementOffArray: function(index, arr) {
           this.splice(arr, index ,1);
         },
 
         /**
-         * CLEAR
+         * Clear the input fields
+         *
+         * @private
+         * @function
          */
-        clearInputFields : function() {
+        _clearInputFields: function() {
           // clear title and description
-          var inputFields = Polymer.dom(this.$.dialog).querySelectorAll('.inputs');
+          var inputFields = Polymer.dom(this.$.dialog).querySelectorAll(".inputs");
           inputFields.forEach(function(field) {
             field.value = "";
           });
@@ -442,120 +462,74 @@ Custom property | Description | Default
           // clear images
           Polymer.dom(this.$.dialog).querySelector("#add_image").src = "";
           Polymer.dom(this.$.dialog).querySelector("#fileChooser").value = null;
+
+          this.$.dialog.close();
         },
 
         /**
-         * FILE CHOOSER
+         * Open the file chooser
+         *
          * @private
+         * @function
          */
-        _openFileChooser : function() {
+        _openFileChooser: function() {
           this.$.fileChooser.click();
         },
 
         /**
-         * FILE CHOOSER
+         * Encode the image
+         *
          * @private
+         * @function
          */
-        encode : function() {
+        encode: function() {
           this.image = new ImageService("#fileChooser");
           this.image.encode(document.querySelector("#add_image"));
         },
 
         /**
-         * NEW
+         * Create a new recipe
+         *
+         * @private
+         * @function
          */
-        createNewRecipe : function() {
+        createNewRecipe: function() {
           this.recipe.ingredients = this.ingredient_inputs;
           var arr = [];
-          for(var i = 0; i < this.recipe_inputs.length; i++){
-            arr[i]=this.recipe_inputs[i];
+          for (var i = 0; i < this.recipe_inputs.length; i++) {
+            arr[i] = this.recipe_inputs[i];
           }
           this.recipe.steps = arr;
           var counter = 1;
-          for(var k in this.recipe.steps){
+          for (var k in this.recipe.steps) {
             this.recipe.steps[k].number = counter;
             counter++;
           }
-          var v = this.validateRecipe();
-          var recipeContainer = {};
-          if(v.length <= 0){
+          var validationResult = this.validate(this.recipe);
+          if (validationResult.isValid) {
             if (this.image === undefined || this.image === null || this.image === "") {
               this.recipe.image = "";
             } else {
               this.recipe.image = this.image.getImageAsString();
             }
             this.fire("add_request", this.recipe);
-            this.clearInputFields();
+            this._clearInputFields();
             this.$.dialog.close();
-          }else{
-            this._notify(v);
+          } else {
+            this._notify(validationResult.message);
           }
         },
         /**
          * Shows a given message as paper-toast element
-         * @param msg
+         *
+         * @param {String} msg
          * @private
+         * @function
          */
-        _notify: function (msg) {
+        _notify: function(msg) {
           this.$.errorNotification.text = msg;
           this.$.errorNotification.show();
-        },
-        /**
-         * VALIDATE
-         */
-        validateRecipe : function() {
-          var check = function(obj, value){
-            return obj.recipe[value] != "" && obj.recipe[value] != undefined;
-          };
-          var checkContainer = function(obj, container){
-            return obj.recipe[container].lenght > 0;
-          };
-          var titleExists = check(this, 'desc');
-          var textExists = check(this, "text");
-          var stepsExist = this.recipe.steps.length > 0;
-          var ingredientsExist = this.recipe.ingredients.length > 0;
-          var message = [];
-          if (!titleExists) {
-            message.push("Title");
-          }
-          if (!stepsExist && !textExists) {
-            message.push("at least a description or some steps");
-          }
-          var stepsComplete = true;
-          if (stepsExist) {
-            for(var step in this.recipe.steps){
-              if(this.recipe.steps[step].desc == ""){
-                stepsComplete = false;
-              }
-            }
-            if(!stepsComplete){
-              message.push("descriptions for the steps");
-            }
-          }
-          var ingredientsComplete = true;
-          if (!ingredientsExist) {
-            message.push("ingredients");
-          } else {
-            for(var ingr in this.recipe.ingredients){
-              if(this.recipe.ingredients[ingr].desc == ""){
-                ingredientsComplete = false;
-              }
-            }
-            if(!ingredientsComplete){
-              message.push("descriptions for the ingredients");
-            }
-          }
-          var msg = "";
-          if (message.length > 0) {
-            msg = "Please add the missing information: ";
-            message.forEach(function(element){
-              msg += element + ", ";
-            });
-            msg = msg.slice(0, msg.length - 2);
-          }
-          return msg;
         }
-
       });
     })();
   </script>

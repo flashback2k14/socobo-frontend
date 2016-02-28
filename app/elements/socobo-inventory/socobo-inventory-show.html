@@ -14,7 +14,7 @@ Custom property | Description | Default
 `--socobo-profile-info-style-disabled-inputs-underline-color` | | `{#FFFFFF}`
 `--socobo-profile-info-style-disabled-inputs-underline-focus-color | | `#FFFFFF`
 
-@demo demo/socobo-inventory/demo.html
+@demo demo/index.html
 -->
 
 <dom-module id="socobo-inventory-show">
@@ -117,7 +117,7 @@ Custom property | Description | Default
               readonly
               label="Category"
               class="vertical-layout width-small style-disabled-inputs"
-              value="[[item.category]]">
+              value="[[item.category.value]]">
             </paper-input>
           </div>
         </paper-dialog-scrollable>
@@ -127,17 +127,21 @@ Custom property | Description | Default
   <script>
     (function() {
       Polymer({
-        is: 'socobo-inventory-show',
+        is: "socobo-inventory-show",
         properties: {
         },
 
-        /*Display the dialog
-        @param {Object} itemToEdit
-        */
-        show: function(itemToEdit) {
-          this.item = itemToEdit;
+        /**
+         * Shows the dialog
+         *
+         * @param {Object} item
+         * @function
+         */
+        show: function(item) {
+          this.set("item", item);
           this.$.showInventoryDialog.toggle();
         }
-    })})();
+      });
+    })();
   </script>
 </dom-module>
