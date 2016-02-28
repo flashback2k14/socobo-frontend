@@ -133,21 +133,19 @@
     // get error object
     var errorObj = e.detail.error;
     // show toast to inform the user
-    var msgObj = {
-      type: "error", 
-      duration: 2000, 
-      message: "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message 
-    };
-    this.fire("socobo-show-toast", msgObj);
+    Util.notify(this, {
+      type: "error",
+      duration: 2000,
+      message: "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message
+    });
   };
   app.passwordsMisMatching = function() {
     // show toast to inform the user
-    var msgObj = {
-      type: "error", 
-      duration: 2000, 
-      message: "Your Passwords does not match! Please retry!" 
-    };
-    this.fire("socobo-show-toast", msgObj);
+    Util.notify(this, {
+      type: "error",
+      duration: 2000,
+      message: "Your Passwords does not match! Please retry!"
+    });
   };
   /**
    * RANKING
@@ -175,12 +173,11 @@
     UserInfo.set(UserInfo.EMAILADDRESS, e.detail.email);
     UserInfo.set(UserInfo.PROFILEIMAGE, e.detail.profileImage);
     // show toast to inform the user
-    var msgObj = {
-      type: "success", 
-      duration: 2000, 
-      message: "User " + e.detail.email + " is logged in!" 
-    };
-    this.fire("socobo-show-toast", msgObj);
+    Util.notify(this, {
+      type: "success",
+      duration: 2000,
+      message: "User " + e.detail.email + " is logged in!"
+    });
   };
   app.handleProfileImageChanged = function(e) {
     // set UserInfo to Menubar
@@ -207,12 +204,11 @@
       infoText = "Logging out...";
     }
     // show toast to inform the user
-    var msgObj = {
-      type: "plain", 
-      duration: 2000, 
-      message: infoText 
-    };
-    this.fire("socobo-show-toast", msgObj);
+    Util.notify(this, {
+      type: "plain",
+      duration: 2000,
+      message: infoText
+    });
     // unregister tracking listeners
     elRanking.unregisterListeners();
     elGroceryList.unregisterListeners();
