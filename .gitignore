@@ -1,7 +1,7 @@
 node_modules
 dist
+ghPages
 bower_components
 .tmp
 .idea
-
 .idea/encodings.xml
