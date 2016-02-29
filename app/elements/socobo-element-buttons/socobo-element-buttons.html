@@ -28,8 +28,20 @@ Custom property | Description | Default
   </style>
 
   <template>
+    <div>
     <paper-fab hidden$="{{!showDelete}}" class="button-delete" icon="delete" on-tap="_delete"></paper-fab>
     <paper-fab hidden$="{{showDelete}}" class="button-add" icon="add" on-tap="_add"></paper-fab>
+    <paper-dialog
+      id="dialog"
+      on-iron-overlay-closed="_dialogConfirmed"
+      >
+      <h2>Do you really want to delete all items?</h2>
+      <div class="buttons">
+        <paper-button id="deleteCancel" dialog-dismiss>Cancel</paper-button>
+        <paper-button id="deleteOk" dialog-confirm>Ok</paper-button>
+      </div>
+    </paper-dialog>
+    </div>
   </template>
 </dom-module>
 
@@ -55,11 +67,17 @@ Custom property | Description | Default
     },
 
     _delete: function() {
-      this.fire("delete-items");
+      this.$.dialog.toggle();
     },
 
     _add: function() {
       this.fire("add-item");
+    },
+
+    _dialogConfirmed(e) {
+      if (e.detail.confirmed) {
+        this.fire("delete-items");
+      }
     }
   });
 })();

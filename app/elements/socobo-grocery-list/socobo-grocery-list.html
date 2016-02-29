@@ -211,13 +211,13 @@ Custom property | Description | Default
         },
         /**
          * unregister tracking changed listeners
-         * 
+         *
          * @function
          */
         unregisterListeners: function() {
           SocoboGrocery.getInstance(this, this.userLogin).unregisterGroceryItemListeners();
         },
-        
+
         /**
          * PRIVATE API
          */
@@ -353,12 +353,10 @@ Custom property | Description | Default
           if (checkItemIndex !== -1) {
             items.splice(checkItemIndex, 1);
           } else {
-            var msgObj = {
-              type: "plain", 
-              duration: 2000, 
-              message: "There is no Active Item checked for unchecking."
-            };
-            this.fire("socobo-show-toast", msgObj);
+            this._notify({
+              type: "error",
+              message: "There is no active Item checked for unchecking."
+            });
           }
         },
 
@@ -470,21 +468,17 @@ Custom property | Description | Default
               }
             } else {
               // notify user
-              var msgObj = {
-                type: "error", 
-                duration: 2000, 
-                message: "There Item is not available."
-              };
-              this.fire("socobo-show-toast", msgObj);
+              this._notify({
+                type: "error",
+                message: "There is no Item available."
+              });
             }
           } else {
             // notify user
-            var msgObj2 = {
-              type: "plain", 
-              duration: 2000, 
-              message: "There Item is not checked. Please check the Item before delete."
-            };
-            this.fire("socobo-show-toast", msgObj2);
+            this._notify({
+              type: "error",
+              message: "There is no checked Item. Please check the Item before delete."
+            });
           }
         },
         /**
@@ -514,12 +508,10 @@ Custom property | Description | Default
             }
           } else {
             // notify user
-            var msgObj = {
-              type: "error", 
-              duration: 2000, 
-              message: "There Item is not available."
-            };
-            this.fire("socobo-show-toast", msgObj);
+            this._notify({
+              type: "error",
+              message: "There is no Item available."
+            });
           }
         },
 
@@ -543,12 +535,10 @@ Custom property | Description | Default
             SocoboGrocery.getInstance(this, this.userLogin).removeItemFromActiveList(e.detail);
           } else {
             // notify user
-            var msgObj = {
-              type: "error", 
-              duration: 2000, 
-              message: "There Item is not available."
-            };
-            this.fire("socobo-show-toast", msgObj);
+            this._notify({
+              type: "error",
+              message: "There is no Item available."
+            });
           }
         },
         /**
@@ -574,12 +564,10 @@ Custom property | Description | Default
               .addItemToActiveList({desc: e.detail.desc});
           } else {
             // notify user
-            var msgObj = {
-              type: "error", 
-              duration: 2000, 
-              message: "There Item is not available."
-            };
-            this.fire("socobo-show-toast", msgObj);
+            this._notify({
+              type: "error",
+              message: "There is no Item available."
+            });
           }
         },
 
@@ -596,8 +584,8 @@ Custom property | Description | Default
          */
         _setHidden: function(item, searchQuery) {
           return !(searchQuery === null ||
-          typeof searchQuery === "undefined" ||
-          item.desc.toUpperCase().match(searchQuery.toUpperCase()));
+            typeof searchQuery === "undefined" ||
+            item.desc.toUpperCase().match(searchQuery.toUpperCase()));
         },
 
         /**
@@ -624,7 +612,7 @@ Custom property | Description | Default
           // return selected item index
           return index;
         },
-        
+
         /**
          * LISTENER METHODS
          */
@@ -681,12 +669,23 @@ Custom property | Description | Default
          * @function
          */
         _groceryChangedError: function(error) {
-          var msgObj = {
-            type: "error", 
-            duration: 2000, 
+          this._notify({
+            type: "error",
             message: "Grocery List - Error: " + error.code + " - " + error.message
-          };
-          this.fire("socobo-show-toast", msgObj);
+          });
+        },
+
+        /**
+         * Send Notification to inform the User
+         *
+         * @param {Object} options
+         * @function
+         */
+        _notify: function(options) {
+          var type = options && options.type ? options.type : "plain";
+          var dur = options && options.duration ? options.duration : 2000;
+          var msg = options && options.message ? options.message : "Hello, World";
+          this.fire("socobo-show-toast", {type: type, duration: dur, message: msg});
         },
 
         /**

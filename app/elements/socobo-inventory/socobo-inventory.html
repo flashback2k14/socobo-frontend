@@ -25,25 +25,36 @@ Custom property | Description | Default
       <socobo-inventory-create
         id="inventoryCreateDialog"
         on-create-item="_onCreateItem"
-        measurements="[[measurements]]">
+        measurements="[[measurements]]"
+        categories="[[categories]]">
       </socobo-inventory-create>
       <socobo-inventory-edit
         id="inventoryEditDialog"
         on-edit-item="_saveItem"
-        measurements="[[measurements]]">
+        measurements="[[measurements]]"
+        categories="[[categories]]">
       </socobo-inventory-edit>
 
+      <!-- Inventory items-->
       <firebase-collection
         id="inventoryCollection"
         order-by-child="created"
         location="{{location}}"
         data="{{data}}">
       </firebase-collection>
+      <!-- measurements -->
       <firebase-collection
         id="measurementCollection"
         order-by-child="name"
         location="{{measurementLocation}}"
         data="{{measurements}}">
+      </firebase-collection>
+      <!-- categories-->
+      <firebase-collection
+        id="categoryCollection"
+        order-by-child="name"
+        location="{{categoryLocation}}"
+        data="{{categories}}">
       </firebase-collection>
 
       <socobo-inventory-overview
@@ -57,7 +68,7 @@ Custom property | Description | Default
       </socobo-inventory-overview>
     <socobo-element-buttons
       class="button-add"
-      show-delete="{{_itemsChecked}}"
+      show-delete="[[_itemsChecked]]"
       on-add-item="_createItem"
       on-delete-items="_deleteAllItems">
     </socobo-element-buttons>
@@ -97,6 +108,12 @@ Custom property | Description | Default
             computed: "_handleMeasurement(userLogin)",
             type: String,
             value: "https://socobo.firebaseio.com/"
+          },
+
+          categoryLocation: {
+            computed: "_computeCategoryLocations(userLogin)",
+            type: String,
+            value: "https://socobo.firebaseio.com/"
           }
         },
 
@@ -106,6 +123,10 @@ Custom property | Description | Default
         ready: function() {
           this._checkedItems = 0;
           this._itemsChecked = false;
+        },
+
+        _computeCategoryLocations: function(login) {
+          return login ? login.firebaseUrl + "categories/inventory" : this.measurementLocation;
         },
 
         /**

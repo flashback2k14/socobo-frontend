@@ -61,7 +61,19 @@ var Util = (function() {
       _toggleMI(menuItem);
     });
   };
-  
+  /**
+   * Send Notification to inform the User
+   *
+   * @param {Object} ctx
+   * @param {Object} options
+   */
+  var notify = function(ctx, options) {
+    var type = options && options.type ? options.type : "plain";
+    var dur = options && options.duration ? options.duration : 2000;
+    var msg = options && options.message ? options.message : "Hello, World";
+    ctx.fire("socobo-show-toast", {type: type, duration: dur, message: msg});
+  };
+
   /**
    * make functions public
    */
@@ -69,6 +81,7 @@ var Util = (function() {
     objectToString: objectToString,
     stringToObject: stringToObject,
     isUserLoginExpired: isUserLoginExpired,
-    toggleMenuItems: toggleMenuItems
+    toggleMenuItems: toggleMenuItems,
+    notify: notify
   };
 })();
