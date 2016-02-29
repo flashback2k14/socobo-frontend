@@ -28,8 +28,6 @@
   var elRecipe = null;
   var elProfile = null;
   var elAbout = null;
-  // Other
-  var infoToast = null;
 
   /**
    * global eventlistener
@@ -63,8 +61,6 @@
     elRecipe = document.querySelector("#elRecipe");
     elProfile = document.querySelector("#elProfile");
     elAbout = document.querySelector("#elAbout");
-    // Other
-    infoToast = document.querySelector("#info-toast");
     // init UserInfo
     UserInfo.init("https://socobo-dev-project.firebaseio.com/");
     // set FirebaseUrl, UserId and ExpireDate for Subelements
@@ -137,16 +133,17 @@
     // get error object
     var errorObj = e.detail.error;
     // show toast to inform the user
-    Util.showToast(
-      infoToast,
-      "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message,
-      "#FF3333",
-      "#EEEEEE"
-    );
+    Util.notify(this, {
+      type: "error",
+      message: "Login failed! Please retry! Error Code: " + errorObj.code + ", Error: " + errorObj.message
+    });
   };
   app.passwordsMisMatching = function() {
     // show toast to inform the user
-    Util.showToast(infoToast, "Your Passwords does not match! Please retry!", "#FF3333", "#EEEEEE");
+    Util.notify(this, {
+      type: "error",
+      message: "Your Passwords does not match! Please retry!"
+    });
   };
   /**
    * RANKING
@@ -174,7 +171,10 @@
     UserInfo.set(UserInfo.EMAILADDRESS, e.detail.email);
     UserInfo.set(UserInfo.PROFILEIMAGE, e.detail.profileImage);
     // show toast to inform the user
-    Util.showToast(infoToast, "User " + e.detail.email + " is logged in!", "#2EB82E", "#EEEEEE");
+    Util.notify(this, {
+      type: "success",
+      message: "User " + e.detail.email + " is logged in!"
+    });
   };
   app.handleProfileImageChanged = function(e) {
     // set UserInfo to Menubar
@@ -201,7 +201,12 @@
       infoText = "Logging out...";
     }
     // show toast to inform the user
-    Util.showToast(infoToast, infoText, "#333333", "#EEEEEE");
+    Util.notify(this, {
+      message: infoText
+    });
+    // unregister tracking listeners
+    elRanking.unregisterListeners();
+    elGroceryList.unregisterListeners();
     // log user out from firebase
     var rootRef = new Firebase(UserInfo.getBaseUrl());
     rootRef.unauth();
