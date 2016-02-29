@@ -35,6 +35,7 @@
     "ValidateModule": true,
     "RecipeBehaviors": true,
     "ValidateBehavior": true,
+    "InventoryBehaviors": true,
     "UtilsModule": true
   }
 }

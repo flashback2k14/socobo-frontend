@@ -68,8 +68,7 @@
           done();
         });
 
-
-          MockInteractions.tap(addButton);
+        MockInteractions.tap(addButton);
       });
 
       test("clicking the delete button fires a delete-items event", function(done) {
@@ -78,6 +77,23 @@
         });
 
         MockInteractions.tap(deleteButton);
+        expect(buttonGroup.$.dialog.opened).to.be.eql(true, "Confirmation dialog opens");
+        MockInteractions.tap(buttonGroup.$.deleteOk)
+      });
+
+      test("clicking the delete button opens the confirmation dialog", function(done) {
+        MockInteractions.tap(deleteButton);
+        expect(buttonGroup.$.dialog.opened).to.be.eql(true, "Confirmation dialog opens");
+        done();
+      });
+
+      test("clicking the delete button opens the confirmation dialog and cancel closes it", function(done) {
+        MockInteractions.tap(deleteButton);
+        expect(buttonGroup.$.dialog.opened).to.be.eql(true, "Confirmation dialog opens");
+
+        MockInteractions.tap(buttonGroup.$.deleteCancel);
+        expect(buttonGroup.$.dialog.opened).to.be.eql(false, "Confirmation dialog closes again");
+        done();
       });
 
       test("setting showDelete shows the delete button", function (done) {

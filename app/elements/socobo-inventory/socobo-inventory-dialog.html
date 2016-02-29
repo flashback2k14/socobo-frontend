@@ -1,0 +1,244 @@
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--socobo-inventory-create-create-dialog` | | `{}`
+`--socobo-inventory-create-style-input-container` |  | `{}`
+`--socobo-inventory-create-style-input-color` |  | `{--text-secondary-color}`
+`--socobo-inventory-create-style-input-focus-color` |  | `{--text-secondary-color}`
+`--socobo-inventory-create-style-input-input-color` |  | `{--text-secondary-color}`
+`--socobo-inventory-create-style-input-only-color-color` |  | `{--text-secondary-color}`
+`--socobo-inventory-create-style-input-only-color-focus-color` | | `{--text-secondary-color}`
+`--socobo-inventory-create-style-input-only-color-input-color` | | `{--text-secondary-color}`
+
+@demo demo/socobo-inventory/demo.html
+-->
+
+<dom-module id="socobo-inventory-dialog">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .create-dialog {
+        width: 500px;
+        @apply(--socobo-inventory-create-create-dialog);
+      }
+      .style-paper-dialog-scrollable {
+        margin-top: 0;
+      }
+      .horizontal-layout {
+        @apply(--layout-horizontal);
+        margin-top: 8px;
+      }
+      .vertical-layout {
+        @apply(--layout-vertical);
+      }
+      .width-full {
+        width: 100%;
+      }
+      .width-big {
+        width: 60%;
+      }
+      .width-small {
+        width: 35%;
+        margin-left: 10px;
+      }
+      .style-input {
+        --paper-input-container-input: {
+          width: 440px;
+          @apply(--socobo-inventory-create-style-input-container);
+        };
+        --paper-input-container-color: var(--socobo-inventory-create-style-input-color, --text-secondary-color);
+        --paper-input-container-focus-color: var(--socobo-inventory-create-style-input-focus-color, --text-secondary-color);
+        --paper-input-container-input-color: var(--socobo-inventory-create-style-input-input-color, --text-secondary-color);
+      }
+      .style-input-only-color {
+        --paper-input-container-color: var(--socobo-inventory-create-style-input-only-color-color, --text-secondary-color);
+        --paper-input-container-focus-color: var(--socobo-inventory-create-style-input-only-color-focus-color, --text-secondary-color);
+        --paper-input-container-input-color: var(--socobo-inventory-create-style-input-only-color-input-color, --text-secondary-color);
+      }
+      .style-best-before {
+        padding-top: 25px;
+      }
+      .style-date-picker-row {
+        margin-top: -15px;
+      }
+      .style-dropdown-category {
+        margin-top: 2px;
+      }
+    </style>
+    <div>
+      <paper-dialog
+        on-iron-overlay-closed="_resetItem"
+        class="create-dialog"
+        id="dialog"
+        entry-animation="scale-up-animation"
+        exit-animation="fade-out-animation"
+        modal>
+        <h2>[[heading]]</h2>
+        <paper-dialog-scrollable class="style-paper-dialog-scrollable">
+          <!-- 1. Row -->
+          <div class="horizontal-layout">
+            <paper-input
+              class="horizontal-layout width-full style-input"
+              value="{{item.name}}"
+              id="itemName"
+              label="Name"
+              maxlength="30"
+              minlength="2"
+              auto-validate
+              required
+              auto-focus
+              error-message="Please enter a name">
+            </paper-input>
+          </div>
+          <!-- 2. Row -->
+          <div class="horizontal-layout">
+            <paper-input
+              pattern="[0-9]+"
+              class="vertical-layout width-big style-input-only-color"
+              id="countInput"
+              value="{{item.count}}"
+              label="Amount/Number"
+              error-message="A number is required"
+              maxlength="5"
+              minlength="1"
+              auto-validate
+              required>
+            </paper-input>
+            <paper-dropdown-menu
+              label="Measurement"
+              class="vertical-layout width-small"
+              id="measurementDropdown"
+              on-iron-select="_measurementSelected">
+              <paper-menu
+                id="measurementDropdownMenu"
+                class="dropdown-content">
+                <template is="dom-repeat" items="[[measurements]]" as="measurement">
+                  <paper-item m="[[measurement]]">[[measurement.value]]</paper-item>
+                </template>
+              </paper-menu>
+            </paper-dropdown-menu>
+          </div>
+          <!-- 3. Row -->
+          <div class="horizontal-layout style-best-before">
+            <span>Best before</span>
+          </div>
+          <!-- 4. Row -->
+          <div class="horizontal-layout style-date-picker-row">
+            <paper-input
+              type="date"
+              class="vertical-layout width-big"
+              value="{{item.bestBefore}}"
+              id="bestBeforeInput">
+            </paper-input>
+            <paper-dropdown-menu
+              on-iron-select="_categorySelected"
+              class="vertical-layout width-small style-dropdown-category"
+              label="Category"
+              id="categoryDropdown">
+              <paper-menu
+                id="categoryDropdownMenu"
+                class="dropdown-content">
+                <template is="dom-repeat" items="[[categories]]" as="category">
+                  <paper-item c="[[category]]">[[category.value]]</paper-item>
+                </template>
+              </paper-menu>
+            </paper-dropdown-menu>
+          </div>
+        </paper-dialog-scrollable>
+        <div class="buttons">
+          <paper-button id="cancelDialogButton" dialog-dismiss>Cancel</paper-button>
+          <paper-button id="submitItemButton" on-tap="_submit">Ok</paper-button>
+        </div>
+      </paper-dialog>
+    </div>
+  </template>
+  <script>
+    (function() {
+      Polymer({
+        is: "socobo-inventory-dialog",
+
+        properties: {
+          heading: {
+            type: String
+          }
+        },
+
+        behaviors: [InventoryBehaviors.ItemBehavior],
+
+        /**
+         * Displays the dialog
+         *
+         * @function
+         */
+        show: function() {
+          this.$.dialog.open();
+        },
+
+        /** Hides the dialog
+         *
+         * @function
+         */
+        hide: function() {
+          this.$.dialog.close();
+        },
+
+        /**
+         * Set the internal item data to the item passed in
+         *
+         * @param {Object} item
+         *
+         * @function
+         */
+        setItem: function(item) {
+          if (item !== undefined) {
+            this.item.extend(item);
+            this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
+            this.measurements.forEach(function(m, i) {
+              if (item.measurement.value === m.value) {
+                this.$.measurementDropdownMenu.select(i);
+              }
+            }.bind(this));
+            // trigger Polymers data binding helpers
+            this.notifyPath("item.name", this.item.name);
+            this.notifyPath("item.count", this.item.count);
+            this.notifyPath("item.bestBefore", this.item.bestBefore);
+          }
+        },
+
+        /**
+         * Takes care of sending the item up one level
+         *
+         * @private
+         * @function
+         */
+        _submit: function() {
+          this._populateItem(this.item);
+          if (this._validate()) {
+            this.fire("submit", this.item);
+          }
+        },
+
+        /**
+         * Resets the item and all dropdowns back to initial values
+         *
+         * @param {Event} e
+         * @private
+         */
+        _resetItem: function(e) {
+          if (!(e && e.target === this.$.dialog)) {
+            return;
+          }
+          this.set("item.name","");
+          this.set("item.count","");
+          this.set("item.bestBefore", "");
+          this.$.categoryDropdownMenu.select(-1);
+          this.$.measurementDropdownMenu.select(-1);
+        }
+      });
+    })();
+  </script>
+</dom-module>
