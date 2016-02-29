@@ -35,6 +35,8 @@
     "ValidateModule": true,
     "RecipeBehaviors": true,
     "ValidateBehavior": true,
-    "UtilsModule": true
+    "UtilsModule": true,
+    "ToastElementBehaviors": true,
+    "SendBehavior": true
   }
 }

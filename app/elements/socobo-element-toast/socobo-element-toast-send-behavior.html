@@ -45,7 +45,7 @@
     notifySuccess: function(msg, customDuration) {
       this._buildNotification(this._SUCCESS_TYPE, msg, customDuration);
     },
-    _buildNotification: function(type, msg, customDuration){
+    _buildNotification: function(type, msg, customDuration) {
       var defaultDuration = customDuration ? customDuration : this._DURATION;
       var obj = this._buildMessageObj(
         type,
@@ -54,7 +54,7 @@
       );
       this.fire(this._EVENT, obj);
     },
-    _buildMessageObj: function(toastType, customDuration, msg){
+    _buildMessageObj: function(toastType, customDuration, msg) {
       return {
         type: toastType,
         duration: customDuration,
