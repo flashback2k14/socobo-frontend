@@ -214,6 +214,9 @@
     tbUsername.innerHTML = "Placeholder Username";
     tbUserEmailAddress.innerHTML = "Placeholder Email";
     imgUserProfilePicture.src = "../images/touch/icon-128x128.png";
+    // clear data
+    elRanking.clearData();
+    elGroceryList.clearData();
     // Hide Menu Items
     Util.toggleMenuItems([
       menuItemLogin, menuItemHome, menuItemRecipe,

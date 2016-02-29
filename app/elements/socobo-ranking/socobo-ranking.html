@@ -183,6 +183,14 @@ Custom property | Description | Default
           }
         },
         /**
+         * clear data after logout
+         *
+         * @function
+         */
+        clearData: function() {
+          this.set("recipeRanking", []);
+        },
+        /**
          * unregister tracking changed listeners
          *
          * @function
