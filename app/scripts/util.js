@@ -62,18 +62,16 @@ var Util = (function() {
     });
   };
   /**
-   * show info toast
+   * Send Notification to inform the User
    *
-   * @param {HTMLElement} toast
-   * @param {String} text
-   * @param {String} bgColor
-   * @param {String} color
+   * @param {Object} ctx
+   * @param {Object} options
    */
-  var showToast = function(toast, text, bgColor, color) {
-    toast.text = text;
-    toast.style.background = bgColor;
-    toast.style.color = color;
-    toast.show();
+  var notify = function(ctx, options) {
+    var type = options && options.type ? options.type : "plain";
+    var dur = options && options.duration ? options.duration : 2000;
+    var msg = options && options.message ? options.message : "Hello, World";
+    ctx.fire("socobo-show-toast", {type: type, duration: dur, message: msg});
   };
 
   /**
@@ -84,6 +82,6 @@ var Util = (function() {
     stringToObject: stringToObject,
     isUserLoginExpired: isUserLoginExpired,
     toggleMenuItems: toggleMenuItems,
-    showToast: showToast
+    notify: notify
   };
 })();

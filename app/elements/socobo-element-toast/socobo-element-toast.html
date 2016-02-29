@@ -1,0 +1,155 @@
+<!--
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--socobo-toast-style-error-notification-color` | Set background color for socobo-toast error notification | `{#EEEEEE}`
+`--socobo-toast-style-success-notification-color` | Set background color for socobo-toast success notification | `{#EEEEEE}`
+`--socobo-toast-style-plain-notification-color` | Set background color for socobo-toast info notification | `{#EEEEEE}`
+`--socobo-toast-style-spinner-notification-color` | Set background color for socobo-toast spinner notification | `{#EEEEEE}`
+`--socobo-recipe-style-notification-text-color` | Set the text color for the toasts | `{}`
+
+@demo demo/socobo-element-toast/demo.html
+-->
+<dom-module id="socobo-element-toast">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+
+      .socobo-toast-error {
+        --paper-toast-background-color: var(--socobo-toast-style-error-notification-color);
+        --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
+      }
+      .socobo-toast-success {
+        --paper-toast-background-color: var(--socobo-toast-style-success-notification-color);
+        --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
+      }
+      .socobo-toast-plain {
+         --paper-toast-background-color: var(--socobo-toast-style-plain-notification-color);
+         --paper-toast-color: var(--socobo-recipe-style-notification-text-color);
+       }
+    </style>
+
+    <div>
+      <paper-toast
+        class="socobo-toast-plain"
+        id="toast">
+      </paper-toast>
+    </div>
+  </template>
+
+  <script>
+    (function() {
+      Polymer({
+        is: "socobo-element-toast",
+
+        properties: {
+
+          /**
+           * Array to hold the queued up messages
+           *
+           * @private
+           */
+          _messages: {
+            type: Array,
+            value: []
+          }
+        },
+
+        listeners: {
+          "iron-overlay-closed": "_messageAdded"
+        },
+
+        observers: [
+          "_messageAdded(_messages.splices)"
+        ],
+
+        _DEFAULT: 3000,
+        /**
+         * Handles the global toast events and decides which toast to show when
+         *
+         * @param {CustomEvent} e
+         * @private
+         * @function
+         */
+        _showToast: function(e) {
+          this.push("_messages", e.detail);
+        },
+
+        /**
+         * Add the correct style to the toast and remove any previously set ones
+         *
+         * @param {HtmlElement} toast
+         * @param {Object} msg
+         * @private
+         */
+        _styleToast: function(toast, msg) {
+          toast.className.split(" ").forEach(function(clazz) {
+            if (clazz.indexOf("socobo-toast") !== -1) {
+              toast.classList.remove(clazz);
+            }
+          });
+          switch (msg.type) {
+            case "success":
+              toast.classList.add("socobo-toast-success");
+              break;
+            case "error":
+              toast.classList.add("socobo-toast-error");
+              break;
+            default:
+              toast.classList.add("socobo-toast-plain");
+          }
+          this.updateStyles();
+        },
+
+        /**
+         * Extract the duration from the message object if it contains any.
+         * Defaults to a set default value. Disallows infinity.
+         */
+        _extractDuration: function(msg) {
+          if ((msg.duration && msg.duration < 1) || !msg.duration || msg.duration === Infinity) {
+            return this._DEFAULT;
+          } else {
+            return msg.duration;
+          }
+        },
+
+        /**
+           * Observer for the _messages Array that handles changes to the array.
+           * Displays the toast if no other toast is shown at the moment and queues up the message
+           * if a toast is currently in progress.
+           *
+           * @private
+           */
+        _messageAdded: function() {
+          if (!this.$.toast.opened && this._messages.length) {
+            var msg = this._messages.shift(); // bypasses Polymer observers intentionally
+            this._toast.text = msg.message;
+            this._styleToast(this.$.toast, msg);
+            this._toast.duration = this._extractDuration(msg);
+
+            this._toast.show();
+          }
+        },
+        /**
+         * Called when the component is ready. Adds an event listener for `socobo-show-toast`
+         * to the current window object, thus listening to this event globally.
+         */
+        ready: function() {
+          this._toast = this.$.toast;
+          window.addEventListener("socobo-show-toast", this._showToast.bind(this));
+
+          // Overriding the _renderClosed function of the paper-toast with the one from
+          // IronOverlayBehavior so the closed event is fired
+          this._toast._renderClosed = function() {
+            this.classList.remove("paper-toast-open");
+            Polymer.IronOverlayBehaviorImpl._renderClosed.apply(this, arguments);
+          };
+        }
+      });
+    })();
+  </script>
+</dom-module>

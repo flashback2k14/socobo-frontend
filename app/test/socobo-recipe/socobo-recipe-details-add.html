@@ -75,7 +75,7 @@
 
         teardown(function(){
           mock_add.restore();
-        })
+        });
 
         test("Add step on clicking the add step button", function(){
           var btn_add_stp = socoboRecipeDetailsAdd.$.addStep;
@@ -203,7 +203,6 @@
         });
 
         test('createNewRecipe fires no add_request event if the recipe is invalid', function (done) {
-          mock_add.expects("_notify").once();
           socoboRecipeDetailsAdd.addEventListener("add_request", function(){
             throw new Error("Should not catch an event");
           });
@@ -217,30 +216,27 @@
           });
         });
 
-        test('createNewRecipe creates a recipe correctly', function (done) {
-          mock_add.expects("_clearInputFields").once();
-          var steps = [{number: 0, desc: "testStep"}];
-          var ingredients = [{desc : "test_ingr", amount: 12, unit: "kg"}];
-          var title = "test_title";
-          var text = "test_text";
-          socoboRecipeDetailsAdd.image = new ImageService();
-          sinon.stub(socoboRecipeDetailsAdd.image, "getImageAsString", function(){
-            return "test_image";
-          });
-          socoboRecipeDetailsAdd.addEventListener("add_request", function(){
+        test('createNewRecipe fires socobo-show-toast event if reciep is invalid', function(done) {
+          socoboRecipeDetailsAdd.addEventListener("socobo-show-toast", function(){
             done();
           });
           sinon.stub(socoboRecipeDetailsAdd, "validate", function(){
-            return {isValid: true, message: "Test"};
+            return {isValid: false, message: "Test"};
           });
           flush(function () {
             socoboRecipeDetailsAdd.createNewRecipe();
-            mock_add.verify();
           });
         });
 
-        //TODO: test encode method
+        test('createNewRecipe calls clearInputField if recipe is valid', function () {
+          mock_add.expects("_clearInputFields");
 
+          sinon.stub(socoboRecipeDetailsAdd, "validate", function(){
+            return {isValid: true, message: "Test"};
+          });
+          socoboRecipeDetailsAdd.createNewRecipe();
+          mock_add.verify();
+        });
       });
 
 

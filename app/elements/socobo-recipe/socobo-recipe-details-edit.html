@@ -580,18 +580,9 @@ Custom property | Description | Default
             this._clearInputFields();
             this.$.dialog.close();
           } else {
-            this._notify(validationResult.message);
+            this.fire("socobo-show-toast", {type: "error", message: validationResult.message});
+
           }
-        },
-        /**
-         * Shows a given message as paper-toast element
-         *
-         * @param {String} msg
-         * @private
-         */
-        _notify: function(msg) {
-          this.$.errorNotification.text = msg;
-          this.$.errorNotification.show();
         }
       });
     })();
