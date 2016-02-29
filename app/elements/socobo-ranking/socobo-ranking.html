@@ -112,8 +112,6 @@ Custom property | Description | Default
         </div>
       </div>
     </div>
-    <!-- Notification-->
-    <paper-toast id="infoRanking" duration="2000"></paper-toast>
   </template>
 
   <script>
@@ -167,11 +165,16 @@ Custom property | Description | Default
           SocoboRanking.getInstance(this.userLogin)
             .getData()
             .then(function(data) {
-              this._notify("Loading Data finished! Calculating started...");
+              this._notify({
+                message: "Loading Data finished! Calculating started..."
+              });
               this._calcRanking(data);
             }.bind(this))
             .catch(function(error) {
-              this._notify(error.message);
+              this._notify({
+                type: "error",
+                message: "Ranking - Error - " + error.message
+              });
             }.bind(this));
           // register changed listener
           if (this.isFirstLoad) {
@@ -187,6 +190,14 @@ Custom property | Description | Default
         clearData: function() {
           this.set("recipeRanking", []);
         },
+        /**
+         * unregister tracking changed listeners
+         *
+         * @function
+         */
+        unregisterListeners: function() {
+          SocoboRanking.getInstance(this.userLogin).unregisterChangedListener();
+        },
 
         /**
          * Calculate Ranking
@@ -198,12 +209,18 @@ Custom property | Description | Default
         _calcRanking: function(data) {
           // check Data
           if (data === null || typeof(data) === "undefined") {
-            this._notify("No Data for Ranking available!");
+            this._notify({
+              type: "error",
+              message: "Ranking - Error - No Data for Ranking available!"
+            });
             return false;
           }
           // check Data length
           if (data.length !== 2) {
-            this._notify("Error - One needed Item is missing!");
+            this._notify({
+              type: "error",
+              message: "Ranking - Error - One needed Item is missing!"
+            });
             return false;
           }
           //extract data
@@ -253,7 +270,9 @@ Custom property | Description | Default
           // sort desc
           this._sortList(true);
           // notify user
-          this._notify("Calculating finished!");
+          this._notify({
+            message: "Calculating finished!"
+          });
           // reset loading flag
           this.isLoading = false;
         },
@@ -532,7 +551,9 @@ Custom property | Description | Default
          */
         _reload: function() {
           // notify user
-          this._notify("Reloading...");
+          this._notify({
+            message: "Reloading..."
+          });
           // reset recipe ranking
           this.set("recipeRanking", []);
           // reload data
@@ -602,20 +623,6 @@ Custom property | Description | Default
         },
 
         /**
-         * Show Toast with specific message
-         *
-         * @param {String} msg
-         * @private
-         * @function
-         */
-        _notify: function(msg) {
-          this.$.infoRanking.text = msg;
-          if (!this.$.infoRanking.opened) {
-            this.$.infoRanking.show();
-          }
-        },
-
-        /**
          * tracking changes in inventory items
          *
          * @private
@@ -647,7 +654,23 @@ Custom property | Description | Default
          * @function
          */
         _onChangedError: function(e) {
-          this._notify("Ranking - Reloading Error: " + e.detail.message);
+          this._notify({
+            type: "error",
+            message: "Ranking - Reloading Error: " + e.detail.message
+          });
+        },
+
+        /**
+         * Send Notification to inform the User
+         *
+         * @param {Object} options
+         * @function
+         */
+        _notify: function(options) {
+          var type = options && options.type ? options.type : "plain";
+          var dur = options && options.duration ? options.duration : 2000;
+          var msg = options && options.message ? options.message : "Hello, World";
+          this.fire("socobo-show-toast", {type: type, duration: dur, message: msg});
         },
 
         /**
