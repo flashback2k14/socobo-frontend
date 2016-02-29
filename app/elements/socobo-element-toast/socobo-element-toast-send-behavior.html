@@ -37,22 +37,22 @@
       }
     },
     notify: function(msg, customDuration) {
-      this._notify(this._PLAIN_TYPE, msg, customDuration);
+      this._buildNotification(this._PLAIN_TYPE, msg, customDuration);
     },
     notifyError: function(msg, customDuration) {
-      this._notify(this._ERROR_TYPE, msg, customDuration);
+      this._buildNotification(this._ERROR_TYPE, msg, customDuration);
     },
     notifySuccess: function(msg, customDuration) {
-      this._notify(this._SUCCESS_TYPE, msg, customDuration);
+      this._buildNotification(this._SUCCESS_TYPE, msg, customDuration);
     },
-    _notify: function(type, msg, customDuration){
+    _buildNotification: function(type, msg, customDuration){
       var defaultDuration = customDuration ? customDuration : this._DURATION;
       var obj = this._buildMessageObj(
-        this._PLAIN_TYPE,
+        type,
         defaultDuration,
         msg
       );
-      this.fire(type, obj);
+      this.fire(this._EVENT, obj);
     },
     _buildMessageObj: function(toastType, customDuration, msg){
       return {

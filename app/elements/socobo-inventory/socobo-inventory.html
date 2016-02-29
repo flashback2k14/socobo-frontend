@@ -68,6 +68,7 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-inventory",
+        behaviors: [ToastElementBehaviors.SendBehavior],
 
         properties: {
           /**
@@ -260,13 +261,15 @@ Custom property | Description | Default
             var ref = new Firebase(this._handleLogin(this.userLogin) + "/" + item.__firebaseKey__);
             ref.update(item, function(error) {
               if (error) {
-                this.fire("socobo-show-toast",
-                  {type: "error", message: "There was an error updating " + item.name});
+//                this.fire("socobo-show-toast",
+//                  {type: "error", message: "There was an error updating " + item.name});
+                this.notifyError("TEST There was an error updating " + item.name);
                 console.log(error);
               } else {
                 self.$.inventoryEditDialog.hide();
-                this.fire("socobo-show-toast",
-                  {type: "success", message: "Successfully updated " + item.name});
+//                this.fire("socobo-show-toast",
+//                  {type: "success", message: "Successfully updated " + item.name});
+                this.notifySuccess("Successfully updated " + item.name);
               }
             }.bind(this));
           }
