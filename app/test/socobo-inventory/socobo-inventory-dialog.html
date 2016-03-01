@@ -103,8 +103,8 @@
         setItemData();
 
         dialog.item.bestBefore = "1066-3-2";
-        dialog.$.categoryDropdownMenu.select(0);
-        dialog.$.categoryDropdownMenu.fire("iron-selected", dialog.$.categoryDropdownMenu.items[0]);
+        dialog.$.expireDropdownMenu.select(0);
+        dialog.$.expireDropdownMenu.fire("iron-selected", dialog.$.expireDropdownMenu.items[0]);
 
         flush(function() {
           expect(dialog.item.bestBefore).to.be.eql("");
@@ -118,8 +118,8 @@
         var expected = new Date();
         dialog.dateOffsets[1].set(expected);
 
-        dialog.$.categoryDropdownMenu.select(1);
-        dialog.$.categoryDropdownMenu.fire("iron-selected", dialog.$.categoryDropdownMenu.items[1]);
+        dialog.$.expireDropdownMenu.select(1);
+        dialog.$.expireDropdownMenu.fire("iron-selected", dialog.$.expireDropdownMenu.items[1]);
 
         flush(function() {
           expect(new Date(dialog.item.bestBefore).getDate()).to.be.eql(expected.getDate());
