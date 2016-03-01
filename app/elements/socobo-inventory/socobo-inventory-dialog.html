@@ -63,15 +63,28 @@ Custom property | Description | Default
         padding-top: 25px;
       }
       .style-date-picker-row {
-        margin-top: -15px;
+        margin-top: 6px;
       }
+
+      .style-date-picker {
+        margin-top: -20px;
+        margin-left: 16px;
+      }
+
       .style-dropdown-category {
         margin-top: 2px;
+      }
+
+      .dropdown-content {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 100%;
       }
     </style>
     <div>
       <paper-dialog
-        on-iron-overlay-closed="_resetItem"
+        on-iron-overlay-closed="_clearItem"
         class="create-dialog"
         id="dialog"
         entry-animation="scale-up-animation"
@@ -128,25 +141,26 @@ Custom property | Description | Default
           </div>
           <!-- 4. Row -->
           <div class="horizontal-layout style-date-picker-row">
-            <paper-input
-              type="date"
-              class="vertical-layout width-big"
-              value="{{item.bestBefore}}"
-              id="bestBeforeInput">
-            </paper-input>
             <paper-dropdown-menu
-              on-iron-select="_categorySelected"
-              class="vertical-layout width-small style-dropdown-category"
-              label="Category"
+              class="vertical-layout style-dropdown-category"
+              label="expires in..."
+              no-label-float
               id="categoryDropdown">
               <paper-menu
                 id="categoryDropdownMenu"
-                class="dropdown-content">
-                <template is="dom-repeat" items="[[categories]]" as="category">
-                  <paper-item c="[[category]]">[[category.value]]</paper-item>
+                class="dropdown-content"
+                on-iron-select="_offsetSelected">
+                <template is="dom-repeat" items="[[dateOffsets]]" as="offset">
+                  <paper-item c="[[offset]]">[[offset.value]]</paper-item>
                 </template>
               </paper-menu>
             </paper-dropdown-menu>
+            <paper-input
+              type="date"
+              class="style-date-picker vertical-layout width-small"
+              value="{{item.bestBefore}}"
+              id="bestBeforeInput">
+            </paper-input>
           </div>
         </paper-dialog-scrollable>
         <div class="buttons">
@@ -167,47 +181,7 @@ Custom property | Description | Default
           }
         },
 
-        behaviors: [InventoryBehaviors.ItemBehavior],
-
-        /**
-         * Displays the dialog
-         *
-         * @function
-         */
-        show: function() {
-          this.$.dialog.open();
-        },
-
-        /** Hides the dialog
-         *
-         * @function
-         */
-        hide: function() {
-          this.$.dialog.close();
-        },
-
-        /**
-         * Set the internal item data to the item passed in
-         *
-         * @param {Object} item
-         *
-         * @function
-         */
-        setItem: function(item) {
-          if (item !== undefined) {
-            this.item.extend(item);
-            this.$.categoryDropdownMenu.select(this.categories.indexOf(item.category));
-            this.measurements.forEach(function(m, i) {
-              if (item.measurement.value === m.value) {
-                this.$.measurementDropdownMenu.select(i);
-              }
-            }.bind(this));
-            // trigger Polymers data binding helpers
-            this.notifyPath("item.name", this.item.name);
-            this.notifyPath("item.count", this.item.count);
-            this.notifyPath("item.bestBefore", this.item.bestBefore);
-          }
-        },
+        behaviors: [InventoryBehaviors.ItemBehavior, InventoryBehaviors.DialogBehavior],
 
         /**
          * Takes care of sending the item up one level
@@ -222,21 +196,17 @@ Custom property | Description | Default
           }
         },
 
-        /**
-         * Resets the item and all dropdowns back to initial values
-         *
-         * @param {Event} e
-         * @private
-         */
-        _resetItem: function(e) {
-          if (!(e && e.target === this.$.dialog)) {
-            return;
+        _offsetSelected: function(e) {
+          if (e && e.target === this.$.categoryDropdownMenu) {
+            var selected = e.detail.item;
+            var dateString = "";
+            if (selected.c.offset) {
+              var date = new Date();
+              selected.c.set(date);
+              dateString = date.toISOString().substring(0, 10);
+            }
+            this.set("item.bestBefore", dateString);
           }
-          this.set("item.name","");
-          this.set("item.count","");
-          this.set("item.bestBefore", "");
-          this.$.categoryDropdownMenu.select(-1);
-          this.$.measurementDropdownMenu.select(-1);
         }
       });
     })();

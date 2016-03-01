@@ -24,14 +24,14 @@ Custom property | Description | Default
 
       /* CONTENT */
       .wrapper {
-        height: 75%;
-        max-height: 85%;
+        /*height: 75%;*/
+        /*max-height: 85%;*/
         width: 90%;
         min-width:700px;
         padding: 0;
         margin-top : 20px;
         margin-bottom: 20px;
-        overflow: auto;
+        /*overflow: auto;*/
         background-color: white;
         color: var(--socobo-recipe-style-text-color, --secondary-text-color);
         @apply(--socobo-recipe-style-default-font);
@@ -47,6 +47,11 @@ Custom property | Description | Default
         font-weight: 400;
         font-size: 30px;
       }
+
+      .scrollableContent{
+        margin-top: 40px;
+      }
+
       .content {
         @apply(--layout-horizontal);
         padding: 0;
@@ -55,12 +60,12 @@ Custom property | Description | Default
       }
       .leftColumn {
         width: 300px;
-        padding: 0 30px 30px 30px;
+        padding: 0 30px 60px 30px;
       }
       .rightColumn {
         width: 100%;
         margin-right: 0;
-        padding: 0 30px 30px 30px;
+        padding: 0 30px 60px 30px;
         overflow: hidden;
       }
 
@@ -149,69 +154,71 @@ Custom property | Description | Default
       <!-- EXIT DIALOG-->
       <paper-icon-button id="exit" class="style-exit-show-button" icon="clear" on-tap="toggleDialog">
       </paper-icon-button>
-      <!-- RECIPE NAME -->
-      <h1
-        id="title_default"
-        class="default-title-style default">{{recipe.desc}}</h1>
-      <!-- CONTENT -->
-      <div class="content">
-        <!-- LEFT COLUMN -->
-        <div class="leftColumn">
-          <!-- IMAGE SECTION -->
-          <paper-material elevation="1" class="recipeImg">
-            <template is="dom-if" if="{{recipe.image}}">
-              <iron-image
-                id="show_image"
-                class="recipeImg_image"
-                src="{{recipe.image}}"
-                sizing="cover"
-                preload="true"
-                fade
-                placeholder="images/placeholder/placeholder.png"><!-- Does not work with documentation.html -->
-              </iron-image>
-            </template>
-            <template is="dom-if" if="{{!recipe.image}}">
-              <iron-image
-                id="recipe_image"
-                class="recipeImg_image"
-                sizing="cover"
-                preload="true"
-                fade
-                placeholder="images/placeholder/placeholder.png"><!-- Does not work with documentation.html -->
-              </iron-image>
+      <paper-dialog-scrollable class="scrollableContent">
+        <!-- RECIPE NAME -->
+        <h1
+          id="title_default"
+          class="default-title-style default">{{recipe.desc}}</h1>
+        <!-- CONTENT -->
+        <div class="content">
+          <!-- LEFT COLUMN -->
+          <div class="leftColumn">
+            <!-- IMAGE SECTION -->
+            <paper-material elevation="1" class="recipeImg">
+              <template is="dom-if" if="{{recipe.image}}">
+                <iron-image
+                  id="show_image"
+                  class="recipeImg_image"
+                  src="{{recipe.image}}"
+                  sizing="cover"
+                  preload="true"
+                  fade
+                  placeholder="images/placeholder/placeholder.png"><!-- Does not work with documentation.html -->
+                </iron-image>
               </template>
-          </paper-material>
-          <!-- DETAIL INGREDIENTS -->
-          <template is="dom-if" if="{{recipe.ingredients}}">
-            <div class="subHeadings">Ingredients</div>
-            <hr class="separator"/>
-          </template>
-          <div class="ingredients" id="ingr_default" class="default">
-            <template is="dom-repeat" items="{{recipe.ingredients}}">
-              <socobo-recipe-details-ingredient ingredient="{{item}}"></socobo-recipe-details-ingredient>
+              <template is="dom-if" if="{{!recipe.image}}">
+                <iron-image
+                  id="recipe_image"
+                  class="recipeImg_image"
+                  sizing="cover"
+                  preload="true"
+                  fade
+                  placeholder="images/placeholder/placeholder.png"><!-- Does not work with documentation.html -->
+                </iron-image>
+              </template>
+            </paper-material>
+            <!-- DETAIL INGREDIENTS -->
+            <template is="dom-if" if="{{recipe.ingredients}}">
+              <div class="subHeadings">Ingredients</div>
+              <hr class="separator"/>
             </template>
+            <div class="ingredients" id="ingr_default" class="default">
+              <template is="dom-repeat" items="{{recipe.ingredients}}">
+                <socobo-recipe-details-ingredient ingredient="{{item}}"></socobo-recipe-details-ingredient>
+              </template>
+            </div>
+          </div>
+          <!-- RIGHT COLUMN -->
+          <div class="rightColumn">
+            <!-- DESCRIPTION SECTION -->
+            <template is="dom-if" if="{{recipe.text}}">
+              <div class="subHeadings">Description</div>
+              <hr class="separator"/>
+            </template>
+            <div id="text_default" class="default" class="text">{{recipe.text}}</div>
+            <!-- DETAIL STEPS -->
+            <template is="dom-if" if="{{recipe.steps.length}}">
+              <div class="subHeadings">Steps</div>
+              <hr class="separator"/>
+            </template>
+            <div class="steps" id="steps_default" class="default">
+              <template is="dom-repeat" items="{{recipe.steps}}">
+                <socobo-recipe-details-step class="step" step="{{item}}"></socobo-recipe-details-step>
+              </template>
+            </div>
           </div>
         </div>
-        <!-- RIGHT COLUMN -->
-        <div class="rightColumn">
-          <!-- DESCRIPTION SECTION -->
-          <template is="dom-if" if="{{recipe.text}}">
-            <div class="subHeadings">Description</div>
-            <hr class="separator"/>
-          </template>
-          <div id="text_default" class="default" class="text">{{recipe.text}}</div>
-          <!-- DETAIL STEPS -->
-          <template is="dom-if" if="{{recipe.steps.length}}">
-            <div class="subHeadings">Steps</div>
-            <hr class="separator"/>
-          </template>
-          <div class="steps" id="steps_default" class="default">
-            <template is="dom-repeat" items="{{recipe.steps}}">
-              <socobo-recipe-details-step class="step" step="{{item}}"></socobo-recipe-details-step>
-            </template>
-          </div>
-        </div>
-      </div>
+      </paper-dialog-scrollable>
     </paper-dialog>
   </template>
 

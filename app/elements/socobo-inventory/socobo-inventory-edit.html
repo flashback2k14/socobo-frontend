@@ -9,7 +9,6 @@
         id="dialog"
         heading="Update the item"
         on-submit="_editItem"
-        categories="[[categories]]"
         measurements="[[measurements]]">
       </socobo-inventory-dialog>
     </div>
@@ -19,17 +18,12 @@
       Polymer({
         is: "socobo-inventory-edit",
 
-        behaviors: [InventoryBehaviors.DialogBehavior],
+        show: function(item) {
+          this.$.dialog.show(item);
+        },
 
-        /**Displays the dialog
-         *
-         * @param {Object} itemToEdit
-         *
-         * @function
-         */
-        show: function(itemToEdit) {
-          this.$.dialog.setItem(itemToEdit);
-          this.$.dialog.show();
+        hide: function() {
+          this.$.dialog.hide();
         },
 
         /**

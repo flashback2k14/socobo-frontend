@@ -65,18 +65,15 @@ Custom property | Description | Default
         }
       }
       .style-best-before {
-        padding-top: 25px;
-      }
-      .style-date-picker-row {
-        margin-top: -15px;
       }
     </style>
     <div>
       <paper-dialog
         class="create-dialog"
-        id="showInventoryDialog"
+        id="dialog"
         entry-animation="scale-up-animation"
-        exit-animation="fade-out-animation">
+        exit-animation="fade-out-animation"
+        on-iron-overlay-closed="_clearItem">
         <paper-dialog-scrollable class="style-paper-dialog-scrollable">
           <!-- 1. Row -->
           <div class="horizontal-layout">
@@ -103,23 +100,13 @@ Custom property | Description | Default
             </paper-input>
           </div>
           <!-- 3. Row -->
-          <div class="horizontal-layout style-best-before">
-            <span>Best before</span>
-          </div>
-          <!-- 4. Row -->
-          <div class="horizontal-layout style-date-picker-row">
-            <paper-input
-              readonly
-              class="vertical-layout width-big style-disabled-inputs"
-              value="[[item.bestBefore]]">
-            </paper-input>
-            <paper-input
-              readonly
-              label="Category"
-              class="vertical-layout width-small style-disabled-inputs"
-              value="[[item.category.value]]">
-            </paper-input>
-          </div>
+          <paper-input
+            hidden$="[[_hasBestBefore(item.bestBefore)]]"
+            label="Best before"
+            readonly
+            class="style-best-before width-big style-disabled-inputs"
+            value="[[item.bestBefore]]">
+          </paper-input>
         </paper-dialog-scrollable>
       </paper-dialog>
     </div>
@@ -131,15 +118,17 @@ Custom property | Description | Default
         properties: {
         },
 
+        behaviors: [InventoryBehaviors.ItemBehavior, InventoryBehaviors.DialogBehavior],
+
         /**
-         * Shows the dialog
+         * Checks if bestBefore property exists
          *
-         * @param {Object} item
-         * @function
+         * @param {String} bestBefore
+         * @returns {boolean}
+         * @private
          */
-        show: function(item) {
-          this.set("item", item);
-          this.$.showInventoryDialog.toggle();
+        _hasBestBefore: function(bestBefore) {
+          return !bestBefore;
         }
       });
     })();
