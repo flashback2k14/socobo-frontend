@@ -25,6 +25,13 @@
     suite('<socobo-inventory-dialog>', function() {
       var dialog;
 
+      function setItemData(){
+        // preparing valid item data
+        dialog.set('item.name', "Valid name");
+        dialog.set('item.count', "4");
+        dialog.set('item.measurement', {value: "g"});
+      }
+
       setup(function() {
         dialog = fixture('InventoryDialog');
       });
@@ -77,11 +84,7 @@
         });
 
         dialog.show();
-
-        // preparing valid item data
-        dialog.set('item.name', "Valid name");
-        dialog.set('item.count', "4");
-        dialog.set('item.measurement', {value: "g"});
+        setItemData();
 
         var createButton = dialog.$.submitItemButton;
         MockInteractions.tap(createButton);
@@ -93,6 +96,37 @@
         expect(dialog.item.desc).to.be.eql(item.desc);
         expect(dialog.item.info).to.be.eql(item.info);
         done();
+      });
+
+      test('selecting none in offset dropdown clears the date', function(done) {
+        dialog.show();
+        setItemData();
+
+        dialog.item.bestBefore = "1066-3-2";
+        dialog.$.categoryDropdownMenu.select(0);
+        dialog.$.categoryDropdownMenu.fire("iron-selected", dialog.$.categoryDropdownMenu.items[0]);
+
+        flush(function() {
+          expect(dialog.item.bestBefore).to.be.eql("");
+          done();
+        });
+      });
+
+      test('offset dropdown sets the bestBefore date correctly', function(done) {
+        dialog.show();
+        setItemData();
+        var expected = new Date();
+        dialog.dateOffsets[1].set(expected);
+
+        dialog.$.categoryDropdownMenu.select(1);
+        dialog.$.categoryDropdownMenu.fire("iron-selected", dialog.$.categoryDropdownMenu.items[1]);
+
+        flush(function() {
+          expect(new Date(dialog.item.bestBefore).getDate()).to.be.eql(expected.getDate());
+          expect(new Date(dialog.item.bestBefore).getFullYear()).to.be.eql(expected.getFullYear());
+          expect(new Date(dialog.item.bestBefore).getMonth()).to.be.eql(expected.getMonth());
+          done();
+        });
       });
     });
   </script>

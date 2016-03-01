@@ -1,4 +1,3 @@
-<script type="application/javascript" src="../../bower_components/lodash/lodash.min.js"></script>
 <script>
   var InventoryBehaviors = InventoryBehaviors || {};
   InventoryBehaviors.DialogBehavior = {
@@ -34,16 +33,28 @@
       if (item !== undefined) {
         this._setAndNotify(item);
         this._setMeasurement(item);
-        // trigger Polymers data binding helpers
       }
     },
 
+    /**
+     * Extends `this.item` with all own properties of `item`
+     * and trigger Polymers data binding helpers.
+     *
+     * @param {Object} item
+     * @private
+     */
     _setAndNotify: function(item) {
       Object.keys(item).forEach(function(k) {
         this.set("item." + k,  item[k]);
       }, this);
     },
 
+    /**
+     * Looks for the measurement in item and sets the dropdown to the corresponding value
+     *
+     * @param {Object} item
+     * @private
+     */
     _setMeasurement(item) {
       if (!this.$.measurementDropdown) {
         return;
@@ -68,7 +79,9 @@
       this.set("item.name","");
       this.set("item.count","");
       this.set("item.bestBefore", "");
-      this.$.measurementDropdownMenu.select(-1);
+      if (this.$.measurementDropdownMenu) {
+        this.$.measurementDropdownMenu.select(-1);
+      }
     }
   };
 </script>

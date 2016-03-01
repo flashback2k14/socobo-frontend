@@ -142,14 +142,14 @@ Custom property | Description | Default
           <!-- 4. Row -->
           <div class="horizontal-layout style-date-picker-row">
             <paper-dropdown-menu
-              on-iron-select="_offsetSelected"
               class="vertical-layout style-dropdown-category"
               label="expires in..."
               no-label-float
               id="categoryDropdown">
               <paper-menu
                 id="categoryDropdownMenu"
-                class="dropdown-content">
+                class="dropdown-content"
+                on-iron-select="_offsetSelected">
                 <template is="dom-repeat" items="[[dateOffsets]]" as="offset">
                   <paper-item c="[[offset]]">[[offset.value]]</paper-item>
                 </template>
@@ -157,8 +157,7 @@ Custom property | Description | Default
             </paper-dropdown-menu>
             <paper-input
               type="date"
-              class="style-date-picker"
-              class="vertical-layout width-small"
+              class="style-date-picker vertical-layout width-small"
               value="{{item.bestBefore}}"
               id="bestBeforeInput">
             </paper-input>
@@ -200,10 +199,13 @@ Custom property | Description | Default
         _offsetSelected: function(e) {
           if (e && e.target === this.$.categoryDropdownMenu) {
             var selected = e.detail.item;
+            var dateString = "";
             if (selected.c.offset) {
               var date = new Date();
               selected.c.set(date);
               this.set("item.bestBefore", date.toISOString().substring(0, 10));
+            } else {
+              this.set("item.bestBefore", "");
             }
           }
         }

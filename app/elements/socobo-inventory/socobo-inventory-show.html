@@ -65,10 +65,6 @@ Custom property | Description | Default
         }
       }
       .style-best-before {
-        padding-top: 25px;
-      }
-      .style-date-picker-row {
-        margin-top: -15px;
       }
     </style>
     <div>
@@ -104,18 +100,13 @@ Custom property | Description | Default
             </paper-input>
           </div>
           <!-- 3. Row -->
-          <!-- 4. Row -->
-          <div hidden$="[[_hasBestBefore(item.bestBefore)]]"
-               class="horizontal-layout style-best-before">
-            <span>Best before</span>
-            <div class="horizontal-layout">
-              <paper-input
-                readonly
-                class="width-big style-disabled-inputs"
-                value="[[item.bestBefore]]">
-              </paper-input>
-            </div>
-          </div>
+          <paper-input
+            hidden$="[[_hasBestBefore(item.bestBefore)]]"
+            label="Best before"
+            readonly
+            class="style-best-before width-big style-disabled-inputs"
+            value="[[item.bestBefore]]">
+          </paper-input>
         </paper-dialog-scrollable>
       </paper-dialog>
     </div>
