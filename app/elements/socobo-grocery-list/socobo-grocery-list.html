@@ -134,14 +134,16 @@ Custom property | Description | Default
         </div>
       </iron-pages>
     </div>
-    <!-- Notification-->
-    <paper-toast id="infoGroceryList" duration="2000"></paper-toast>
   </template>
 
   <script>
     (function() {
       Polymer({
         is: "socobo-grocery-list",
+        /**
+         * Behaviors
+         */
+        behaviors: [ToastElementBehaviors.SendBehavior],
         /**
          * Element Properties.
          */
@@ -210,6 +212,23 @@ Custom property | Description | Default
             SocoboGrocery.getInstance(this, this.userLogin)
               .addItemToActiveList({desc: item.desc + " - " + item.amount + " " + item.unit});
           }.bind(this));
+        },
+        /**
+         * clear data after logout
+         *
+         * @function
+         */
+        clearData: function() {
+          this.set("groceryItems", []);
+          this.set("groceryArchiveItems", []);
+        },
+        /**
+         * unregister tracking changed listeners
+         *
+         * @function
+         */
+        unregisterListeners: function() {
+          SocoboGrocery.getInstance(this, this.userLogin).unregisterGroceryItemListeners();
         },
 
         /**
@@ -347,7 +366,7 @@ Custom property | Description | Default
           if (checkItemIndex !== -1) {
             items.splice(checkItemIndex, 1);
           } else {
-            this._notify("There is no Active Item checked for unchecking.");
+            this.notifyError("There is no active Item checked for unchecking.");
           }
         },
 
@@ -459,11 +478,11 @@ Custom property | Description | Default
               }
             } else {
               // notify user
-              this._notify("The Item is not available");
+              this.notifyError("There is no Item available.");
             }
           } else {
             // notify user
-            this._notify("The Item is not checked. Please check the Item before delete.");
+            this.notifyError("There is no checked Item. Please check the Item before delete.");
           }
         },
         /**
@@ -493,7 +512,7 @@ Custom property | Description | Default
             }
           } else {
             // notify user
-            this._notify("The Item is not available");
+            this.notifyError("There is no Item available.");
           }
         },
 
@@ -517,7 +536,7 @@ Custom property | Description | Default
             SocoboGrocery.getInstance(this, this.userLogin).removeItemFromActiveList(e.detail);
           } else {
             // notify user
-            this._notify("The Item is not available");
+            this.notifyError("There is no Item available.");
           }
         },
         /**
@@ -543,7 +562,7 @@ Custom property | Description | Default
               .addItemToActiveList({desc: e.detail.desc});
           } else {
             // notify user
-            this._notify("The Item is not available");
+            this.notifyError("There is no Item available.");
           }
         },
 
@@ -560,8 +579,8 @@ Custom property | Description | Default
          */
         _setHidden: function(item, searchQuery) {
           return !(searchQuery === null ||
-          typeof searchQuery === "undefined" ||
-          item.desc.toUpperCase().match(searchQuery.toUpperCase()));
+            typeof searchQuery === "undefined" ||
+            item.desc.toUpperCase().match(searchQuery.toUpperCase()));
         },
 
         /**
@@ -587,19 +606,6 @@ Custom property | Description | Default
           }.bind(this));
           // return selected item index
           return index;
-        },
-        /**
-         * Show Toast with specific message
-         *
-         * @param {String} msg
-         * @private
-         * @function
-         */
-        _notify: function(msg) {
-          this.$.infoGroceryList.text = msg;
-          if (!this.$.infoGroceryList.opened) {
-            this.$.infoGroceryList.show();
-          }
         },
 
         /**
@@ -658,9 +664,9 @@ Custom property | Description | Default
          * @function
          */
         _groceryChangedError: function(error) {
-          this._notify(error.code + " - " + error.message);
+          //notify user
+          this.notifyError("Grocery List - Error: " + error.code + " - " + error.message);
         },
-
         /**
          * init variable
          */

@@ -71,6 +71,7 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-inventory",
+        behaviors: [ToastElementBehaviors.SendBehavior],
 
         properties: {
           /**
@@ -199,7 +200,7 @@ Custom property | Description | Default
         },
 
         /**
-         * Listener to handle the create item events. Takes care creating the item and
+         * Listener to handle the create item events. Takes care of creating the item and
          * updating Firebase.
          *
          * @param {Object} e
@@ -268,17 +269,15 @@ Custom property | Description | Default
          */
         _saveItem: function(e) {
           var item = e.detail;
-          var self = this;
           if (item.__firebaseKey__) {
             var ref = new Firebase(this._handleLogin(this.userLogin) + "/" + item.__firebaseKey__);
             ref.update(item, function(error) {
               if (error) {
-                alert("There was an error updating the item");
-                console.log(error);
+                this.notifyError("There was an error updating the item. " + error.message);
               } else {
-                self.$.inventoryEditDialog.hide();
+                this.$.inventoryEditDialog.hide();
               }
-            });
+            }.bind(this));
           }
         }
       });

@@ -112,14 +112,16 @@ Custom property | Description | Default
         </div>
       </div>
     </div>
-    <!-- Notification-->
-    <paper-toast id="infoRanking" duration="2000"></paper-toast>
   </template>
 
   <script>
     (function() {
       Polymer({
         is: "socobo-ranking",
+        /**
+         * Behaviors
+         */
+        behaviors: [ToastElementBehaviors.SendBehavior],
         /**
          * This Event is fired if the user click the "add-to-grocery-list" button on the ranking dialog. <br/>
          * `Detail`: Object: {Missing Inventory Items} <br/>
@@ -167,17 +169,33 @@ Custom property | Description | Default
           SocoboRanking.getInstance(this.userLogin)
             .getData()
             .then(function(data) {
-              this._notify("Loading Data finished! Calculating started...");
+              this.notify("Loading Data finished! Calculating started...");
               this._calcRanking(data);
             }.bind(this))
             .catch(function(error) {
-              this._notify(error.message);
+              this.notifyError("Ranking - Error - " + error.message);
             }.bind(this));
           // register changed listener
           if (this.isFirstLoad) {
             SocoboRanking.getInstance(this.userLogin).registerChangedListener(this);
             this.isFirstLoad = false;
           }
+        },
+        /**
+         * clear data after logout
+         *
+         * @function
+         */
+        clearData: function() {
+          this.set("recipeRanking", []);
+        },
+        /**
+         * unregister tracking changed listeners
+         *
+         * @function
+         */
+        unregisterListeners: function() {
+          SocoboRanking.getInstance(this.userLogin).unregisterChangedListener();
         },
 
         /**
@@ -190,12 +208,12 @@ Custom property | Description | Default
         _calcRanking: function(data) {
           // check Data
           if (data === null || typeof(data) === "undefined") {
-            this._notify("No Data for Ranking available!");
+            this.notifyError("Ranking - Error - No Data for Ranking available!");
             return false;
           }
           // check Data length
           if (data.length !== 2) {
-            this._notify("Error - One needed Item is missing!");
+            this.notifyError("Ranking - Error - One needed Item is missing!");
             return false;
           }
           //extract data
@@ -245,7 +263,7 @@ Custom property | Description | Default
           // sort desc
           this._sortList(true);
           // notify user
-          this._notify("Calculating finished!");
+          this.notify("Calculating finished!");
           // reset loading flag
           this.isLoading = false;
         },
@@ -524,7 +542,7 @@ Custom property | Description | Default
          */
         _reload: function() {
           // notify user
-          this._notify("Reloading...");
+          this.notify("Reloading...");
           // reset recipe ranking
           this.set("recipeRanking", []);
           // reload data
@@ -594,20 +612,6 @@ Custom property | Description | Default
         },
 
         /**
-         * Show Toast with specific message
-         *
-         * @param {String} msg
-         * @private
-         * @function
-         */
-        _notify: function(msg) {
-          this.$.infoRanking.text = msg;
-          if (!this.$.infoRanking.opened) {
-            this.$.infoRanking.show();
-          }
-        },
-
-        /**
          * tracking changes in inventory items
          *
          * @private
@@ -639,9 +643,8 @@ Custom property | Description | Default
          * @function
          */
         _onChangedError: function(e) {
-          this._notify("Ranking - Reloading Error: " + e.detail.message);
+          this.notifyError("Ranking - Reloading Error: " + e.detail.message);
         },
-
         /**
          * init variables
          */
