@@ -203,10 +203,9 @@ Custom property | Description | Default
             if (selected.c.offset) {
               var date = new Date();
               selected.c.set(date);
-              this.set("item.bestBefore", date.toISOString().substring(0, 10));
-            } else {
-              this.set("item.bestBefore", "");
+              dateString = date.toISOString().substring(0, 10);
             }
+            this.set("item.bestBefore", dateString);
           }
         }
       });
