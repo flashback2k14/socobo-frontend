@@ -228,6 +228,18 @@
           });
         });
 
+        test('createNewRecipe calls notifyError if recipe is invalid', function() {
+          mock_add.expects("notifyError").once();
+          sinon.stub(socoboRecipeDetailsAdd, "validate", function(){
+            return {isValid: false, message: "Test"};
+          });
+          flush(function () {
+            socoboRecipeDetailsAdd.createNewRecipe();
+            mock_add.verify();
+          });
+        });
+
+
         test('createNewRecipe calls clearInputField if recipe is valid', function () {
           mock_add.expects("_clearInputFields");
 
