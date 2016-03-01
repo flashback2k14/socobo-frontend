@@ -141,13 +141,6 @@ Custom property | Description | Default
         ready: function() {
           this._toast = this.$.toast;
           window.addEventListener("socobo-show-toast", this._showToast.bind(this));
-
-          // Overriding the _renderClosed function of the paper-toast with the one from
-          // IronOverlayBehavior so the closed event is fired
-          this._toast._renderClosed = function() {
-            this.classList.remove("paper-toast-open");
-            Polymer.IronOverlayBehaviorImpl._renderClosed.apply(this, arguments);
-          };
         }
       });
     })();
