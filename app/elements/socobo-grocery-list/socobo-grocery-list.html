@@ -214,6 +214,15 @@ Custom property | Description | Default
           }.bind(this));
         },
         /**
+         * clear data after logout
+         *
+         * @function
+         */
+        clearData: function() {
+          this.set("groceryItems", []);
+          this.set("groceryArchiveItems", []);
+        },
+        /**
          * unregister tracking changed listeners
          *
          * @function

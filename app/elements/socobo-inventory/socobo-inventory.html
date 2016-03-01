@@ -277,16 +277,16 @@ Custom property | Description | Default
          */
         _saveItem: function(e) {
           var item = e.detail;
-          var self = this;
           if (item.__firebaseKey__) {
             var ref = new Firebase(this._handleLogin(this.userLogin) + "/" + item.__firebaseKey__);
             ref.update(item, function(error) {
               if (error) {
-                this.notifyError("TEST There was an error updating " + item.name);
-                console.log(error);
+//                this.fire("socobo-show-toast",
+//                  {type: "error", message: "There was an error updating the item. " + error.message}
+//                );
+                this.notifyError("There was an error updating the item. " + error.message);
               } else {
-                self.$.inventoryEditDialog.hide();
-                this.notifySuccess("Successfully updated " + item.name);
+                this.$.inventoryEditDialog.hide();
               }
             }.bind(this));
           }
