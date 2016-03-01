@@ -10,55 +10,123 @@
   ToastElementBehaviors.SendBehavior = {
 
     properties: {
+      /**
+       * Default duration, set if no duration is specified
+       *
+       * @private
+       */
       _DURATION: {
         type: Number,
         readOnly: true,
         value: 2000
       },
+      /**
+       * Type for plain toasts
+       *
+       * @private
+       */
       _PLAIN_TYPE: {
         type: String,
         readOnly: true,
         value: "plain"
       },
+      /**
+       * Type for error toasts
+       *
+       * @private
+       */
       _ERROR_TYPE: {
         type: String,
         readOnly: true,
         value: "error"
       },
+      /**
+       * Type for success toasts
+       *
+       * @private
+       */
       _SUCCESS_TYPE: {
         type: String,
         readOnly: true,
         value: "success"
       },
+      /**
+       * Name of the fired event
+       *
+       * @private
+       */
       _EVENT: {
         type: String,
         readOnly: true,
         value: "socobo-show-toast"
       }
     },
+    /**
+     * Triggers the raise a plain notification toast
+     *
+     * @param {String} msg
+     * @param {Number} [customDuration=2000]
+     * @function
+     *
+     */
     notify: function(msg, customDuration) {
       this._buildNotification(this._PLAIN_TYPE, msg, customDuration);
     },
+    /**
+     * Triggers the raise a error notification toast
+     *
+     * @param {String} msg
+     * @param {Number} [customDuration=2000]
+     * @function
+     *
+     */
     notifyError: function(msg, customDuration) {
       this._buildNotification(this._ERROR_TYPE, msg, customDuration);
     },
+    /**
+     * Triggers the raise a success notification toast
+     *
+     * @param {String} msg
+     * @param {Number} [customDuration=2000]
+     * @function
+     *
+     */
     notifySuccess: function(msg, customDuration) {
       this._buildNotification(this._SUCCESS_TYPE, msg, customDuration);
     },
+    /**
+     * Generic function to raise notification toasts
+     *
+     * @param {any} type
+     * @param {String} msg
+     * @param {Number} [customDuration=2000]
+     * @private
+     * @function
+     *
+     */
     _buildNotification: function(type, msg, customDuration) {
       var defaultDuration = customDuration ? customDuration : this._DURATION;
       var obj = this._buildMessageObj(
         type,
-        defaultDuration,
-        msg
+        msg,
+        defaultDuration
       );
       this.fire(this._EVENT, obj);
     },
-    _buildMessageObj: function(toastType, customDuration, msg) {
+    /**
+     * Generic function to build the message object
+     *
+     * @param {String} toastType
+     * @param {String} msg
+     * @param {Number} customDuration
+     * @private
+     * @function
+     */
+    _buildMessageObj: function(toastType, msg, customDuration) {
       return {
         type: toastType,
-        duration: customDuration,
-        message: msg
+        message: msg,
+        duration: customDuration
       };
     }
   };

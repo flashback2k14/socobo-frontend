@@ -228,7 +228,7 @@
           });
         });
 
-        test('createNewRecipe calls notifyError if reciep is invalid', function() {
+        test('createNewRecipe calls notifyError if recipe is invalid', function() {
           mock_add.expects("notifyError").once();
           sinon.stub(socoboRecipeDetailsAdd, "validate", function(){
             return {isValid: false, message: "Test"};
