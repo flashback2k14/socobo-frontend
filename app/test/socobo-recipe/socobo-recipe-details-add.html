@@ -40,11 +40,6 @@
           done();
         });
 
-        test("has an paper-icon-button field to exit the dialog", function(done) {
-          expect(socoboRecipeDetailsAdd.$.exit).to.not.be.eql(undefined);
-          done();
-        });
-
         test("has an input field for the image", function(done) {
           expect(socoboRecipeDetailsAdd.$.fileChooser).to.not.be.eql(undefined);
           done();
@@ -136,13 +131,6 @@
           };
           socoboRecipeDetailsAdd._removeStep(e);
           expect(socoboRecipeDetailsAdd.recipe_inputs.length).to.be.eql(1);
-        });
-
-        test("Call clearInputFields on clicking the exit cross button", function(){
-          mock_add.expects("_clearInputFields").once();
-          var btn_exit = socoboRecipeDetailsAdd.$.exit;
-          MockInteractions.tap(btn_exit);
-          mock_add.verify();
         });
 
         test("Call clearInputFields on clicking the exit fab button", function(){
