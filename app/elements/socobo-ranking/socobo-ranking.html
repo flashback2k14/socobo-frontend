@@ -622,8 +622,13 @@ Custom property | Description | Default
          * @function
          */
         _onInventoryItemChanged: function() {
-          if (!this.isLoading) {
+          // this.reloadCounter is a Workaround,
+          // because inventory fires 2 changed events
+          if (!this.isLoading && this.reloadCounter === 0) {
             this._reload();
+            this.reloadCounter++;
+          } else {
+            this.reloadCounter = 0;
           }
         },
 
@@ -655,6 +660,7 @@ Custom property | Description | Default
         ready: function() {
           this.isFirstLoad = true;
           this.isLoading = false;
+          this.reloadCounter = 0;
         }
       });
     })();
