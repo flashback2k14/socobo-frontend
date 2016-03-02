@@ -221,10 +221,8 @@
           sinon.stub(socoboRecipeDetailsAdd, "validate", function(){
             return {isValid: false, message: "Test"};
           });
-          flush(function () {
-            socoboRecipeDetailsAdd.createNewRecipe();
-            mock_add.verify();
-          });
+          socoboRecipeDetailsAdd.createNewRecipe();
+          mock_add.verify();
         });
 
 
