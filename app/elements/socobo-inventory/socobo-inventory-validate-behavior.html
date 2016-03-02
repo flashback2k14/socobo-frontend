@@ -37,14 +37,21 @@
       },
 
       /**
-       * Possible categories the item can be associated with
+       * Quick select options for the expiry date
        *
        * @private
        */
-      categories: {
+      dateOffsets: {
         type: Array,
         value: function() {
-          return ["Backen", "Gewürze", "Gemüse", "Obst"];
+          return [
+            this.Offset("none", 0, "day"),
+            this.Offset("3 days", 3, "day"),
+            this.Offset("1 week", 7, "day"),
+            this.Offset("2 weeks",14, "day"),
+            this.Offset("1 month", 1, "month"),
+            this.Offset("3 months", 3, "month")
+          ];
         }
       }
     },
@@ -52,6 +59,33 @@
     observers: [
       "_validate(item.*)"
     ],
+
+    /**
+     * Provides an object to set a date to a specific offset.
+     *
+     * @param {string} text
+     * @param {Number} offset
+     * @param {string} type The type of offset, either `day` or `month
+     *
+     * @return {{value, set, offset}}
+     *
+     * @private
+     */
+    Offset: function(text, offset, type) {
+      return {
+        value: text,
+        offset: offset,
+        set: function(d) {
+          switch (type) {
+            case "day":
+              d.setDate(d.getDate() + offset);
+              break;
+            case "month":
+              d.setMonth(d.getMonth() + offset);
+          }
+        }
+      };
+    },
 
     /**
      * Populate the item with the values from the dropdowns and set item.desc and item.info
@@ -105,9 +139,11 @@
      * @private
      */
     _validate: function() {
-      var valid = this.item.validate().isValid;
-      this.$.submitItemButton.disabled = !valid;
-      return valid;
+      if (this.$.submitItemButton) {
+        var valid = this.item.validate().isValid;
+        this.$.submitItemButton.disabled = !valid;
+        return valid;
+      }
     }
   };
   InventoryBehaviors.ValidateBehavior = {
