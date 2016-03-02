@@ -119,6 +119,10 @@ Custom property | Description | Default
       Polymer({
         is: "socobo-ranking",
         /**
+         * Behaviors
+         */
+        behaviors: [ToastElementBehaviors.SendBehavior],
+        /**
          * This Event is fired if the user click the "add-to-grocery-list" button on the ranking dialog. <br/>
          * `Detail`: Object: {Missing Inventory Items} <br/>
          * @event add-missing-items-to-grocery-list
@@ -165,16 +169,11 @@ Custom property | Description | Default
           SocoboRanking.getInstance(this.userLogin)
             .getData()
             .then(function(data) {
-              this._notify({
-                message: "Loading Data finished! Calculating started..."
-              });
+              this.notify("Loading Data finished! Calculating started...");
               this._calcRanking(data);
             }.bind(this))
             .catch(function(error) {
-              this._notify({
-                type: "error",
-                message: "Ranking - Error - " + error.message
-              });
+              this.notifyError("Ranking - Error - " + error.message);
             }.bind(this));
           // register changed listener
           if (this.isFirstLoad) {
@@ -209,18 +208,12 @@ Custom property | Description | Default
         _calcRanking: function(data) {
           // check Data
           if (data === null || typeof(data) === "undefined") {
-            this._notify({
-              type: "error",
-              message: "Ranking - Error - No Data for Ranking available!"
-            });
+            this.notifyError("Ranking - Error - No Data for Ranking available!");
             return false;
           }
           // check Data length
           if (data.length !== 2) {
-            this._notify({
-              type: "error",
-              message: "Ranking - Error - One needed Item is missing!"
-            });
+            this.notifyError("Ranking - Error - One needed Item is missing!");
             return false;
           }
           //extract data
@@ -270,9 +263,7 @@ Custom property | Description | Default
           // sort desc
           this._sortList(true);
           // notify user
-          this._notify({
-            message: "Calculating finished!"
-          });
+          this.notify("Calculating finished!");
           // reset loading flag
           this.isLoading = false;
         },
@@ -551,9 +542,7 @@ Custom property | Description | Default
          */
         _reload: function() {
           // notify user
-          this._notify({
-            message: "Reloading..."
-          });
+          this.notify("Reloading...");
           // reset recipe ranking
           this.set("recipeRanking", []);
           // reload data
@@ -654,25 +643,8 @@ Custom property | Description | Default
          * @function
          */
         _onChangedError: function(e) {
-          this._notify({
-            type: "error",
-            message: "Ranking - Reloading Error: " + e.detail.message
-          });
+          this.notifyError("Ranking - Reloading Error: " + e.detail.message);
         },
-
-        /**
-         * Send Notification to inform the User
-         *
-         * @param {Object} options
-         * @function
-         */
-        _notify: function(options) {
-          var type = options && options.type ? options.type : "plain";
-          var dur = options && options.duration ? options.duration : 2000;
-          var msg = options && options.message ? options.message : "Hello, World";
-          this.fire("socobo-show-toast", {type: type, duration: dur, message: msg});
-        },
-
         /**
          * init variables
          */

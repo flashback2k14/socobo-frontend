@@ -336,7 +336,7 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-recipe-details-edit",
-        behaviors: [RecipeBehaviors.ValidateBehavior],
+        behaviors: [RecipeBehaviors.ValidateBehavior, ToastElementBehaviors.SendBehavior],
         /**
          * LISTENERS
          */
@@ -557,8 +557,7 @@ Custom property | Description | Default
             this._clearInputFields();
             this.$.dialog.close();
           } else {
-            this.fire("socobo-show-toast", {type: "error", message: validationResult.message});
-
+            this.notifyError(validationResult.message, 5000);
           }
         }
       });
