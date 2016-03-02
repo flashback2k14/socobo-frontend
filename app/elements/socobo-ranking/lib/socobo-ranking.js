@@ -131,18 +131,20 @@ var SocoboRanking = (function() {
     };
     /**
      * unregister listener for tracking changes
+     *
+     * @param {Object} context
      */
-    var unregisterChangedListener = function() {
+    var unregisterChangedListener = function(context) {
       // inventory
-      _refInventory.off("child_added", _onCompleteInventory);
-      _refInventory.off("child_changed", _onCompleteInventory);
-      _refInventory.off("child_removed", _onCompleteInventory);
+      _refInventory.off("child_added", _onCompleteInventory, context);
+      _refInventory.off("child_changed", _onCompleteInventory, context);
+      _refInventory.off("child_removed", _onCompleteInventory, context);
       // recipes
-      _refRecipes.off("child_added", _onCompleteRecipe);
-      _refRecipes.off("child_changed", _onCompleteRecipe);
-      _refRecipes.off("child_removed", _onCompleteRecipe);
+      _refRecipes.off("child_added", _onCompleteRecipe, context);
+      _refRecipes.off("child_changed", _onCompleteRecipe, context);
+      _refRecipes.off("child_removed", _onCompleteRecipe, context);
     };
-    
+
     /**
      * Public API
      */

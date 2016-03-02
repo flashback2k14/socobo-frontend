@@ -195,7 +195,7 @@ Custom property | Description | Default
          * @function
          */
         unregisterListeners: function() {
-          SocoboRanking.getInstance(this.userLogin).unregisterChangedListener();
+          SocoboRanking.getInstance(this.userLogin).unregisterChangedListener(this);
         },
 
         /**
