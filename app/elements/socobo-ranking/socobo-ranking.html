@@ -119,14 +119,16 @@ Custom property | Description | Default
       Polymer({
         is: "socobo-ranking",
         /**
-         * Behaviors
-         */
-        behaviors: [ToastElementBehaviors.SendBehavior],
-        /**
          * This Event is fired if the user click the "add-to-grocery-list" button on the ranking dialog. <br/>
          * `Detail`: Object: {Missing Inventory Items} <br/>
          * @event add-missing-items-to-grocery-list
          */
+
+        /**
+         * Behaviors
+         */
+        behaviors: [ToastElementBehaviors.SendBehavior],
+
         /**
          * Element Properties.
          */
@@ -158,7 +160,7 @@ Custom property | Description | Default
         },
 
         /**
-         * Load Data for Ranking.</br>
+         * Load Data for Ranking.
          *
          * @function
          */
@@ -169,10 +171,16 @@ Custom property | Description | Default
           SocoboRanking.getInstance(this.userLogin)
             .getData()
             .then(function(data) {
-              this.notify("Loading Data finished! Calculating started...");
               this._calcRanking(data);
+              // reset loading flag
+              this.isLoading = false;
+              // notify user
+              this.notify("Ranking - Calculating finished!");
             }.bind(this))
             .catch(function(error) {
+              // reset loading flag
+              this.isLoading = false;
+              // notify user
               this.notifyError("Ranking - Error - " + error.message);
             }.bind(this));
           // register changed listener
@@ -262,10 +270,6 @@ Custom property | Description | Default
           }.bind(this));
           // sort desc
           this._sortList(true);
-          // notify user
-          this.notify("Calculating finished!");
-          // reset loading flag
-          this.isLoading = false;
         },
 
         /**
@@ -542,7 +546,7 @@ Custom property | Description | Default
          */
         _reload: function() {
           // notify user
-          this.notify("Reloading...");
+          this.notify("Ranking - Reloading...");
           // reset recipe ranking
           this.set("recipeRanking", []);
           // reload data
