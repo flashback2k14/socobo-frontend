@@ -28,8 +28,8 @@
       function setItemData(){
         // preparing valid item data
         dialog.set('item.name', "Valid name");
-        dialog.set('item.count', "4");
-        dialog.set('item.measurement', {value: "g"});
+        dialog.set('item.amount', "4");
+        dialog.set('item.unit', {value: "g"});
       }
 
       setup(function() {
@@ -46,11 +46,6 @@
         done();
       });
 
-      test('does not have a save button', function(done) {
-        expect(dialog.$.editItemButton).to.be.eql(undefined);
-        done();
-      });
-
       test('show sets item data to initial values if nothing is passed in', function(done) {
         dialog.show();
         expect(dialog.item.desc).to.be.eql(undefined);
@@ -60,16 +55,16 @@
       });
 
       test('valid items are validated correctly', function(done) {
-        var validItem = {name: "Valid name", count: "4", measurement: {value: "g"}};
-        dialog.item.extend(validItem);
+        var validItem = {name: "Valid name", amount: "4", unit: {value: "g"}};
+        dialog._setAndNotify(validItem);
         expect(dialog._validate()).to.be.eql(true);
 
         done();
       });
 
       test('items without measurement are not valid', function(done) {
-        var invalidItem = {name: "Valid name", count: "4"};
-        dialog.item.extend(invalidItem);
+        var invalidItem = {name: "Valid name", amount: "4"};
+        dialog._setAndNotify(invalidItem);
         expect(dialog._validate()).to.be.eql(false);
 
         done();
@@ -91,7 +86,7 @@
       });
 
       test('setItem sets item data', function(done) {
-        var item = {desc: 'test item', info: 'test info', measurement: {__firebaseKey__: "0", value: "pcs"}};
+        var item = {desc: 'test item', info: 'test info', unit: {__firebaseKey__: "0", value: "pcs"}};
         dialog.setItem(item);
         expect(dialog.item.desc).to.be.eql(item.desc);
         expect(dialog.item.info).to.be.eql(item.info);

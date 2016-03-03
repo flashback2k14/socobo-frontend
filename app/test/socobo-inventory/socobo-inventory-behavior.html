@@ -32,15 +32,15 @@
       });
 
       test('valid items are validated correctly', function(done) {
-        var validItem = item.extend({name: "Valid name", count: "4", measurement: {__firebaseKey__: "0", value: "pcs"}});
+        var validItem = Object.assign(item, {name: "Valid name", amount: "4", unit: {__firebaseKey__: "0", value: "pcs"}});
         expect(validItem.validate().isValid).to.be.eql(true);
 
         done();
       });
 
       test('items without measurement are not valid', function(done) {
-        var invalidItem = item.extend({name: "Valid name", count: "4"});
-        var anotherInvalidItem = item.extend({name: "Valid name", count: "4"});
+        var invalidItem = Object.assign(item, {name: "Valid name", amount: "4"});
+        var anotherInvalidItem = Object.assign(item, {name: "Valid name", amount: "4"});
         expect((invalidItem.validate().isValid)).to.be.eql(false);
         expect(anotherInvalidItem.validate().isValid).to.be.eql(false);
 
@@ -48,21 +48,21 @@
       });
 
       test('items without name are not valid', function(done) {
-        var invalidItem = item.extend({count: "4"});
+        var invalidItem = Object.assign(item, {amount: "4"});
         expect(invalidItem.validate().isValid).to.be.eql(false);
 
         done();
       });
 
       test('item with too short name are not valid', function(done) {
-        var invalidItem = item.extend({name: "name"});
+        var invalidItem = Object.assign(item, {name: "name"});
         expect(invalidItem.validate().isValid).to.be.eql(false);
 
         done();
       });
 
       test('items without count are not valid', function(done) {
-        var invalidItem = item.extend({name: "Valid name", measurement: {__firebaseKey__: "0", value: "pcs"}});
+        var invalidItem = Object.assign(item, {name: "Valid name", unit: {__firebaseKey__: "0", value: "pcs"}});
         expect(invalidItem.validate().isValid).to.be.eql(false);
 
         done();
