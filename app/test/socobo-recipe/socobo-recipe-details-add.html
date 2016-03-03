@@ -40,11 +40,6 @@
           done();
         });
 
-        test("has an paper-icon-button field to exit the dialog", function(done) {
-          expect(socoboRecipeDetailsAdd.$.exit).to.not.be.eql(undefined);
-          done();
-        });
-
         test("has an input field for the image", function(done) {
           expect(socoboRecipeDetailsAdd.$.fileChooser).to.not.be.eql(undefined);
           done();
@@ -138,13 +133,6 @@
           expect(socoboRecipeDetailsAdd.recipe_inputs.length).to.be.eql(1);
         });
 
-        test("Call clearInputFields on clicking the exit cross button", function(){
-          mock_add.expects("_clearInputFields").once();
-          var btn_exit = socoboRecipeDetailsAdd.$.exit;
-          MockInteractions.tap(btn_exit);
-          mock_add.verify();
-        });
-
         test("Call clearInputFields on clicking the exit fab button", function(){
           mock_add.expects("_clearInputFields").once();
           var btn_exit = socoboRecipeDetailsAdd.$.abort;
@@ -227,18 +215,6 @@
             socoboRecipeDetailsAdd.createNewRecipe();
           });
         });
-
-        test('createNewRecipe calls notifyError if recipe is invalid', function() {
-          mock_add.expects("notifyError").once();
-          sinon.stub(socoboRecipeDetailsAdd, "validate", function(){
-            return {isValid: false, message: "Test"};
-          });
-          flush(function () {
-            socoboRecipeDetailsAdd.createNewRecipe();
-            mock_add.verify();
-          });
-        });
-
 
         test('createNewRecipe calls clearInputField if recipe is valid', function () {
           mock_add.expects("_clearInputFields");
