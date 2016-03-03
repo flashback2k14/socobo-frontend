@@ -75,7 +75,7 @@
         menuItemInventory, menuItemProfile
       ]);
       // load Ranking, Recipes and Profile
-      elRanking.loadData();
+      elRanking.loadData(false);
       elGroceryList.loadData();
       elRecipe.loadData();
       elProfile.loadData();
@@ -122,7 +122,7 @@
     // set UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
     // load Ranking, Grocery List, Recipes and Profile
-    elRanking.loadData();
+    elRanking.loadData(false);
     elGroceryList.loadData();
     elRecipe.loadData();
     elProfile.loadData();

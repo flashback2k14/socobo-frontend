@@ -164,7 +164,7 @@ Custom property | Description | Default
          *
          * @function
          */
-        loadData: function() {
+        loadData: function(isReload) {
           // set loading flag
           this.isLoading = true;
           // load data
@@ -175,7 +175,9 @@ Custom property | Description | Default
               // reset loading flag
               this.isLoading = false;
               // notify user
-              this.notify("Ranking - Calculating finished!");
+              if (isReload) {
+                this.notify("Ranking updated!");
+              }
             }.bind(this))
             .catch(function(error) {
               // reset loading flag
@@ -541,16 +543,15 @@ Custom property | Description | Default
         /**
          * Reload List
          *
+         * @param {Object} e
          * @private
          * @function
          */
-        _reload: function() {
-          // notify user
-          this.notify("Ranking - Reloading...");
+        _reload: function(e) {
           // reset recipe ranking
           this.set("recipeRanking", []);
           // reload data
-          this.loadData();
+          this.loadData(!!e);
         },
 
         /**
