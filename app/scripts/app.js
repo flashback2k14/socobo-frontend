@@ -5,6 +5,7 @@
    * global app object
    */
   var app = document.querySelector("#app");
+
   /**
    * declare variables
    */
