@@ -151,31 +151,6 @@ gulp.task("copyAbout", function() {
   return gulp.src(["app/elements/socobo-about/data/*"]).pipe(gulp.dest(dist("elements/data")));
 });
 
-// Copy all files at the root level (app)
-gulp.task("copy", ["copyAbout"], function() {
-  var app = gulp.src([
-    "app/*",
-    "!app/test",
-    "!app/elements",
-    "!app/bower_components",
-    "!app/cache-config.json",
-    "!**/.DS_Store"
-  ], {
-    dot: true
-  }).pipe(gulp.dest(dist()));
-
-  // Copy over only the bower_components we need
-  // These are things which cannot be vulcanized
-  var bower = gulp.src([
-    "app/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*"
-  ]).pipe(gulp.dest(dist("bower_components")));
-
-  return merge(app, bower)
-    .pipe($.size({
-      title: "copy"
-    }));
-});
-
 gulp.task("copyGhPages", function() {
   // copy bower_components
   var bc = gulp.src([
@@ -217,6 +192,31 @@ gulp.task("copyGhPages", function() {
   return merge(bc, app, renameDoc, removeImports, config, newIndex)
     .pipe($.size({
       title: "copyGhPages"
+    }));
+});
+
+// Copy all files at the root level (app)
+gulp.task("copy", ["copyAbout", "copyGhPages"], function() {
+  var app = gulp.src([
+    "app/*",
+    "!app/test",
+    "!app/elements",
+    "!app/bower_components",
+    "!app/cache-config.json",
+    "!**/.DS_Store"
+  ], {
+    dot: true
+  }).pipe(gulp.dest(dist()));
+
+  // Copy over only the bower_components we need
+  // These are things which cannot be vulcanized
+  var bower = gulp.src([
+    "app/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*"
+  ]).pipe(gulp.dest(dist("bower_components")));
+
+  return merge(app, bower)
+    .pipe($.size({
+      title: "copy"
     }));
 });
 
@@ -285,7 +285,7 @@ gulp.task("cache-config", function(callback) {
 
 // Clean output directory
 gulp.task("clean", function() {
-  return del([".tmp", dist()]);
+  return del([".tmp", dist(), "ghPages"]);
 });
 
 // Watch files for changes & reload
