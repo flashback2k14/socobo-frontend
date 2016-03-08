@@ -1,7 +1,7 @@
 {
   "firebase": "socobo-dev-project",
   "public": "dist",
-  "rules": "db/rules.bolt",
+  "rules": "db/rules.json",
   "ignore": [
     "firebase.json",
     "**/.*",

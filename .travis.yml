@@ -22,3 +22,6 @@ addons:
       - g++-4.8
 script:
   - ./travis_runner.sh
+env:
+  global:
+    - "CXX='g++-4.8'"
