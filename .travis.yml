@@ -9,13 +9,16 @@ before_script:
   - npm install bower
   - 'export PATH=$PWD/node_modules/.bin:$PATH'
   - bower install
+  - chmod +x ./travis_runner.sh
 node_js: 5
 addons:
   firefox: latest
   apt:
     sources:
       - google-chrome
+      - ubuntu-toolchain-r-test
     packages:
       - google-chrome-stable
+      - g++-4.8
 script:
   - ./travis_runner.sh
