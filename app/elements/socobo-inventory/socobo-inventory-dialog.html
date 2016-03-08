@@ -59,16 +59,16 @@ Custom property | Description | Default
         --paper-input-container-focus-color: var(--socobo-inventory-create-style-input-only-color-focus-color, --text-secondary-color);
         --paper-input-container-input-color: var(--socobo-inventory-create-style-input-only-color-input-color, --text-secondary-color);
       }
-      
+
       .style-dropdown-content-measurement {
         width: 150px;
         overflow: overlay !important;
       }
-      
+
       .style-best-before {
         padding-top: 25px;
       }
-      
+
       .style-date-picker-row {
         margin-top: 6px;
       }
@@ -111,10 +111,10 @@ Custom property | Description | Default
           <!-- 2. Row -->
           <div class="horizontal-layout">
             <paper-input
-              id="countInput"
+              id="amountInput"
               class="vertical-layout width-big style-input-only-color"
               label="Amount/Number"
-              value="{{item.count}}"
+              value="{{item.amount}}"
               minlength="1"
               maxlength="5"
               pattern="[0-9]+"
@@ -123,15 +123,15 @@ Custom property | Description | Default
               error-message="A number is required">
             </paper-input>
             <paper-dropdown-menu
-              id="measurementDropdown"
+              id="unitDropdown"
               class="vertical-layout width-small"
               label="Measurement"
-              on-iron-select="_measurementSelected">
+              on-iron-select="_unitSelected">
               <paper-menu
-                id="measurementDropdownMenu"
+                id="unitDropdownMenu"
                 class="dropdown-content style-dropdown-content-measurement">
-                <template is="dom-repeat" items="[[measurements]]" as="measurement">
-                  <paper-item m="[[measurement]]">[[measurement.value]]</paper-item>
+                <template is="dom-repeat" items="[[units]]" as="unit">
+                  <paper-item m="[[unit]]">[[unit.value]]</paper-item>
                 </template>
               </paper-menu>
             </paper-dropdown-menu>
@@ -175,15 +175,15 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-inventory-dialog",
-        
+
         behaviors: [InventoryBehaviors.ItemBehavior, InventoryBehaviors.DialogBehavior],
-        
+
         properties: {
           heading: {
             type: String
           }
         },
-        
+
         /**
          * Takes care of sending the item up one level
          *

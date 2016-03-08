@@ -245,7 +245,7 @@ Custom property | Description | Default
                 // check if inventory items is available for recipe
                 if (ingredient.desc === item.name) {
                   // check measurements and amount
-                  if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement.value)) {
+                  if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.amount, item.unit.value)) {
                     // count matching items
                     recipe.matchingItemCount++;
                     // add matching items
