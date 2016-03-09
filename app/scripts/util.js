@@ -73,6 +73,29 @@ var Util = (function() {
     var msg = options && options.message ? options.message : "Hello, World";
     ctx.fire("socobo-show-toast", {type: type, duration: dur, message: msg});
   };
+  /**
+   * get email address from auth data
+   *
+   * @param {Object} userObj
+   * @return {String}
+   * @private
+   */
+  var getUserEmailAddress = function(userObj) {
+    switch (userObj.provider) {
+      case "password":
+        return userObj.password.email;
+      case "google":
+        return userObj.google.hasOwnProperty("email") ?
+          userObj.google.email
+          : userObj.google.cachedUserProfile.link;
+      case "twitter":
+        return userObj.twitter.username;
+      case "facebook":
+        return userObj.facebook.hasOwnProperty("email") ?
+          userObj.facebook.email
+          : userObj.facebook.cachedUserProfile.email;
+    }
+  };
 
   /**
    * make functions public
@@ -82,6 +105,7 @@ var Util = (function() {
     stringToObject: stringToObject,
     isUserLoginExpired: isUserLoginExpired,
     toggleMenuItems: toggleMenuItems,
-    notify: notify
+    notify: notify,
+    getUserEmailAddress: getUserEmailAddress
   };
 })();
