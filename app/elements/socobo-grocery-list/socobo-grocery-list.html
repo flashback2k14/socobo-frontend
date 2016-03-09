@@ -76,6 +76,7 @@ Custom property | Description | Default
       <iron-ajax
         id="iaSendMail"
         url="https://socobo-project-backend.herokuapp.com/api/v1/send-grocery-list"
+        content-type="application/json"
         method="POST"
         handle-as="json"
         on-response="_handleMailResponse"
@@ -708,20 +709,22 @@ Custom property | Description | Default
          */
         _sendMail: function() {
           this.notify("Send Grocery List...");
-          this.$.iaSendMail.body = {
-            email: this.userMailAddress,
+          var requestBody = {
+            email: "sebastian-kloppe@gmx.de",
             list: this.groceryItems
           };
+          this.$.iaSendMail.body = Util.objectToString(requestBody);
           this.$.iaSendMail.generateRequest();
         },
         /**
          * Handle Success Response from Backend
          *
-         * @param {Object} response
          * @function
          */
-        _handleMailResponse: function(response) {
-          this.notifySuccess(response.detail.msg);
+        //_handleMailResponse: function(response) {
+        _handleMailResponse: function() {
+          //this.notifySuccess(response.detail.msg);
+          this.notifySuccess("Grocery List Items send to User!");
         },
         /**
          * Handle Failed Response from Backend
@@ -730,7 +733,20 @@ Custom property | Description | Default
          * @function
          */
         _handleMailError: function(error) {
-          this.notifyError(error.detail.msg);
+          var msg = "";
+          if (error.detail.hasOwnProperty("msg")) {
+            msg = error.detail.msg + " ";
+            msg += error.detail.extra;
+          } else if (error.detail.hasOwnProperty("error")) {
+            if (error.detail.error.hasOwnProperty("message")) {
+              msg = error.detail.error.message;
+            } else {
+              msg = "Something went wrong with sending the Mail!";
+            }
+          } else {
+            msg = "Something went wrong with sending the Mail!";
+          }
+          this.notifyError(msg);
         },
 
         /**
