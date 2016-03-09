@@ -330,6 +330,7 @@ Custom property | Description | Default
         _handleCheck: function(e) {
           if (this.selected === 0) {
             if (this._getIndex(this.checkItems, e.detail) === -1) {
+              this.toggleAttribute("disabled", false, this.$.btnDelete);
               this.checkItems.push(e.detail);
             }
           } else {
@@ -348,6 +349,7 @@ Custom property | Description | Default
         _handleUncheck: function(e) {
           if (this.selected === 0) {
             this._uncheck(this.checkItems, e.detail);
+            this.toggleAttribute("disabled", true, this.$.btnDelete);
           } else {
             this._uncheck(this.checkItemsArchive, e.detail);
           }
