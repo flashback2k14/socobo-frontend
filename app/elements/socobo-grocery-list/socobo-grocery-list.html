@@ -27,7 +27,7 @@ Custom property | Description | Default
       .style-paper-tabs {
         @apply(--layout-horizontal);
         @apply(--layout-self-start);
-        --paper-tabs-selection-bar-color: var(--socobo-grocery-list-paper-tab-ink, --accent-color);
+        --paper-tabs-selection-bar-color: var(--socobo-grocery-list-paper-tab-ink, --dark-accent-color);
         --paper-tabs: {
           margin-left: 15px;
           margin-bottom: 0;
@@ -35,7 +35,7 @@ Custom property | Description | Default
         };
       }
       .style-paper-tab {
-        --paper-tab-ink: var(--socobo-grocery-list-paper-tab-ink, --accent-color);
+        --paper-tab-ink: var(--socobo-grocery-list-paper-tab-ink, --dark-accent-color);
         --paper-tab: {
           min-width: 25%;
           width: 200px;
@@ -210,7 +210,6 @@ Custom property | Description | Default
             value: 0
           }
         },
-
         /**
          * register listeners for changed items
          */
@@ -710,7 +709,7 @@ Custom property | Description | Default
         _sendMail: function() {
           this.notify("Send Grocery List...");
           var requestBody = {
-            email: "sebastian-kloppe@gmx.de",
+            email: this.userMailAddress,
             list: this.groceryItems
           };
           this.$.iaSendMail.body = Util.objectToString(requestBody);
@@ -721,9 +720,8 @@ Custom property | Description | Default
          *
          * @function
          */
-        //_handleMailResponse: function(response) {
         _handleMailResponse: function() {
-          //this.notifySuccess(response.detail.msg);
+          //notify user
           this.notifySuccess("Grocery List Items send to User!");
         },
         /**
@@ -746,6 +744,7 @@ Custom property | Description | Default
           } else {
             msg = "Something went wrong with sending the Mail!";
           }
+          //notify user
           this.notifyError(msg);
         },
 
