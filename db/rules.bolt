@@ -33,8 +33,8 @@ type Recipe {
   desc: NameString,
   text: String,
   userId: String,
-  steps: Any,
-  ingredients: Any,
+  steps: Step[],
+  ingredients: RecipeIngredient[],
 
   refUser: Url | Null,
   image: String | Null,
@@ -99,13 +99,11 @@ path /recipes {
 
 
   path /{id} is Recipe {
-    write() { isCurrentUser(this.userId)}
-    index() { "userId" }
+    update() {  isCurrentUser(this.userId) }
+    create() { isCurrentUser(this.userId) }
 
-   // STEPS
-    path /steps/{number} is Step {}
-    // INGREDIENTS
-    path /ingredients/{number} is RecipeIngredient {}
+    delete() { isCurrentUser(prior(this.userId)) }
+    index() { "userId" }
   }
 }
 
