@@ -74,9 +74,6 @@
         menuItemLogin, menuItemHome, menuItemRecipe,
         menuItemInventory, menuItemProfile
       ]);
-      // set email address to grocery list
-      var userObj = Util.stringToObject(UserInfo.get(UserInfo.USEROBJECT));
-      app.usermailaddress = Util.getUserEmailAddress(userObj);
       // load Ranking, Recipes and Profile
       elRanking.loadData(false);
       elGroceryList.loadData();
@@ -124,8 +121,6 @@
     ]);
     // set UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
-    // set email address to grocery list
-    app.usermailaddress = Util.getUserEmailAddress(userObj);
     // load Ranking, Grocery List, Recipes and Profile
     elRanking.loadData(false);
     elGroceryList.loadData();
@@ -200,10 +195,10 @@
    */
   app.handleGoToHome = function() {
     if (app.route !== "home") {
-      page.show("/home"); 
+      page.show("/home");
     }
   };
-  
+
   app.logoutUser = function(text) {
     var infoText = "";
     if (typeof text === "string") {

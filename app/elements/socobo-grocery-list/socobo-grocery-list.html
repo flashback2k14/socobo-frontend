@@ -179,14 +179,6 @@ Custom property | Description | Default
             value: {}
           },
           /**
-           * User Email Address
-           */
-          userMailAddress: {
-            type: String,
-            value: "",
-            notify: true
-          },
-          /**
            * data binding array
            */
           groceryItems: {
@@ -708,10 +700,13 @@ Custom property | Description | Default
          */
         _sendMail: function() {
           this.notify("Send Grocery List...");
+          var requestHeader = {
+            "X-SOCOBO-AUTH": this.userLogin.userId
+          };
           var requestBody = {
-            email: this.userMailAddress,
             list: this.groceryItems
           };
+          this.$.iaSendMail.headers = requestHeader;
           this.$.iaSendMail.body = Util.objectToString(requestBody);
           this.$.iaSendMail.generateRequest();
         },
