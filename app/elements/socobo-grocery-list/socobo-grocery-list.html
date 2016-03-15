@@ -27,27 +27,33 @@ Custom property | Description | Default
       .style-paper-tabs {
         @apply(--layout-horizontal);
         @apply(--layout-self-start);
+        --paper-tabs-selection-bar-color: var(--socobo-grocery-list-paper-tab-ink, --dark-accent-color);
         --paper-tabs: {
           margin-left: 15px;
           margin-bottom: 0;
           padding-bottom: 0;
         };
-        --paper-tabs-selection-bar-color: var(--socobo-grocery-list-paper-tab-ink, --accent-color);
       }
       .style-paper-tab {
+        --paper-tab-ink: var(--socobo-grocery-list-paper-tab-ink, --dark-accent-color);
         --paper-tab: {
           min-width: 25%;
           width: 200px;
           background: var(--socobo-grocery-list-paper-tab-bg, --default-primary-color);
           color: var(--socobo-grocery-list-paper-tab-color, --text-primary-color);
         };
-        --paper-tab-ink: var(--socobo-grocery-list-paper-tab-ink, --accent-color);
+      }
+      .style-paper-fab-mail {
+        @apply(--layout-horizontal);
+        @apply(--layout-self-end);
+        margin-top: -30px;
+        margin-right: 70px;
       }
       .style-paper-fab {
         @apply(--layout-horizontal);
         @apply(--layout-self-end);
-        margin-top: -30px;
-        margin-right: 24px;
+        margin-top: -55px;
+        margin-right: 5px;
       }
       .style-content-container {
         margin-top: 5px;
@@ -66,6 +72,16 @@ Custom property | Description | Default
     </style>
 
     <div class="container">
+      <!-- iron ajax -->
+      <iron-ajax
+        id="iaSendMail"
+        url="https://socobo-project-backend.herokuapp.com/api/v1/send-grocery-list"
+        content-type="application/json"
+        method="POST"
+        handle-as="json"
+        on-response="_handleMailResponse"
+        on-error="_handleMailError">
+      </iron-ajax>
       <!-- Search -->
       <socobo-element-search
         id="elSearch"
@@ -84,7 +100,14 @@ Custom property | Description | Default
           <paper-tab id="tabArchive" class="style-paper-tab">ARCHIVE</paper-tab>
         </paper-tabs>
       </paper-toolbar>
-      <!-- FAB -->
+      <!-- FABs -->
+      <paper-fab
+        id="btnSendMail"
+        class="style-paper-fab-mail"
+        icon="send"
+        elevation="3"
+        on-tap="_sendMail">
+      </paper-fab>
       <paper-fab
         id="btnDelete"
         class="style-paper-fab"
@@ -179,7 +202,6 @@ Custom property | Description | Default
             value: 0
           }
         },
-
         /**
          * register listeners for changed items
          */
@@ -667,6 +689,60 @@ Custom property | Description | Default
           //notify user
           this.notifyError("Grocery List - Error: " + error.code + " - " + error.message);
         },
+
+        /**
+         * EMAIL
+         */
+        /**
+         * Send Grocery List to User Email
+         *
+         * @function
+         */
+        _sendMail: function() {
+          this.notify("Send Grocery List...");
+          var requestHeader = {
+            "X-SOCOBO-AUTH": this.userLogin.userId
+          };
+          var requestBody = {
+            list: this.groceryItems
+          };
+          this.$.iaSendMail.headers = requestHeader;
+          this.$.iaSendMail.body = Util.objectToString(requestBody);
+          this.$.iaSendMail.generateRequest();
+        },
+        /**
+         * Handle Success Response from Backend
+         *
+         * @function
+         */
+        _handleMailResponse: function() {
+          //notify user
+          this.notifySuccess("Grocery List Items send to User!");
+        },
+        /**
+         * Handle Failed Response from Backend
+         *
+         * @param {Object} error
+         * @function
+         */
+        _handleMailError: function(error) {
+          var msg = "";
+          if (error.detail.hasOwnProperty("msg")) {
+            msg = error.detail.msg + " ";
+            msg += error.detail.extra;
+          } else if (error.detail.hasOwnProperty("error")) {
+            if (error.detail.error.hasOwnProperty("message")) {
+              msg = error.detail.error.message;
+            } else {
+              msg = "Something went wrong with sending the Mail!";
+            }
+          } else {
+            msg = "Something went wrong with sending the Mail!";
+          }
+          //notify user
+          this.notifyError(msg);
+        },
+
         /**
          * init variable
          */
