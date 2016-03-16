@@ -1,0 +1,135 @@
+/**
+ * Checks if user is logged in and if that
+ * user has the correct access rights
+ * @param uid
+ * @returns {boolean}
+ */
+function isCurrentUser(uid) {
+  auth != null && auth.uid == uid;
+}
+
+function isLoggedIn() {
+  auth != null
+}
+
+// TYPES
+type Item {
+  amount: Number,
+    created: Number,
+    desc: String,
+    info: String,
+    name: NameString,
+    unit: Object,
+
+    __firebaseKey__: String | Null,
+    bestBefore: String | Null
+}
+
+type NameString extends String {
+  validate() { this.length > 1 && this.length < 30 }
+}
+
+type Recipe {
+  desc: NameString,
+  text: String,
+  userId: String,
+  steps: Step[],
+  ingredients: RecipeIngredient[],
+
+  refUser: Url | Null,
+  image: String | Null,
+}
+
+type Url extends String {
+  validate() { this.contains("http")}
+}
+
+type User {
+  hasTermsAccepted: Boolean,
+  isAdmin: Boolean,
+  provider: String
+}
+
+type Step {
+  desc: String,
+  number: Number
+}
+
+type RecipeIngredient {
+  amount: Number,
+  desc: NameString,
+  unit: String
+}
+
+type Profile {
+  biography: String,
+  email: String,
+  name: NameString,
+  profileImage: String,
+  provider: String
+}
+
+type Grocery {
+  desc: NameString
+}
+
+// GROCERY
+path /grocery/{userId} {
+  read() { isCurrentUser(userId)}
+  write() { isCurrentUser(userId)}
+
+  path /active/{id} is Grocery {}
+  path /archive/{id} is Grocery {}
+}
+
+// MEASUREMENT
+path /measurements {
+  read() { isLoggedIn() }
+  write() { false }
+}
+// PROFILE
+path /profiles/{id} is Profile{
+  read() { isCurrentUser(id)}
+  write() { isCurrentUser(id)}
+}
+
+// RECIPES
+path /recipes {
+  read() { isLoggedIn() }
+
+
+  path /{id} is Recipe {
+    update() {  isCurrentUser(this.userId) }
+    create() { isCurrentUser(this.userId) }
+
+    delete() { isCurrentUser(prior(this.userId)) }
+    index() { "userId" }
+  }
+}
+
+// USERS
+path /users {
+  path /{id} {
+    read() { isCurrentUser(id) }
+    write() {isCurrentUser(id) }
+
+    path /administration is User {}
+
+    path /recipes {}
+    path /recipes/{recipeId} {
+      validate() { isCurrentUser(id) }
+    }
+  }
+}
+
+// INVENTORY Items
+path /inventory {
+  read() { isLoggedIn() }
+
+  path /{userId} {
+    read() { isCurrentUser(userId) }
+    write() { isCurrentUser(userId) }
+
+    path /{id} is Item {}
+  }
+}

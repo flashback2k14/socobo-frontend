@@ -1,0 +1,10 @@
+{
+  "firebase": "socobo-dev-project",
+  "public": "dist",
+  "rules": "db/rules.json",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
