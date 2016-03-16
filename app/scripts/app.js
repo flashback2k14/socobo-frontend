@@ -67,7 +67,7 @@
     app.userlogin = UserInfo.getUserLogin();
     // check if user login is expired
     if (Util.isUserLoginExpired(UserInfo.get(UserInfo.EXPIREDATE))) {
-      app.route = "login";
+      page.show("/");
     } else {
       // Show Menu Items
       Util.toggleMenuItems([
@@ -80,7 +80,7 @@
       elRecipe.loadData();
       elProfile.loadData();
       // navigate to home
-      app.route = "home";
+      page.show("/home");
     }
   });
 
@@ -103,7 +103,7 @@
    * AUTH
    */
   app.closeAuthElement = function() {
-    app.route = "about";
+    page.show("/about");
   };
   app.loginSuccessful = function(e) {
     // declare variable
@@ -127,7 +127,7 @@
     elRecipe.loadData();
     elProfile.loadData();
     // go to the home element
-    app.route = "home";
+    page.show("/home");
   };
   app.loginFailed = function(e) {
     // get error object
@@ -193,6 +193,12 @@
   /**
    * PROJECT
    */
+  app.handleGoToHome = function() {
+    if (app.route !== "home") {
+      page.show("/home");
+    }
+  };
+
   app.logoutUser = function(text) {
     var infoText = "";
     if (typeof text === "string") {
@@ -227,7 +233,7 @@
     // reset UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
     // go to login element
-    app.route = "login";
+    page.show("/");
   };
   /**
    * END: handle custom events for socobo elements here
