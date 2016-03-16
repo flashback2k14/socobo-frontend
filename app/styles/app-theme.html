@@ -15,15 +15,16 @@
   /* Application theme */
   :root {
     /* App Colors */
-    --dark-primary-color: rgba(26,35,126,1.0);  /*#303F9F;*/
-    --primary-color: rgba(49,27,146,1.0);       /*#3F51B5;*/
-    --light-primary-color: rgba(27,57,146,1.0);
+    --dark-primary-color: rgba(44, 109, 47, 1.0);   /*rgba(26,35,126,1.0);*/  /*#303F9F;*/
+    --primary-color: rgba(56, 142, 60, 1.0);        /*rgba(49,27,146,1.0);*/  /*#3F51B5;*/
+    --light-primary-color: rgba(65, 164, 70, 1.0);  /*rgba(27,57,146,1.0);*/
 
     --dark-accent-color: rgba(204,0,53,1.0);
-    --accent-color: rgba(242,0,63,1.0);         /*#FF4081;*/
+    --accent-color: rgba(242,0,63,1.0);             /*#FF4081;*/
     --light-accent-color: rgba(255,26,85,1.0);
 
     --primary-background-color: #FFFFFF;
+    --secondary-background-color: #727272;
 
     --primary-text-color: #212121;
     --secondary-text-color: #727272;
@@ -62,7 +63,7 @@
 
   /* General styles */
   .style-drawer-toolbar {
-    margin-top: -20px;
+    --paper-toolbar-height: 231px;
   }
   .paper-menu > .iron-selected {
     color: var(--default-primary-color);
@@ -121,31 +122,43 @@
 
   /* Custom Toolbar Menu */
   .user-info-container {
-    margin: 45px 10px 10px 0;
+    @apply(--layout-vertical);
+    width: 250px;
+    height: 100%;
+    margin-left: -20px;
+  }
+  .user-info-picture-wrapper {
+    @apply(--layout-horizontal);
+    @apply(--layout-center-justified);
   }
   .user-info-picture {
-    padding: 5px;
+    @apply(--layout-horizontal);
+    @apply(--layout-center-justified);
   }
   .user-info-username {
-    padding: 5px;
+    @apply(--layout-horizontal);
+    @apply(--layout-center-justified);
+    margin-top: 10px;
     font-size: medium;
   }
-  .user-info-emailaddress{
-    padding: 5px;
-    font-size: xx-small;
+  .user-info-emailaddress {
+    @apply(--layout-horizontal);
+    @apply(--layout-center-justified);
+    margin-top: 5px;
+    font-size: small;
     word-break: break-all;
   }
   .circular {
     display: inline-block;
-    min-height: 80px;
-    height: 80px;
-    max-height: 80px;
-    min-width: 80px;
-    width: 80px;
-    max-width: 80px;
+    min-height: 150px;
+    height: 150px;
+    max-height: 150px;
+    min-width: 150px;
+    width: 150px;
+    max-width: 150px;
     overflow: hidden;
-    -webkit-border-radius: 40px;
-    -moz-border-radius: 40px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
     border-radius: 50%;
     -webkit-box-shadow: 0 0 8px var(--border-color);
     -moz-box-shadow: 0 0 8px var(--border-color);
@@ -253,7 +266,7 @@
       @apply(--socobo-text-font);
     };
   }
-
+  
   socobo-element-buttons {
     --socobo-style-action-btn-add-color: var(--accent-color);
     --socobo-style-action-btn-delete-color: red;
@@ -261,10 +274,14 @@
 
   socobo-grocery-list {
     --socobo-element-style-search-search-input-container: {
-      width: 88%;
+      width: 80%;
     };
   }
-
+  
+  socobo-profile {
+    --socobo-profile-info-style-admin-buttons-bg: var(--primary-color);
+  }
+  
   /* Breakpoints */
   /* Material Design Adaptive Breakpoints */
   /* Small */

@@ -18,8 +18,7 @@ Custom property | Description | Default
         @apply(--layout-vertical);
         width: 100%;
         height: 100%;
-        background: var(--dark-primary-color);
-        border-radius: 5px;
+        background: var(--socobo-about-container-bg, --dark-primary-color);
         overflow: hidden;
       }
 
@@ -38,13 +37,30 @@ Custom property | Description | Default
         @apply(--layout-wrap);
         margin-top: 20px;
       }
-
+      
       .style-iron-image {
-        width:200px;
-        height:200px;
-        margin-top: 20px;
+        width:300px;
+        height:300px;
+        margin-top: 40px;
         background: transparent;
       }
+      .circular {
+        display: inline-block;
+        min-height: 300px;
+        height: 300px;
+        max-height: 300px;
+        min-width: 300px;
+        width: 300px;
+        max-width: 300px;
+        overflow: hidden;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        -webkit-box-shadow: 0 0 8px var(--border-color);
+        -moz-box-shadow: 0 0 8px var(--border-color);
+        box-shadow: 0 0 8px var(--border-color);
+      }
+      
       .style-paper-material {
         min-width: 500px;
         width: 70%;
@@ -75,7 +91,7 @@ Custom property | Description | Default
       <!-- Product Image -->
       <div class="center-content">
         <iron-image
-          class="style-iron-image"
+          class="style-iron-image circular"
           sizing="cover"
           preload
           fade
