@@ -217,8 +217,8 @@
     var rootRef = new Firebase(UserInfo.getBaseUrl());
     rootRef.unauth();
     // set Placedolder to toolbar menu
-    tbUsername.innerHTML = "Placeholder Username";
-    tbUserEmailAddress.innerHTML = "Placeholder Email";
+    tbUsername.innerHTML = "";
+    tbUserEmailAddress.innerHTML = "";
     imgUserProfilePicture.src = "../images/touch/icon-128x128.png";
     // clear data
     elRanking.clearData();
