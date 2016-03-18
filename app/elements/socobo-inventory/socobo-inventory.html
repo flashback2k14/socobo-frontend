@@ -39,24 +39,16 @@ Custom property | Description | Default
       <firebase-collection
         id="inventoryCollection"
         order-by-child="created"
-        location="{{location}}"
+        location="[[location]]"
         data="{{data}}">
       </firebase-collection>
       <!-- measurements -->
       <firebase-collection
         id="measurementCollection"
         order-by-child="name"
-        location="{{measurementLocation}}"
+        location="[[measurementLocation]]"
         data="{{measurements}}">
       </firebase-collection>
-      <!-- categories-->
-      <firebase-collection
-        id="categoryCollection"
-        order-by-child="name"
-        location="{{categoryLocation}}"
-        data="{{categories}}">
-      </firebase-collection>
-
       <socobo-inventory-overview
         id="inventoryOverview"
         on-edit_request="_editItem"
@@ -66,12 +58,12 @@ Custom property | Description | Default
         on-checked-all = "_handleCheckAll"
         data="[[data]]">
       </socobo-inventory-overview>
-    <socobo-element-buttons
-      class="button-add"
-      show-delete="[[_itemsChecked]]"
-      on-add-item="_createItem"
-      on-delete-items="_deleteAllItems">
-    </socobo-element-buttons>
+      <socobo-element-buttons
+        class="button-add"
+        show-delete="[[_itemsChecked]]"
+        on-add-item="_createItem"
+        on-delete-items="_deleteAllItems">
+      </socobo-element-buttons>
     </div>
   </template>
 
@@ -79,6 +71,7 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-inventory",
+        behaviors: [ToastElementBehaviors.SendBehavior],
 
         properties: {
           /**
@@ -207,7 +200,7 @@ Custom property | Description | Default
         },
 
         /**
-         * Listener to handle the create item events. Takes care creating the item and
+         * Listener to handle the create item events. Takes care of creating the item and
          * updating Firebase.
          *
          * @param {Object} e
@@ -276,17 +269,15 @@ Custom property | Description | Default
          */
         _saveItem: function(e) {
           var item = e.detail;
-          var self = this;
           if (item.__firebaseKey__) {
             var ref = new Firebase(this._handleLogin(this.userLogin) + "/" + item.__firebaseKey__);
             ref.update(item, function(error) {
               if (error) {
-                alert("There was an error updating the item");
-                console.log(error);
+                this.notifyError("There was an error updating the item. " + error.message);
               } else {
-                self.$.inventoryEditDialog.hide();
+                this.$.inventoryEditDialog.hide();
               }
-            });
+            }.bind(this));
           }
         }
       });

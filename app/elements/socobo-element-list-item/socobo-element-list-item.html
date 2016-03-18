@@ -105,67 +105,67 @@ Custom property | Description | Default
 </dom-module>
 
 <script>
-  (function() {
-    Polymer({
-      is: "socobo-element-list-item",
-      behaviors: [
-        Polymer.NeonAnimationRunnerBehavior
-      ],
-      properties: {
-        obj: {
-          type: Object,
-          value: {
-            desc: "test"
-          }
-        },
-        isChecked: {
-          type: Boolean,
-          value: false
-        },
-        editIcon: {
-          type: String,
-          value: "create"
-        },
-        deleteIcon: {
-          type: String,
-          value: "delete"
-        },
-        dialogText: {
-          type: String,
-          value:  "Do you really want to remove?"
-        },
-        animationConfig: {
-          value: function() {
-            return {
-              name: "fade-in-animation",
-              node: this.$.wrapper
-            };
-          }
+(function() {
+  Polymer({
+    is: "socobo-element-list-item",
+    behaviors: [
+      Polymer.NeonAnimationRunnerBehavior
+    ],
+    properties: {
+      obj: {
+        type: Object,
+        value: {
+          desc: "test"
         }
       },
-      changeCheckBox: function() {
-        if (this.isChecked) {
-          this.fire("check", this.obj);
-        } else {
-          this.fire("uncheck", this.obj);
+      isChecked: {
+        type: Boolean,
+        value: false
+      },
+      editIcon: {
+        type: String,
+        value: "create"
+      },
+      deleteIcon: {
+        type: String,
+        value: "delete"
+      },
+      dialogText: {
+        type: String,
+        value:  "Do you really want to remove?"
+      },
+      animationConfig: {
+        value: function() {
+          return {
+            name: "fade-in-animation",
+            node: this.$.wrapper
+          };
         }
-      },
-      showElement: function() {
-        this.fire("show_request", this.obj);
-      },
-      editElement: function() {
-        this.fire("edit_request", this.obj);
-      },
-      deleteElement: function() {
-        this.fire("delete_request", this.obj);
-      },
-      _showConfirmation: function() {
-        this.$.currentItem.innerHTML = this.obj.desc;
-        this.$.deletionConfirmation.open();
-      },
-      ready: function() {
-        this.playAnimation();
       }
-    });
-  })();
+    },
+    changeCheckBox: function() {
+      if (this.isChecked) {
+        this.fire("check", this.obj);
+      } else {
+        this.fire("uncheck", this.obj);
+      }
+    },
+    showElement: function() {
+      this.fire("show_request", this.obj);
+    },
+    editElement: function() {
+      this.fire("edit_request", this.obj);
+    },
+    deleteElement: function() {
+      this.fire("delete_request", this.obj);
+    },
+    _showConfirmation: function() {
+      this.$.currentItem.innerHTML = this.obj.desc;
+      this.$.deletionConfirmation.open();
+    },
+    ready: function() {
+      this.playAnimation();
+    }
+  });
+})();
 </script>

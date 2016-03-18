@@ -112,12 +112,23 @@ var SocoboGrocery = (function() {
       var removePath = new Firebase(_archiveItemsRoute + "/" + item.key);
       removePath.remove();
     };
+    /**
+     * unregister listener for tracking changes
+     */
+    var unregisterGroceryItemListeners = function() {
+      // active
+      _refActive.off("child_added");
+      _refActive.off("child_removed");
+      // archive
+      _refArchive.off("child_added");
+    };
 
     /**
      * Public API
      */
     return {
       registerGroceryItemListeners: registerGroceryItemListeners,
+      unregisterGroceryItemListeners: unregisterGroceryItemListeners,
       addItemToActiveList: addItemToActiveList,
       removeItemFromActiveList: removeItemFromActiveList,
       addItemToArchiveList: addItemToArchiveList,

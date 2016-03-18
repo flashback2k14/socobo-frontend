@@ -14,7 +14,7 @@
       </socobo-ranking>
     </template>
     <!--firebase-->
-    <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
     <!-- Demo Data -->
     <script type="text/javascript">
       window.addEventListener("WebComponentsReady", function() {
@@ -25,7 +25,7 @@
           "expires": 1605292372
         };
         var elDemoRanking = document.querySelector("#elDemoRanking");
-        elDemoRanking.loadData();
+        elDemoRanking.loadData(false);
       });
     </script>
   </body>

@@ -30,8 +30,6 @@ Custom property | Description | Default
 
       /* CONTENT */
       .wrapper {
-        height: 75%;
-        max-height: 85%;
         width: 90%;
         min-width: 700px;
         padding: 0;
@@ -43,6 +41,10 @@ Custom property | Description | Default
         line-height: 2;
       }
 
+      .scrollableContent{
+        margin-top: 0;
+      }
+
       .content {
         @apply(--layout-horizontal);
         padding: 0;
@@ -52,42 +54,19 @@ Custom property | Description | Default
 
       .leftColumn {
         width: 300px;
-        padding: 0 30px 30px 30px;
+        padding: 0 30px 60px 30px;
       }
 
       .rightColumn {
         width: 100%;
         margin-right: 0;
-        padding: 0 30px 30px 30px;
+        padding: 0 30px 60px 30px;
         overflow: hidden;
       }
 
       .separator {
         border: 1px solid var(--socobo-recipe-style-border-color);
         margin-top: 2px;
-      }
-
-      /* EXIT DIALOG */
-      .style-exit-button {
-        cursor: default;
-        position: absolute;
-        padding: 0;
-        margin: 0;
-        top: 0;
-        right: 20px;
-        color: var(--socobo-recipe-style-text-color);
-        font-weight: 100;
-      }
-
-      .style-exit-button:hover {
-        color: var(--socobo-recipe-style-icon-focus-color);
-        cursor: pointer;
-      }
-
-      .style-exit-button iron-icon {
-        width: 30px;
-        height: 30px;
-        float: right;
       }
 
       /* TITLE */
@@ -211,130 +190,128 @@ Custom property | Description | Default
                   exit-animation="fade-out-animation"
                   with-backdrop>
       <!-- DIALOG -->
-      <!-- EXIT DIALOG-->
-      <paper-icon-button id="exit" class="style-exit-button" icon="clear" on-tap="_clearInputFields">
-      </paper-icon-button>
 
-      <!-- RECIPE NAME -->
-      <paper-input
-        id="title_input"
-        class="style-recipe-name"
-        label="Please name your recipe ... "
-        value="{{recipe.clone.desc}}"
-        required
-        pattern=".+"
-        auto-validate
-        error-message="Missing name or invalid characters!"
-        autofocus="true"
-        focused="true">
-      </paper-input>
+      <paper-dialog-scrollable class="scrollableContent">
+        <!-- RECIPE NAME -->
+        <paper-input
+          id="title_input"
+          class="style-recipe-name"
+          label="Please name your recipe ... "
+          value="{{recipe.clone.desc}}"
+          required
+          pattern=".+"
+          auto-validate
+          error-message="Missing name or invalid characters!"
+          autofocus="true"
+          focused="true">
+        </paper-input>
 
-      <!-- START CONTENT -->
-      <div class="content">
+        <!-- START CONTENT -->
+        <div class="content">
 
-        <!-- START LEFT COLUMN -->
-        <div class="leftColumn">
+          <!-- START LEFT COLUMN -->
+          <div class="leftColumn">
 
-          <!-- START IMAGE SECTION -->
-          <input type="file" id="editfileChooser" class="style-file-chooser"/>
+            <!-- START IMAGE SECTION -->
+            <input type="file" id="editfileChooser" class="style-file-chooser"/>
 
-          <div elevation="1" class="recipeImg" id="editImageHolder">
-            <!-- OVERLAY EDIT IMAGE -->
-            <div class="overlay" on-tap="_openFileChooser">
-              <iron-icon icon="create"></iron-icon>
+            <div elevation="1" class="recipeImg" id="editImageHolder">
+              <!-- OVERLAY EDIT IMAGE -->
+              <div class="overlay" on-tap="_openFileChooser">
+                <iron-icon icon="create"></iron-icon>
+              </div>
+              <!-- RECIPE IMAGE -->
+              <template is="dom-if" if="{{recipe.clone.image}}">
+                <iron-image
+                  id="edit_image"
+                  class="recipeImg_image"
+                  src="{{recipe.clone.image}}"
+                  sizing="cover"
+                  preload="true"
+                  fade
+                  placeholder="images/placeholder/placeholder.png"><!-- Does not work with documentation.html -->
+                </iron-image>
+              </template>
+              <!-- RECIPE IMAGE PLACEHOLDER -->
+              <template is="dom-if" if="{{!recipe.clone.image}}">
+                <iron-image
+                  id="edit_placeholder"
+                  class="recipeImg_image"
+                  sizing="cover"
+                  preload="true"
+                  fade
+                  placeholder="images/placeholder/placeholder.png"><!-- Does not work with documentation.html -->
+                </iron-image>
+              </template>
+              <!-- END IMAGE SECTION -->
             </div>
-            <!-- RECIPE IMAGE -->
-            <template is="dom-if" if="{{recipe.clone.image}}">
-              <iron-image
-                id="edit_image"
-                class="recipeImg_image"
-                src="{{recipe.clone.image}}"
-                sizing="cover"
-                preload="true"
-                fade
-                placeholder="images/placeholder/placeholder.png"><!-- Does not work with documentation.html -->
-              </iron-image>
-            </template>
-            <!-- RECIPE IMAGE PLACEHOLDER -->
-            <template is="dom-if" if="{{!recipe.clone.image}}">
-              <iron-image
-                id="edit_placeholder"
-                class="recipeImg_image"
-                sizing="cover"
-                preload="true"
-                fade
-                placeholder="images/placeholder/placeholder.png"><!-- Does not work with documentation.html -->
-              </iron-image>
-            </template>
-            <!-- END IMAGE SECTION -->
-          </div>
 
-          <!-- DETAIL INGREDIENTS HEADLINE -->
-          <div class="subHeadings">Ingredients</div>
-          <hr class="separator"/>
-          <!-- DETAIL INGREDIENTS -->
-          <template is="dom-repeat" items="{{ingredient_inputs}}">
-            <!-- DETAIL INGREDIENT -->
-            <socobo-recipe-details-ingredient
-              state="add"
-              class="inputs"
-              ingredient="{{item}}"
-              id="{{item}}"
-              measurements="{{measurements}}"
-              on-rem_ingr="_removeIngr">
-            </socobo-recipe-details-ingredient>
-          </template>
-          <!-- ADD DETAIL INGREDIENT-->
-          <paper-fab
-            id="addIngr"
-            mini="true"
-            class="style-add-ingr-button"
-            icon="add"
-            on-tap="_addIngr">
-          </paper-fab>
-          <!-- END LEFT COLUMN -->
-        </div>
-
-        <!-- START RIGHT COLUMN -->
-        <div class="rightColumn">
-          <!-- DESCRIPTION SECTION -->
-          <div class="subHeadings">Description</div>
-          <hr class="separator"/>
-          <paper-textarea
-            id="text_input"
-            rows="6"
-            label="Here you might place a brief description or the like ..."
-            value="{{recipe.clone.text}}">
-          </paper-textarea>
-          <!-- SHOW DETAIL STEPS HEADLINE -->
-          <div class="subHeadings">Steps</div>
-          <hr class="separator"/>
-          <!-- DETAIL STEPS -->
-          <div class="steps" id="steps_input">
-            <template is="dom-repeat" items="{{recipe_inputs}}">
-              <!-- DETAIL STEP -->
-              <socobo-recipe-details-step
+            <!-- DETAIL INGREDIENTS HEADLINE -->
+            <div class="subHeadings">Ingredients</div>
+            <hr class="separator"/>
+            <!-- DETAIL INGREDIENTS -->
+            <template is="dom-repeat" items="{{ingredient_inputs}}">
+              <!-- DETAIL INGREDIENT -->
+              <socobo-recipe-details-ingredient
                 state="add"
-                class="inputs step"
-                step="{{item}}"
-                id="{{item.number}}"
-                on-rem_step="_removeStep">
-              </socobo-recipe-details-step>
+                class="inputs"
+                ingredient="{{item}}"
+                id="{{item}}"
+                measurements="{{measurements}}"
+                on-rem_ingr="_removeIngr">
+              </socobo-recipe-details-ingredient>
             </template>
+            <!-- ADD DETAIL INGREDIENT-->
+            <paper-fab
+              id="addIngr"
+              mini="true"
+              class="style-add-ingr-button"
+              icon="add"
+              on-tap="_addIngr">
+            </paper-fab>
+            <!-- END LEFT COLUMN -->
           </div>
-          <!-- ADD DETAIL STEP -->
-          <paper-fab
-            id="addStep"
-            mini="true"
-            class="style-add-step-button"
-            icon="add"
-            on-tap="_addStep">
-          </paper-fab>
-          <!-- END RIGHT COLUMN -->
-        </div>
-        <!-- END CONTENT -->
-      </div>
 
+          <!-- START RIGHT COLUMN -->
+          <div class="rightColumn">
+            <!-- DESCRIPTION SECTION -->
+            <div class="subHeadings">Description</div>
+            <hr class="separator"/>
+            <paper-textarea
+              id="text_input"
+              rows="6"
+              label="Here you might place a brief description or the like ..."
+              value="{{recipe.clone.text}}">
+            </paper-textarea>
+            <!-- SHOW DETAIL STEPS HEADLINE -->
+            <div class="subHeadings">Steps</div>
+            <hr class="separator"/>
+            <!-- DETAIL STEPS -->
+            <div class="steps" id="steps_input">
+              <template is="dom-repeat" items="{{recipe_inputs}}">
+                <!-- DETAIL STEP -->
+                <socobo-recipe-details-step
+                  state="add"
+                  class="inputs step"
+                  step="{{item}}"
+                  id="{{item.number}}"
+                  on-rem_step="_removeStep">
+                </socobo-recipe-details-step>
+              </template>
+            </div>
+            <!-- ADD DETAIL STEP -->
+            <paper-fab
+              id="addStep"
+              mini="true"
+              class="style-add-step-button"
+              icon="add"
+              on-tap="_addStep">
+            </paper-fab>
+            <!-- END RIGHT COLUMN -->
+          </div>
+          <!-- END CONTENT -->
+        </div>
+      </paper-dialog-scrollable>
       <!-- DIALOG BUTTONS -->
       <div class="buttons">
         <paper-fab
@@ -359,7 +336,7 @@ Custom property | Description | Default
     (function() {
       Polymer({
         is: "socobo-recipe-details-edit",
-        behaviors: [RecipeBehaviors.ValidateBehavior],
+        behaviors: [RecipeBehaviors.ValidateBehavior, ToastElementBehaviors.SendBehavior],
         /**
          * LISTENERS
          */
@@ -580,18 +557,8 @@ Custom property | Description | Default
             this._clearInputFields();
             this.$.dialog.close();
           } else {
-            this._notify(validationResult.message);
+            this.notifyError(validationResult.message, 5000);
           }
-        },
-        /**
-         * Shows a given message as paper-toast element
-         *
-         * @param {String} msg
-         * @private
-         */
-        _notify: function(msg) {
-          this.$.errorNotification.text = msg;
-          this.$.errorNotification.show();
         }
       });
     })();

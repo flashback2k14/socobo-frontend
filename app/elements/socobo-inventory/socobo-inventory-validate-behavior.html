@@ -29,7 +29,7 @@
        *
        *  @private
        */
-      measurements: {
+      units: {
         type: Array,
         value: function() {
           return [];
@@ -37,14 +37,21 @@
       },
 
       /**
-       * Possible categories the item can be associated with
+       * Quick select options for the expiry date
        *
        * @private
        */
-      categories: {
+      dateOffsets: {
         type: Array,
         value: function() {
-          return ["Backen", "Gewürze", "Gemüse", "Obst"];
+          return [
+            this.Offset("none", 0, "day"),
+            this.Offset("3 days", 3, "day"),
+            this.Offset("1 week", 7, "day"),
+            this.Offset("2 weeks",14, "day"),
+            this.Offset("1 month", 1, "month"),
+            this.Offset("3 months", 3, "month")
+          ];
         }
       }
     },
@@ -52,6 +59,33 @@
     observers: [
       "_validate(item.*)"
     ],
+
+    /**
+     * Provides an object to set a date to a specific offset.
+     *
+     * @param {string} text
+     * @param {Number} offset
+     * @param {string} type The type of offset, either `day` or `month
+     *
+     * @return {{value, set, offset}}
+     *
+     * @private
+     */
+    Offset: function(text, offset, type) {
+      return {
+        value: text,
+        offset: offset,
+        set: function(d) {
+          switch (type) {
+            case "day":
+              d.setDate(d.getDate() + offset);
+              break;
+            case "month":
+              d.setMonth(d.getMonth() + offset);
+          }
+        }
+      };
+    },
 
     /**
      * Populate the item with the values from the dropdowns and set item.desc and item.info
@@ -62,14 +96,14 @@
      * @function
      */
     _populateItem: function(item) {
-      if (item.count && /^(\s)*([0-9]+(\s)*)$/.test(item.count)) {
-        item.count = Number(item.count);
+      if (item.amount && /^(\s)*([0-9]+(\s)*)$/.test(item.amount)) {
+        item.amount = Number(item.amount);
       } else {
-        item.count = NaN;
+        item.amount = NaN;
       }
 
       item.desc = item.name;
-      item.info = item.count + " " + item.measurement.value;
+      item.info = item.amount + " " + item.unit.value;
 
       return item;
     },
@@ -80,21 +114,9 @@
      * @param {Event} e
      * @private
      */
-    _measurementSelected: function(e) {
+    _unitSelected: function(e) {
       if (e.detail.item.m) {
-        this.set("item.measurement", e.detail.item.m);
-      }
-    },
-
-    /**
-     * React to selected category in the dropdown
-     *
-     * @param {Event} e
-     * @private
-     */
-    _categorySelected: function(e) {
-      if (e.detail.item.c) {
-        this.set("item.category", e.detail.item.c);
+        this.set("item.unit", e.detail.item.m);
       }
     },
 
@@ -105,9 +127,11 @@
      * @private
      */
     _validate: function() {
-      var valid = this.item.validate().isValid;
-      this.$.submitItemButton.disabled = !valid;
-      return valid;
+      if (this.$.submitItemButton) {
+        var valid = this.item.validate().isValid;
+        this.$.submitItemButton.disabled = !valid;
+        return valid;
+      }
     }
   };
   InventoryBehaviors.ValidateBehavior = {
@@ -122,18 +146,10 @@
         type: Object,
         value: {
           name: "Name",
-          count: "Amount",
-          measurement: "Measurement"
+          amount: "Amount",
+          unit: "Measurement"
         }
       }
-    },
-
-    extend: function(item) {
-      Object.keys(item).forEach(function(p) {
-        this[p] = item[p];
-      }.bind(this));
-
-      return this;
     },
 
     /**
@@ -144,28 +160,28 @@
     validate: function() {
       var errorMsg = new MessageModule();
       var nameExists;
-      var countExists;
-      var measurementExists;
+      var amountExists;
+      var unitExists;
       var valid = true;
       errorMsg.setPrefix("Please add the missing information: ");
       errorMsg.setMappings(this.mappings);
 
       nameExists = ValidateModule.verifySingleProperty(this, "name");
-      countExists = /^(\s)*([0-9]+(\s)*)$/.test(this.count) &&
-        ValidateModule.verifySingleProperty(this, "count");
-      measurementExists = ValidateModule.verifySingleProperty(this, "measurement");
+      amountExists = /^(\s)*([0-9]+(\s)*)$/.test(this.amount) &&
+        ValidateModule.verifySingleProperty(this, "amount");
+      unitExists = ValidateModule.verifySingleProperty(this, "unit");
 
       if (!nameExists) {
         errorMsg.addMsgPart("Add a name");
       }
-      if (!countExists) {
+      if (!amountExists) {
         errorMsg.addMsgPart("Enter a valid number as amount");
       }
-      if (!measurementExists) {
-        errorMsg.addMsgPart("Pleas choose a unit");
+      if (!unitExists) {
+        errorMsg.addMsgPart("Please choose a unit");
       }
 
-      valid = nameExists && countExists && measurementExists;
+      valid = nameExists && amountExists && unitExists;
 
       return {isValid: valid, message: errorMsg.buildMsg()};
     }

@@ -27,27 +27,33 @@ Custom property | Description | Default
       .style-paper-tabs {
         @apply(--layout-horizontal);
         @apply(--layout-self-start);
+        --paper-tabs-selection-bar-color: var(--socobo-grocery-list-paper-tab-ink, --dark-accent-color);
         --paper-tabs: {
           margin-left: 15px;
           margin-bottom: 0;
           padding-bottom: 0;
         };
-        --paper-tabs-selection-bar-color: var(--socobo-grocery-list-paper-tab-ink, --accent-color);
       }
       .style-paper-tab {
+        --paper-tab-ink: var(--socobo-grocery-list-paper-tab-ink, --dark-accent-color);
         --paper-tab: {
           min-width: 25%;
           width: 200px;
           background: var(--socobo-grocery-list-paper-tab-bg, --default-primary-color);
           color: var(--socobo-grocery-list-paper-tab-color, --text-primary-color);
         };
-        --paper-tab-ink: var(--socobo-grocery-list-paper-tab-ink, --accent-color);
+      }
+      .style-paper-fab-mail {
+        @apply(--layout-horizontal);
+        @apply(--layout-self-end);
+        margin-top: -30px;
+        margin-right: 70px;
       }
       .style-paper-fab {
         @apply(--layout-horizontal);
         @apply(--layout-self-end);
-        margin-top: -30px;
-        margin-right: 24px;
+        margin-top: -55px;
+        margin-right: 5px;
       }
       .style-content-container {
         margin-top: 5px;
@@ -57,7 +63,7 @@ Custom property | Description | Default
         font-size: 40px;
         text-align: center;
         font-weight: 100;
-        color: var(--socobo-recipe-style-icon-text-color, --default-primary-color);
+        color: var(--socobo-recipe-style-icon-text-color, --primary-text-color);
         line-height: 80px;
       }
 
@@ -66,6 +72,16 @@ Custom property | Description | Default
     </style>
 
     <div class="container">
+      <!-- iron ajax -->
+      <iron-ajax
+        id="iaSendMail"
+        url="https://socobo-project-backend.herokuapp.com/api/v1/send-grocery-list"
+        content-type="application/json"
+        method="POST"
+        handle-as="json"
+        on-response="_handleMailResponse"
+        on-error="_handleMailError">
+      </iron-ajax>
       <!-- Search -->
       <socobo-element-search
         id="elSearch"
@@ -84,7 +100,14 @@ Custom property | Description | Default
           <paper-tab id="tabArchive" class="style-paper-tab">ARCHIVE</paper-tab>
         </paper-tabs>
       </paper-toolbar>
-      <!-- FAB -->
+      <!-- FABs -->
+      <paper-fab
+        id="btnSendMail"
+        class="style-paper-fab-mail"
+        icon="send"
+        elevation="3"
+        on-tap="_sendMail">
+      </paper-fab>
       <paper-fab
         id="btnDelete"
         class="style-paper-fab"
@@ -134,14 +157,16 @@ Custom property | Description | Default
         </div>
       </iron-pages>
     </div>
-    <!-- Notification-->
-    <paper-toast id="infoGroceryList" duration="2000"></paper-toast>
   </template>
 
   <script>
     (function() {
       Polymer({
         is: "socobo-grocery-list",
+        /**
+         * Behaviors
+         */
+        behaviors: [ToastElementBehaviors.SendBehavior],
         /**
          * Element Properties.
          */
@@ -177,7 +202,6 @@ Custom property | Description | Default
             value: 0
           }
         },
-
         /**
          * register listeners for changed items
          */
@@ -210,6 +234,23 @@ Custom property | Description | Default
             SocoboGrocery.getInstance(this, this.userLogin)
               .addItemToActiveList({desc: item.desc + " - " + item.amount + " " + item.unit});
           }.bind(this));
+        },
+        /**
+         * clear data after logout
+         *
+         * @function
+         */
+        clearData: function() {
+          this.set("groceryItems", []);
+          this.set("groceryArchiveItems", []);
+        },
+        /**
+         * unregister tracking changed listeners
+         *
+         * @function
+         */
+        unregisterListeners: function() {
+          SocoboGrocery.getInstance(this, this.userLogin).unregisterGroceryItemListeners();
         },
 
         /**
@@ -347,7 +388,7 @@ Custom property | Description | Default
           if (checkItemIndex !== -1) {
             items.splice(checkItemIndex, 1);
           } else {
-            this._notify("There is no Active Item checked for unchecking.");
+            this.notifyError("There is no active Item checked for unchecking.");
           }
         },
 
@@ -459,11 +500,11 @@ Custom property | Description | Default
               }
             } else {
               // notify user
-              this._notify("The Item is not available");
+              this.notifyError("There is no Item available.");
             }
           } else {
             // notify user
-            this._notify("The Item is not checked. Please check the Item before delete.");
+            this.notifyError("There is no checked Item. Please check the Item before delete.");
           }
         },
         /**
@@ -493,7 +534,7 @@ Custom property | Description | Default
             }
           } else {
             // notify user
-            this._notify("The Item is not available");
+            this.notifyError("There is no Item available.");
           }
         },
 
@@ -517,7 +558,7 @@ Custom property | Description | Default
             SocoboGrocery.getInstance(this, this.userLogin).removeItemFromActiveList(e.detail);
           } else {
             // notify user
-            this._notify("The Item is not available");
+            this.notifyError("There is no Item available.");
           }
         },
         /**
@@ -543,7 +584,7 @@ Custom property | Description | Default
               .addItemToActiveList({desc: e.detail.desc});
           } else {
             // notify user
-            this._notify("The Item is not available");
+            this.notifyError("There is no Item available.");
           }
         },
 
@@ -560,8 +601,8 @@ Custom property | Description | Default
          */
         _setHidden: function(item, searchQuery) {
           return !(searchQuery === null ||
-          typeof searchQuery === "undefined" ||
-          item.desc.toUpperCase().match(searchQuery.toUpperCase()));
+            typeof searchQuery === "undefined" ||
+            item.desc.toUpperCase().match(searchQuery.toUpperCase()));
         },
 
         /**
@@ -587,19 +628,6 @@ Custom property | Description | Default
           }.bind(this));
           // return selected item index
           return index;
-        },
-        /**
-         * Show Toast with specific message
-         *
-         * @param {String} msg
-         * @private
-         * @function
-         */
-        _notify: function(msg) {
-          this.$.infoGroceryList.text = msg;
-          if (!this.$.infoGroceryList.opened) {
-            this.$.infoGroceryList.show();
-          }
         },
 
         /**
@@ -658,7 +686,61 @@ Custom property | Description | Default
          * @function
          */
         _groceryChangedError: function(error) {
-          this._notify(error.code + " - " + error.message);
+          //notify user
+          this.notifyError("Grocery List - Error: " + error.code + " - " + error.message);
+        },
+
+        /**
+         * EMAIL
+         */
+        /**
+         * Send Grocery List to User Email
+         *
+         * @function
+         */
+        _sendMail: function() {
+          this.notify("Send Grocery List...");
+          var requestHeader = {
+            "X-SOCOBO-AUTH": this.userLogin.userId
+          };
+          var requestBody = {
+            list: this.groceryItems
+          };
+          this.$.iaSendMail.headers = requestHeader;
+          this.$.iaSendMail.body = Util.objectToString(requestBody);
+          this.$.iaSendMail.generateRequest();
+        },
+        /**
+         * Handle Success Response from Backend
+         *
+         * @function
+         */
+        _handleMailResponse: function() {
+          //notify user
+          this.notifySuccess("Grocery List Items send to User!");
+        },
+        /**
+         * Handle Failed Response from Backend
+         *
+         * @param {Object} error
+         * @function
+         */
+        _handleMailError: function(error) {
+          var msg = "";
+          if (error.detail.hasOwnProperty("msg")) {
+            msg = error.detail.msg + " ";
+            msg += error.detail.extra;
+          } else if (error.detail.hasOwnProperty("error")) {
+            if (error.detail.error.hasOwnProperty("message")) {
+              msg = error.detail.error.message;
+            } else {
+              msg = "Something went wrong with sending the Mail!";
+            }
+          } else {
+            msg = "Something went wrong with sending the Mail!";
+          }
+          //notify user
+          this.notifyError(msg);
         },
 
         /**
