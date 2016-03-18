@@ -1,7 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <!-- Font -->
-<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<!--<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>-->
+<link href="https://fonts.googleapis.com/css?family=Roboto+Slab:700" rel="stylesheet" type="text/css">
 <!-- Custom Styles-->
 <style is="custom-style">
   /*
@@ -46,10 +47,12 @@
 
     /* App fonts */
     --socobo-heading-font: {
-      font-family: 'Pacifico', cursive;
+      /*font-family: 'Pacifico', cursive;*/
+      font-family: "Roboto Slab", serif;
     };
     --socobo-text-font: {
-      font-family: sans-serif;
+      /*font-family: sans-serif;*/
+      font-family: "Roboto", sans-serif;
     };
   }
 
@@ -110,7 +113,7 @@
     @apply(--layout-center);
     text-decoration: none;
     color: var(--menu-link-color);
-    font-family: 'Roboto', 'Noto', sans-serif;
+    font-family: "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     font-size: 14px;
@@ -260,15 +263,16 @@
     --socobo-recipe-style-spinner-color-level3: var(--accent-color);
     --socobo-recipe-style-spinner-color-level4: var(--accent-color);
     --socobo-recipe-style-heading-font: {
-      font-family: 'Pacifico', cursive;
+      /*font-family: 'Pacifico', cursive;*/
+      @apply(--socobo-heading-font);
     };
     --socobo-recipe-style-default-font: {
       @apply(--socobo-text-font);
     };
   }
-  
+
   socobo-element-buttons {
-    --socobo-style-action-btn-add-color: var(--accent-color);
+    --socobo-style-action-btn-add-color: var(--light-accent-color);
     --socobo-style-action-btn-delete-color: red;
   }
 
@@ -277,11 +281,11 @@
       width: 80%;
     };
   }
-  
+
   socobo-profile {
     --socobo-profile-info-style-admin-buttons-bg: var(--primary-color);
   }
-  
+
   /* Breakpoints */
   /* Material Design Adaptive Breakpoints */
   /* Small */
