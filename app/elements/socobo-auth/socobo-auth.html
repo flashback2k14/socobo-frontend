@@ -28,7 +28,7 @@ Custom property | Description | Default
         @apply(--socobo-auth-container-theme);
       }
       .background-image {
-        background-image: url("http://lorempixel.com/400/200/food/");
+        background-image: url("https://socobo-project-backend.herokuapp.com/api/v1/get-random-image");
         background-size: cover;
         height: 100%;
         width: 100%;
@@ -107,6 +107,7 @@ Custom property | Description | Default
     </style>
 
     <div class="container">
+
       <paper-fab id="btnClose" class="close-button" mini icon="close" on-tap="_closeAuth"></paper-fab>
 
       <div id="bgImage" class="background-image"></div>
