@@ -32,7 +32,7 @@
     setItem: function(item) {
       if (item !== undefined) {
         this._setAndNotify(item);
-        this._setMeasurement(item);
+        this._setUnit(item);
       }
     },
 
@@ -55,13 +55,13 @@
      * @param {Object} item
      * @private
      */
-    _setMeasurement(item) {
-      if (!this.$.measurementDropdown) {
+    _setUnit(item) {
+      if (!this.$.unitDropdown) {
         return;
       }
-      this.measurements.forEach(function(m, i) {
-        if (item.measurement.value === m.value) {
-          this.$.measurementDropdownMenu.select(i);
+      this.units.forEach(function(m, i) {
+        if (item.unit.value === m.value) {
+          this.$.unitDropdownMenu.select(i);
         }
       }.bind(this));
     },
@@ -77,10 +77,13 @@
         return;
       }
       this.set("item.name","");
-      this.set("item.count","");
+      this.set("item.amount","");
       this.set("item.bestBefore", "");
-      if (this.$.measurementDropdownMenu) {
-        this.$.measurementDropdownMenu.select(-1);
+      if (this.$.unitDropdownMenu) {
+        this.$.unitDropdownMenu.select(-1);
+      }
+      if (this.$.expireDropdownMenu) {
+        this.$.expireDropdownMenu.select(-1);
       }
     }
   };

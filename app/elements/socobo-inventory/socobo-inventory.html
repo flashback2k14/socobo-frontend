@@ -40,14 +40,14 @@ Custom property | Description | Default
       <firebase-collection
         id="inventoryCollection"
         order-by-child="created"
-        location="{{location}}"
+        location="[[location]]"
         data="{{data}}">
       </firebase-collection>
       <!-- measurements -->
       <firebase-collection
         id="measurementCollection"
         order-by-child="name"
-        location="{{measurementLocation}}"
+        location="[[measurementLocation]]"
         data="{{measurements}}">
       </firebase-collection>
       <socobo-inventory-overview
@@ -59,12 +59,12 @@ Custom property | Description | Default
         on-checked-all = "_handleCheckAll"
         data="[[data]]">
       </socobo-inventory-overview>
-    <socobo-element-buttons
-      class="button-add"
-      show-delete="[[_itemsChecked]]"
-      on-add-item="_createItem"
-      on-delete-items="_deleteAllItems">
-    </socobo-element-buttons>
+      <socobo-element-buttons
+        class="button-add"
+        show-delete="[[_itemsChecked]]"
+        on-add-item="_createItem"
+        on-delete-items="_deleteAllItems">
+      </socobo-element-buttons>
     </div>
   </template>
 

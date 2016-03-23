@@ -62,6 +62,7 @@ Custom property | Description | Default
         };
       }
       .style-paper-item:hover {
+        margin: -1px 11px 11px 11px;
         cursor: pointer;
         border: solid 1px lightgray;
         border-radius: 2px;
@@ -119,14 +120,16 @@ Custom property | Description | Default
       Polymer({
         is: "socobo-ranking",
         /**
-         * Behaviors
-         */
-        behaviors: [ToastElementBehaviors.SendBehavior],
-        /**
          * This Event is fired if the user click the "add-to-grocery-list" button on the ranking dialog. <br/>
          * `Detail`: Object: {Missing Inventory Items} <br/>
          * @event add-missing-items-to-grocery-list
          */
+
+        /**
+         * Behaviors
+         */
+        behaviors: [ToastElementBehaviors.SendBehavior],
+
         /**
          * Element Properties.
          */
@@ -158,21 +161,30 @@ Custom property | Description | Default
         },
 
         /**
-         * Load Data for Ranking.</br>
+         * Load Data for Ranking.
          *
+         * @param {Boolean} isReload
          * @function
          */
-        loadData: function() {
+        loadData: function(isReload) {
           // set loading flag
           this.isLoading = true;
           // load data
           SocoboRanking.getInstance(this.userLogin)
             .getData()
             .then(function(data) {
-              this.notify("Loading Data finished! Calculating started...");
               this._calcRanking(data);
+              // reset loading flag
+              this.isLoading = false;
+              // notify user
+              if (isReload) {
+                this.notify("Ranking updated!");
+              }
             }.bind(this))
             .catch(function(error) {
+              // reset loading flag
+              this.isLoading = false;
+              // notify user
               this.notifyError("Ranking - Error - " + error.message);
             }.bind(this));
           // register changed listener
@@ -195,7 +207,7 @@ Custom property | Description | Default
          * @function
          */
         unregisterListeners: function() {
-          SocoboRanking.getInstance(this.userLogin).unregisterChangedListener();
+          SocoboRanking.getInstance(this.userLogin).unregisterChangedListener(this);
         },
 
         /**
@@ -234,7 +246,7 @@ Custom property | Description | Default
                 // check if inventory items is available for recipe
                 if (ingredient.desc === item.name) {
                   // check measurements and amount
-                  if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.count, item.measurement.value)) {
+                  if (this._checkMeasurements(ingredient.amount, ingredient.unit, item.amount, item.unit.value)) {
                     // count matching items
                     recipe.matchingItemCount++;
                     // add matching items
@@ -262,10 +274,6 @@ Custom property | Description | Default
           }.bind(this));
           // sort desc
           this._sortList(true);
-          // notify user
-          this.notify("Calculating finished!");
-          // reset loading flag
-          this.isLoading = false;
         },
 
         /**
@@ -537,16 +545,15 @@ Custom property | Description | Default
         /**
          * Reload List
          *
+         * @param {Object} e
          * @private
          * @function
          */
-        _reload: function() {
-          // notify user
-          this.notify("Reloading...");
+        _reload: function(e) {
           // reset recipe ranking
           this.set("recipeRanking", []);
           // reload data
-          this.loadData();
+          this.loadData(!!e);
         },
 
         /**
@@ -618,8 +625,13 @@ Custom property | Description | Default
          * @function
          */
         _onInventoryItemChanged: function() {
-          if (!this.isLoading) {
+          // this.reloadCounter is a Workaround,
+          // because inventory fires 2 changed events
+          if (!this.isLoading && this.reloadCounter === 0) {
             this._reload();
+            this.reloadCounter++;
+          } else {
+            this.reloadCounter = 0;
           }
         },
 
@@ -651,6 +663,7 @@ Custom property | Description | Default
         ready: function() {
           this.isFirstLoad = true;
           this.isLoading = false;
+          this.reloadCounter = 0;
         }
       });
     })();

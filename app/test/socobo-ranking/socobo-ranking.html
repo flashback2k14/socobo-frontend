@@ -23,9 +23,21 @@
   <script>
     suite("<socobo-ranking>", function() {
       var socoboRanking;
+      var recipes;
+      var inventoryItems;
+
+      function createItems() {
+        return [
+          {},
+          {},
+          {}
+        ]
+      }
 
       setup(function() {
         socoboRanking = fixture("SocoboRanking");
+        inventoryItems = createItems();
+        recipes = {};
       });
 
       test("has a recipe show dialog", function(done) {
@@ -43,6 +55,14 @@
         done();
       });
 
+      test("calcRanking notifies when no data is passied in", function(done) {
+        socoboRanking.addEventListener("socobo-show-toast", function(e) {
+          expect(e.detail.type).to.be.eql("error");
+          done()
+        });
+
+        socoboRanking._calcRanking(null);
+      });
     });
   </script>
 </body>

@@ -51,12 +51,14 @@
       <!-- Nav Drawer -->
       <paper-header-panel drawer mode="standard">
         <!-- Nav Drawer Toolbar -->
-        <paper-toolbar id="drawerToolbar" class="style-drawer-toolbar tall">
+        <paper-toolbar id="drawerToolbar" class="style-drawer-toolbar">
           <div class="middle">
             <div class="user-info-container">
-              <img id="imgUserProfilePicture" class="user-info-picture circular" src="images/touch/icon-128x128.png" alt="User Profile Picture" />
-              <div id="tbUserName" class="user-info-username">Placeholder Username</div>
-              <div id="tbUserEmailAddress" class="user-info-emailaddress">Placeholder Email</div>
+              <div class="user-info-picture-wrapper">
+                <img id="imgUserProfilePicture" class="user-info-picture circular" src="images/touch/icon-128x128.png" alt="User Profile Picture" />
+              </div>
+              <div id="tbUserName" class="user-info-username"></div>
+              <div id="tbUserEmailAddress" class="user-info-emailaddress"></div>
             </div>
           </div>
         </paper-toolbar>
@@ -105,7 +107,7 @@
           <!-- Toolbar icons -->
           <paper-icon-button id="btnLogout" icon="eject" on-click="logoutUser"></paper-icon-button>
           <!-- Application name -->
-          <div class="middle middle-container">Socobo Project</div>
+          <div class="style-application-name middle middle-container" on-tap="handleGoToHome">Socobo Project</div>
         </paper-toolbar>
 
         <!-- Main Content -->

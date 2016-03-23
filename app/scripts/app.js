@@ -67,7 +67,7 @@
     app.userlogin = UserInfo.getUserLogin();
     // check if user login is expired
     if (Util.isUserLoginExpired(UserInfo.get(UserInfo.EXPIREDATE))) {
-      app.route = "login";
+      page.show("/");
     } else {
       // Show Menu Items
       Util.toggleMenuItems([
@@ -75,12 +75,12 @@
         menuItemInventory, menuItemProfile
       ]);
       // load Ranking, Recipes and Profile
-      elRanking.loadData();
+      elRanking.loadData(false);
       elGroceryList.loadData();
       elRecipe.loadData();
       elProfile.loadData();
       // navigate to home
-      app.route = "home";
+      page.show("/home");
     }
   });
 
@@ -103,7 +103,7 @@
    * AUTH
    */
   app.closeAuthElement = function() {
-    app.route = "about";
+    page.show("/about");
   };
   app.loginSuccessful = function(e) {
     // declare variable
@@ -122,12 +122,12 @@
     // set UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
     // load Ranking, Grocery List, Recipes and Profile
-    elRanking.loadData();
+    elRanking.loadData(false);
     elGroceryList.loadData();
     elRecipe.loadData();
     elProfile.loadData();
     // go to the home element
-    app.route = "home";
+    page.show("/home");
   };
   app.loginFailed = function(e) {
     // get error object
@@ -193,6 +193,12 @@
   /**
    * PROJECT
    */
+  app.handleGoToHome = function() {
+    if (app.route !== "home") {
+      page.show("/home");
+    }
+  };
+
   app.logoutUser = function(text) {
     var infoText = "";
     if (typeof text === "string") {
@@ -211,8 +217,8 @@
     var rootRef = new Firebase(UserInfo.getBaseUrl());
     rootRef.unauth();
     // set Placedolder to toolbar menu
-    tbUsername.innerHTML = "Placeholder Username";
-    tbUserEmailAddress.innerHTML = "Placeholder Email";
+    tbUsername.innerHTML = "";
+    tbUserEmailAddress.innerHTML = "";
     imgUserProfilePicture.src = "../images/touch/icon-128x128.png";
     // clear data
     elRanking.clearData();
@@ -227,7 +233,7 @@
     // reset UserId and ExpireDate for Subelements
     app.userlogin = UserInfo.getUserLogin();
     // go to login element
-    app.route = "login";
+    page.show("/");
   };
   /**
    * END: handle custom events for socobo elements here

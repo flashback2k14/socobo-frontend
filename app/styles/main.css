@@ -1,5 +1,5 @@
 body {
-  background: #fafafa;
+  background: #FAFAFA;
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #333;
 }
@@ -15,7 +15,7 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(49,27,146,1.0);
+  background-color: rgba(56, 142, 60, 1.0); /*rgba(49,27,146,1.0);*/
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background: transparent;
