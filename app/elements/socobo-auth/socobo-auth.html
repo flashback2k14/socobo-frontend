@@ -28,7 +28,7 @@ Custom property | Description | Default
         @apply(--socobo-auth-container-theme);
       }
       .background-image {
-        background-image: url("http://lorempixel.com/400/200/food/");
+        background-image: url("https://socobo-project-backend.herokuapp.com/api/v1/get-random-image");
         background-size: cover;
         height: 100%;
         width: 100%;
@@ -107,20 +107,11 @@ Custom property | Description | Default
     </style>
 
     <div class="container">
-      
-      <iron-ajax
-         id="iaGetRandomImage"
-         url="http://localhost:5005/api/v1/get-random-image"
-         handle-as="json"
-         method="GET"
-         on-response="_handleImageResponse"
-         on-error="_handelImageError">
-      </iron-ajax>
-      
+
       <paper-fab id="btnClose" class="close-button" mini icon="close" on-tap="_closeAuth"></paper-fab>
-      
+
       <div id="bgImage" class="background-image"></div>
-      
+
       <div id="contentContainer" class="content">
         <paper-material id="pmLogin" class="default-show-login" elevation="5">
           <socobo-auth-login
@@ -241,23 +232,6 @@ Custom property | Description | Default
           this.$.elLogin.show();
           this.$.pmRegistration.style.display = "none";
           this.$.pmLogin.style.display = "block";
-        },
-        
-        _handleImageResponse: function(response) {
-          // var image = response.detail.response.imageData;
-          // var src = "url('data:image/png;base64," + image + "')";
-          // this.$.bgImage.style.backgroundImage = src;
-          var image = new Image();
-          image.src = "data:image/png;base64," + response.detail.response.imageData;
-          this.$.bgImage.style.backgroundImage = image;
-        },
-        
-        _handelImageError: function(error) {
-          this.fire("show-socobo-toast", {type: error, msg: error.detail.error.message});
-        },
-        
-        ready: function() {
-          this.$.iaGetRandomImage.generateRequest();
         }
       });
     })();
