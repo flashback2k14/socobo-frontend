@@ -163,11 +163,14 @@ gulp.task("copyGhPages", function() {
   // copy socobo elements
   var app = gulp.src([
     "app/elements/**/*",
-    "app/styles/app-theme.html",
     "!app/elements/elements.html",
     "!app/elements/routing.html",
     "!app/elements/documentation.html"
   ]).pipe(gulp.dest("ghPages/app/elements"));
+  // copy app-theme element
+  var theme = gulp.src([
+    "app/styles/app-theme.html"
+  ]).pipe(gulp.dest("ghPages/app/styles"));
   // rename documentation.html to index.html
   var renameDoc = gulp.src("app/elements/documentation.html")
     .pipe(rename("index.html"))
@@ -193,7 +196,7 @@ gulp.task("copyGhPages", function() {
     {src: true}
   ).pipe(gulp.dest("ghPages"));
   // merge all files together
-  return merge(bc, app, renameDoc, removeImports, config, newIndex)
+  return merge(bc, app, theme, renameDoc, removeImports, config, newIndex)
     .pipe($.size({
       title: "copyGhPages"
     }));
