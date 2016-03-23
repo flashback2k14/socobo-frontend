@@ -37,7 +37,7 @@ Custom property | Description | Default
         @apply(--layout-wrap);
         margin-top: 20px;
       }
-      
+
       .style-iron-image {
         width:300px;
         height:300px;
@@ -60,7 +60,7 @@ Custom property | Description | Default
         -moz-box-shadow: 0 0 8px var(--border-color);
         box-shadow: 0 0 8px var(--border-color);
       }
-      
+
       .style-paper-material {
         min-width: 500px;
         width: 70%;
@@ -70,6 +70,10 @@ Custom property | Description | Default
         padding: 20px;
         background: var(--primary-background-color);
         border-radius: 5px;
+      }
+
+      .style-information {
+        font-size: x-large;
       }
     </style>
     <!-- Load Data for Project Information -->
@@ -104,7 +108,7 @@ Custom property | Description | Default
         <div class="center-content">
           <paper-material class="style-paper-material" elevation="5">
             <marked-element markdown="{{information}}">
-              <div class="markdown-html"></div>
+              <div class="markdown-html style-information"></div>
             </marked-element>
           </paper-material>
         </div>
