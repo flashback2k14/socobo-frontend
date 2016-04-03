@@ -291,7 +291,17 @@ Custom property | Description | Default
       </div>
       <div class="login-container">
         <a class="nav-hyperlink" href="#" on-tap="_goToLogin">Go to login...</a>
-        <paper-checkbox id="chbAcceptAGB" class="style-checkbox" on-tap="_toggleRegisterButtons"></paper-checkbox><span>Accept <a class="nav-hyperlink" href="disclaimer/disclaimer.pdf" target="_blank">Terms of Service</a></span>
+        <paper-checkbox
+          id="chbAcceptAGB"
+          class="style-checkbox"
+          on-tap="_toggleRegisterButtons">
+        </paper-checkbox>
+        <span>Accept
+          <a class="nav-hyperlink"
+            href="https://socobo-project-backend.herokuapp.com/api/v1/get-disclaimer"
+            target="_blank">Terms of Service
+          </a>
+        </span>
       </div>
     </div>
   </template>
