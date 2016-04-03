@@ -84,11 +84,6 @@ Custom property | Description | Default
         </socobo-profile-info>
       </div>
     </div>
-    <!-- Info Elements-->
-    <paper-toast
-      id="infoToast"
-      duration="4000">
-    </paper-toast>
   </template>
 
   <script>
@@ -119,6 +114,11 @@ Custom property | Description | Default
          * `Detail`: Object: {value: "The Login is expired!"} <br/>
          * @event login-expired
          */
+
+        /**
+         * Behaviors
+         */
+        behaviors: [ToastElementBehaviors.SendBehavior],
 
         /**
          * Element Properties.
@@ -167,11 +167,11 @@ Custom property | Description | Default
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .updateProfileData({profileImage: this.profileObject.profileImage})
             .then(function() {
-              ProfileUtil.getInstance().showToast(this.$.infoToast, e.detail.value, "#333333", "#EEEEEE");
+              this.notify(e.detail.value);
               this.fire("profile-user-image-changed", this.profileObject.profileImage);
             }.bind(this))
             .catch(function(err) {
-              ProfileUtil.getInstance().showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
+              this.notifyError(err.message);
             }.bind(this));
         },
 
@@ -196,15 +196,15 @@ Custom property | Description | Default
           SocoboProfile
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .updateProfileData(e.detail)
-            .then(function(succ) {
+            .then(function(success) {
               // show info notification
-              ProfileUtil.getInstance().showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+              this.notifySuccess(success.value);
               // fire event to update the menu toolbar
               this.fire("profile-username-changed", {username: e.detail.name});
             }.bind(this))
             .catch(function(err) {
               // show info notification
-              ProfileUtil.getInstance().showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
+              this.notifyError(err.message);
             }.bind(this));
         },
 
@@ -226,11 +226,11 @@ Custom property | Description | Default
           SocoboProfile
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .updateProfileData(e.detail)
-            .then(function(succ) {
-              ProfileUtil.getInstance().showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+            .then(function(success) {
+              this.notifySuccess(success.value);
             }.bind(this))
             .catch(function(err) {
-              ProfileUtil.getInstance().showToast(this.$.infoToast, err.message, "#FF3333", "#EEEEEE");
+              this.notifyError(err.message);
             }.bind(this));
         },
 
@@ -254,15 +254,15 @@ Custom property | Description | Default
           SocoboProfile
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .changeUserEmailAddress(e.detail)
-            .then(function(succ) {
+            .then(function(success) {
               // show info notification
-              ProfileUtil.getInstance().showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+              this.notifySuccess(success.value);
               // fire event to update the menu toolbar
               this.fire("profile-email-address-changed", {email: e.detail.newMail});
             }.bind(this))
             .catch(function(err) {
               // show info notification
-              ProfileUtil.getInstance().showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
+              this.notifyError(err.message);
             }.bind(this));
         },
         /**
@@ -280,11 +280,11 @@ Custom property | Description | Default
           SocoboProfile
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .changeUserPassword(e.detail)
-            .then(function(succ) {
-              ProfileUtil.getInstance().showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+            .then(function(success) {
+              this.notifySuccess(success.value);
             }.bind(this))
             .catch(function(err) {
-              ProfileUtil.getInstance().showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
+              this.notifyError(err.value);
             }.bind(this));
         },
         /**
@@ -302,11 +302,11 @@ Custom property | Description | Default
           SocoboProfile
             .getInstance(this.userLogin.firebaseUrl, this.userLogin.userId)
             .resetUserPassword(e.detail)
-            .then(function(succ) {
-              ProfileUtil.getInstance().showToast(this.$.infoToast, succ.value, "#333333", "#EEEEEE");
+            .then(function(success) {
+              this.notifySuccess(success.value);
             }.bind(this))
             .catch(function(err) {
-              ProfileUtil.getInstance().showToast(this.$.infoToast, err.value, "#FF3333", "#EEEEEE");
+              this.notifyError(err.value);
             }.bind(this));
         },
         /**
@@ -370,7 +370,7 @@ Custom property | Description | Default
          * @function
          */
         _handlePasswordsNotMatching: function(e) {
-          ProfileUtil.getInstance().showToast(this.$.infoToast, e.detail.value, "#FF3333", "#EEEEEE");
+          this.notifyError(e.detail.value);
         },
 
         /**
@@ -382,7 +382,7 @@ Custom property | Description | Default
          */
         _deleteAccountNotificationHelper: function(text) {
           // show info notification
-          ProfileUtil.getInstance().showToast(this.$.infoToast, text, "#333333", "#EEEEEE");
+          this.notify(text);
           // hide confirm dialog
           this.$.confirmRemoveAccountDialog.toggle();
           // reset temporary account data
