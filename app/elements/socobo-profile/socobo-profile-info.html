@@ -37,7 +37,6 @@ Custom property | Description | Default
       }
       .style-paper-card {
         --paper-card-header: {
-           /*background: var(--socobo-profile-info-paper-card-header-bg, #062F3C);*/
            background: var(--socobo-profile-info-paper-card-header-bg, --dark-primary-color);
          };
         --paper-card-header-text: {
@@ -104,7 +103,6 @@ Custom property | Description | Default
       }
       .style-clear-button {
         --paper-button: {
-         /*background: var(--socobo-profile-info-style-clear-button-bg, --paper-pink-500);*/
          background: var(--socobo-profile-info-style-clear-button-bg, --accent-color);
          color: var(--socobo-profile-info-style-clear-button-color, #FFFFFF);
          font-size: medium;
@@ -178,7 +176,7 @@ Custom property | Description | Default
                 <paper-input id="txtUsernameView" class="width-for-inputs style-disabled-inputs" label="Username" type="text" value="{{profileObject.name}}" no-label-float="true" readonly="true"></paper-input>
               </div>
               <div class="vertical-line">
-                <label for="txtEmailAddressView"><strong>Email-Address</strong></label>
+                <label for="txtEmailAddressView"><strong>Email Address for Grocery List</strong></label>
                 <paper-input id="txtEmailAddressView" class="width-for-inputs style-disabled-inputs" label="Email-Address" type="email" value="{{profileObject.email}}" no-label-float="true" readonly="true"></paper-input>
               </div>
             </div>
@@ -188,7 +186,7 @@ Custom property | Description | Default
                 <paper-input id="txtUsername" class="width-for-inputs" label="Username" type="text" value="{{profileObject.name}}" no-label-float="true"></paper-input>
               </div>
               <div class="vertical-line">
-                <label for="txtEmailAddress"><strong>Email-Address</strong></label>
+                <label for="txtEmailAddress"><strong>Email Address for Grocery List</strong></label>
                 <paper-input id="txtEmailAddress" class="width-for-inputs" label="Email-Address" type="email" value="{{profileObject.email}}" no-label-float="true"></paper-input>
               </div>
               <div class="bottom-right-align">
@@ -362,13 +360,6 @@ Custom property | Description | Default
         },
 
         /**
-         * Element Listeners
-         */
-        listeners: {
-          "email-address-updated": "_handleEmailAddressUpdated"
-        },
-
-        /**
          * Helper variable to manage Admin Section State.
          *
          * @type String
@@ -382,18 +373,6 @@ Custom property | Description | Default
          * @private
          */
         _changeValues: {},
-
-        /**
-         * Handle changed Email Address from Administration
-         *
-         * @param {Event} event
-         * @param {Event} context
-         * @private
-         * @function
-         */
-        _handleEmailAddressUpdated: function(event, context) {
-          this.$.txtEmailAddress.value = context.value;
-        },
 
         /**
          * Function to Show / Hide Edit Information Section
