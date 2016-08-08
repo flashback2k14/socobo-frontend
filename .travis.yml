@@ -6,7 +6,7 @@ cache:
     - node_modules
     - app/bower_components
 before_script:
-  - npm install web-component-tester firebase-tools firebase-bolt
+  - npm install web-component-tester firebase-tools@2.2.1 firebase-bolt
   - npm install bower
   - 'export PATH=$PWD/node_modules/.bin:$PATH'
   - bower install
