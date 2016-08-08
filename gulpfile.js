@@ -147,10 +147,6 @@ gulp.task("images", ["imagesAbout"], function() {
   return imageOptimizeTask("app/images/**/*", dist("images"));
 });
 
-gulp.task("copyAuth", function() {
-  return gulp.src(["app/elements/socobo-auth/disclaimer/*"]).pipe(gulp.dest(dist("elements/disclaimer")));
-});
-
 gulp.task("copyAbout", function() {
   return gulp.src(["app/elements/socobo-about/data/*"]).pipe(gulp.dest(dist("elements/data")));
 });
@@ -163,11 +159,14 @@ gulp.task("copyGhPages", function() {
   // copy socobo elements
   var app = gulp.src([
     "app/elements/**/*",
-    "app/styles/app-theme.html",
     "!app/elements/elements.html",
     "!app/elements/routing.html",
     "!app/elements/documentation.html"
   ]).pipe(gulp.dest("ghPages/app/elements"));
+  // copy app-theme element
+  var theme = gulp.src([
+    "app/styles/app-theme.html"
+  ]).pipe(gulp.dest("ghPages/app/styles"));
   // rename documentation.html to index.html
   var renameDoc = gulp.src("app/elements/documentation.html")
     .pipe(rename("index.html"))
@@ -193,14 +192,14 @@ gulp.task("copyGhPages", function() {
     {src: true}
   ).pipe(gulp.dest("ghPages"));
   // merge all files together
-  return merge(bc, app, renameDoc, removeImports, config, newIndex)
+  return merge(bc, app, theme, renameDoc, removeImports, config, newIndex)
     .pipe($.size({
       title: "copyGhPages"
     }));
 });
 
 // Copy all files at the root level (app)
-gulp.task("copy", ["copyAbout", "copyAuth", "copyGhPages"], function() {
+gulp.task("copy", ["copyAbout", "copyGhPages"], function() {
   var app = gulp.src([
     "app/*",
     "!app/test",

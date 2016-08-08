@@ -182,12 +182,16 @@
     // set user info to local storage
     UserInfo.set(UserInfo.PROFILEIMAGE, e.detail.profileImage);
   };
-  app.handleProfileInfoChanged = function(e) {
+  app.handleProfileInfoUsernameChanged = function(e) {
     // set UserInfo to Menubar
-    tbUsername.innerHTML = e.detail.name;
-    tbUserEmailAddress.innerHTML = e.detail.email;
+    tbUsername.innerHTML = e.detail.username;
     // set user info to local storage
     UserInfo.set(UserInfo.USERNAME, e.detail.name);
+  };
+  app.handleProfileInfoEmailChanged = function(e) {
+    // set UserInfo to Menubar
+    tbUserEmailAddress.innerHTML = e.detail.email;
+    // set user info to local storage
     UserInfo.set(UserInfo.EMAILADDRESS, e.detail.email);
   };
   /**

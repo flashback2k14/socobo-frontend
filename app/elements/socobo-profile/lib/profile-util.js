@@ -9,7 +9,7 @@ var ProfileUtil = (function() {
    *
    * @returns {{
    *  arePasswordsMatching: arePasswordsMatching, toggleInformationArea: toggleInformationArea,
-   *  toggleRightAdminContainerElements: toggleRightAdminContainerElements, showToast: showToast
+   *  toggleRightAdminContainerElements: toggleRightAdminContainerElements, isUserLoginExpired: isUserLoginExpired
    * }}
    */
   function init() {
@@ -188,20 +188,6 @@ var ProfileUtil = (function() {
       }
     }
     /**
-     * Show Info Toast
-     *
-     * @param {Object} toast - Polymer Toast Element
-     * @param {String} text
-     * @param {String} bgColor
-     * @param {String} color
-     */
-    function showToast(toast, text, bgColor, color) {
-      toast.text = text;
-      toast.style.background = bgColor;
-      toast.style.color = color;
-      toast.show();
-    }
-    /**
      * get current timestamp
      *
      * @return {number}
@@ -226,7 +212,6 @@ var ProfileUtil = (function() {
       arePasswordsMatching: arePasswordsMatching,
       toggleInformationArea: toggleInformationArea,
       toggleRightAdminContainerElements: toggleRightAdminContainerElements,
-      showToast: showToast,
       isUserLoginExpired: isUserLoginExpired
     };
   }

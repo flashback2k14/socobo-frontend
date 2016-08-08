@@ -33,7 +33,8 @@ Custom property | Description | Default
         user-login="{{userLogin}}"
         profile-object="{{_profileObject}}"
         on-profile-user-image-changed="_handleProfileUserImageChanged"
-        on-profile-user-info-changed="_handleProfileUserInfoChanged"
+        on-profile-username-changed="_handleProfileUsernameChanged"
+        on-profile-email-address-changed="_handleProfileEmailAddressChanged"
         on-user-account-deleted="_handleUserAccountDeleted">
       </socobo-profile-page>
     </div>
@@ -49,9 +50,14 @@ Custom property | Description | Default
          * @event profile-image-changed
          */
         /**
-         * This Event is fired if the user changed the information. <br/>
-         * `Detail`: Object: {name: "name", email: "email"} <br/>
-         * @event profile-info-changed
+         * This Event is fired if the user changed the username. <br/>
+         * `Detail`: Object: {username: "name"} <br/>
+         * @event profile-info-username-changed
+         */
+        /**
+         * This Event is fired if the user changed the email address. <br/>
+         * `Detail`: Object: {email: "email"} <br/>
+         * @event profile-info-email-changed
          */
         /**
          * This Event is fired after the profile data is loaded. <br/>
@@ -97,15 +103,24 @@ Custom property | Description | Default
           this.fire("profile-image-changed", {profileImage: e.detail});
         },
         /**
-         * handle changed user information and fire an event.
+         * handle changed username and fire an event.
          *
          * @param {CustomEvent} e
          * @private
          * @function
          */
-        _handleProfileUserInfoChanged: function(e) {
-          var userInfo = e.detail;
-          this.fire("profile-info-changed", userInfo);
+        _handleProfileUsernameChanged: function(e) {
+          this.fire("profile-info-username-changed", {username: e.detail.username});
+        },
+        /**
+         * handle changed email address and fire an event.
+         *
+         * @param {CustomEvent} e
+         * @private
+         * @function
+         */
+        _handleProfileEmailAddressChanged: function(e) {
+          this.fire("profile-info-email-changed", {email: e.detail.email});
         },
         /**
          * Handle deleted user account and fire an event.
