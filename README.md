@@ -9,10 +9,14 @@
 3. run **bower install**
 4. start application with **gulp serve**
 
+## Testing:
+-----------
+run command **wct** in cmd
+
 ## Documentation:
 -----------------
 http://flashback2k14.github.io/socobo-project
 
-## Testing:
------------
-run command **wct** in cmd
+## Issue Tracker:
+-----------------
+http://ba-pm-presentation.myjetbrains.com/youtrack/dashboard
