@@ -71,6 +71,12 @@
   .paper-menu > .iron-selected {
     color: var(--default-primary-color);
   }
+  .style-main-toolbar{
+    -webkit-box-shadow: 0px 5px 20px 2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 5px 20px 2px rgba(0,0,0,0.75);
+    box-shadow: 0px 5px 20px 2px rgba(0,0,0,0.75);
+    z-index: 100;
+  }
   .style-application-name {
     cursor: pointer;
   }
@@ -89,6 +95,8 @@
     height: 100%;
     margin-bottom: 20px;
     overflow: auto;
+    background-image: url("https://socobo-project-backend.herokuapp.com/api/v1/get-random-image");
+    background-size: cover;
   }
   paper-material {
     height: 100%;
