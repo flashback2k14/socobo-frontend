@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/flashback2k14/socobo-project.svg)](https://travis-ci.org/flashback2k14/socobo-project)
+[![Build Status](https://travis-ci.org/socobo/socobo-project.svg?branch=master)](https://travis-ci.org/socobo/socobo-project)
 
 # socobo-project
 
